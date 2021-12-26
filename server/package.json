@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/fullstackatbrown/history-course-sorting-interface#readme",
   "dependencies": {
-    "express": "^4.17.2"
+    "express": "^4.17.2",
+    "mongoose": "^6.1.3",
+    "passport": "^0.5.2"
   }
 }
