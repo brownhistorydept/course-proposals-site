@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/fullstackatbrown/history-course-sorting-interface/issues"
   },
-  "homepage": "https://github.com/fullstackatbrown/history-course-sorting-interface#readme"
+  "homepage": "https://github.com/fullstackatbrown/history-course-sorting-interface#readme",
+  "dependencies": {
+    "express": "^4.17.2"
+  }
 }
