@@ -7,6 +7,10 @@ const authRouter = Router();
 
 // auth apis will go here http://www.passportjs.org/docs/google/
 
+authRouter.get("/test", (req, res) => {
+    res.json({ message: "Hello from server!" });
+});
+
 
 // this all needs the config setup (see ../config/passport.ts) 
 
@@ -99,6 +103,8 @@ app.post("/logout", (req,res) => {
     console.log(`-------> User Logged out`)
 })
 
+
+export default authRouter;
 
 
 
