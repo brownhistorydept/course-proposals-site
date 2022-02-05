@@ -29,5 +29,8 @@
     "passport": "^0.5.2",
     "passport-google-oauth2": "^0.2.0",
     "ts-node": "^10.4.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.5.5"
   }
 }
