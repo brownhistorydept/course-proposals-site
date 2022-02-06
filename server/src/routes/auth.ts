@@ -1,4 +1,4 @@
-// need to change this file using new tutorial
+// need to change this file using new tutorial (https://www.passportjs.org/tutorials/google/)
 
 import { Request, Response, Router } from "express";
 import passport from "passport";
