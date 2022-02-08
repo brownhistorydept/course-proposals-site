@@ -1,89 +1,78 @@
-if (process.env.NODE_ENV !== "production") {
-  const path = require("path");
-  require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
-}
+const express = require('express');
+const cors = require('cors');
+const mongoose = require('mongoose');
+const session = require("express-session");
+const passport = require("passport");
+const passportLocalMongoose = require("passport-local-mongoose");
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const findOrCreate = require("mongoose-findorcreate");
 
-import express from "express";
-import cors from "cors";
-import authRouter from "./routes/auth";
+require('dotenv').config();
 
+const app = express();
+const port = process.env.PORT || 5000;
 
-export function main() {
+app.use(cors());
+app.use(express.json());
 
-  // this all needs the config setup (see ../config/passport.ts) 
+app.use(session({
+  secret: "Our little secret.",
+  resave: false,
+  saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
-  const express = require('express')
-  const app = express()
+mongoose.connect('mongodb+srv://dummyUser:12345@cluster0.7qos8.mongodb.net/HistoryDB?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
 
-  const session = require('express-session')
-  const passport = require('passport')
+const userSchema = new mongoose.Schema ({
+  username: String,
+  name: String,
+  googleId: String,
+  secret: String
+});
+userSchema.plugin(passportLocalMongoose);
+userSchema.plugin(findOrCreate);
+const User = new mongoose.model("User", userSchema);
 
-  const GoogleStrategy = require( 'passport-google-oauth2' ).Strategy;
-
-  app.use(session({
-      secret: "secret",
-      resave: false ,
-      saveUninitialized: true ,
-  }))
-
-  app.use(passport.initialize())
-  app.use(passport.session())
-
-  // TODO: INSERT
-  const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
-  const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET
-
-  function authUser(request, accessToken, refreshToken, profile, done) {
-      return done(null, profile);
-    }
-
-  //Use "GoogleStrategy" as the Authentication Strategy
-  passport.use(new GoogleStrategy({
-      clientID:     GOOGLE_CLIENT_ID,
-      clientSecret: GOOGLE_CLIENT_SECRET,
-      callbackURL: "http://localhost:3001/auth/google/callback",
-      passReqToCallback   : true
-    }, authUser));
-
-
-  passport.serializeUser( (user, done) => { 
-      console.log(`\n--------> Serialize User:`)
-      console.log(user)
-      // The USER object is the "authenticated user" from the done() in authUser function.
-      // serializeUser() will attach this user to "req.session.passport.user.{user}", so that it is tied to the session object for each session.  
-
-      done(null, user)
-  } )
-
-  passport.deserializeUser((user, done) => {
-          console.log("\n--------- Deserialized User:")
-          console.log(user)
-          // This is the {user} that was saved in req.session.passport.user.{user} in the serializationUser()
-          // deserializeUser will attach this {user} to the "req.user.{user}", so that it can be used anywhere in the App.
-
-          done (null, user)
-  }) 
-
-
-  app.use("/auth", authRouter);
-
-  // set up cors to allow us to accept requests from front end client
-  app.use(
-    cors({
-        origin: process.env.CLIENT_URL || "",
-        methods: "GET,PUT,DELETE",
-        credentials: true,
-    })
-  );
-
-  // start server
-  app.listen(process.env.PORT || 8080, () => {
-      console.log(`Server running on port ${process.env.PORT}`);
+passport.use(User.createStrategy());
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+passport.deserializeUser(function(id, done) {
+  User.findById(id, function(err, user) {
+    done(err, user);
   });
+});
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: "http://localhost:3003/auth/google/callback",
+    userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
+  },
+  function(accessToken, refreshToken, profile, cb) {
+    User.findOrCreate({ googleId: profile.id, username: profile.emails[0].value }, function (err, user) {
+      return cb(err, user);
+    });
+  }
+));
 
-}
+app.get("/auth/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
 
-main();
+// REDIRECT URI - must be specified in GCP
+app.get("/auth/google/callback",
+  passport.authenticate("google", { failureRedirect: "http://localhost:3000" }),
+  function(req, res) {
+    // Successful authentication, redirect secrets.
+    res.redirect("http://localhost:3000");
+  }
+);
+app.get("/logout", function(req, res){
+  res.redirect("http://localhost:3000/");
+});
 
-
-
+app.listen(port, () => {
+    console.log(`Server is running on port: ${port}`);
+});
