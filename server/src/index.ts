@@ -48,9 +48,27 @@ passport.use(new GoogleStrategy({
     userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
   },
   function(accessToken, refreshToken, profile, cb) {
-    User.findOrCreate({ googleId: profile.id, username: profile.emails[0].value }, function (err, user) {
+    User.findOne({ googleId: profile.id, username: profile.emails[0].value }, function (err, user) {
+      if (err) {
+        console.log(err);
+      }
+      if (!user) { // no user found
+        console.log('no user found');
+      }
+
       return cb(err, user);
     });
+    // console.log('outside')
+    // User.find({ googleId: profile.id, username: profile.emails[0].value }, function (err, user) {
+    //   console.log('inside');
+    //   if (err) {
+    //     console.log(err);
+    //   } else {
+    //     console.log('yay');
+    //     console.log(user)
+    //   }
+    //   return cb(err, user)
+    // });
   }
 ));
 
