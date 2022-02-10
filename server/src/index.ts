@@ -1,20 +1,17 @@
 const express = require('express');
+const app = express();
 const cors = require('cors');
 const mongoose = require('mongoose');
-const session = require("express-session");
-const passport = require("passport");
-const passportLocalMongoose = require("passport-local-mongoose");
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const findOrCreate = require("mongoose-findorcreate");
-
+const session = require('express-session');
+const passport = require('passport');
+const passportLocalMongoose = require('passport-local-mongoose');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const findOrCreate = require('mongoose-findorcreate');
 require('dotenv').config();
-
-const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 4000;
 
 app.use(cors());
 app.use(express.json());
-
 app.use(session({
   secret: "Our little secret.",
   resave: false,
@@ -47,7 +44,7 @@ passport.deserializeUser(function(id, done) {
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:3003/auth/google/callback",
+    callbackURL: process.env.GOOGLE_CALLBACK_URL,
     userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
   },
   function(accessToken, refreshToken, profile, cb) {
@@ -60,7 +57,6 @@ passport.use(new GoogleStrategy({
 app.get("/auth/google",
   passport.authenticate("google", { scope: ["profile", "email"] })
 );
-
 // REDIRECT URI - must be specified in GCP
 app.get("/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "http://localhost:3000" }),
