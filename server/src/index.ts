@@ -1,4 +1,7 @@
 const express = require('express');
+import * as passportConfig from './config/passport'
+require('dotenv').config();
+passportConfig.init();
 const app = express();
 const cors = require('cors');
 const mongoose = require('mongoose');
@@ -7,7 +10,7 @@ const passport = require('passport');
 const passportLocalMongoose = require('passport-local-mongoose');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const findOrCreate = require('mongoose-findorcreate');
-require('dotenv').config();
+
 const port = process.env.PORT || 4000;
 
 app.use(cors());
@@ -22,55 +25,41 @@ app.use(passport.session());
 
 mongoose.connect(process.env.MONGODB_STRING, { useNewUrlParser: true, useUnifiedTopology: true });
 
-const userSchema = new mongoose.Schema ({
-  username: String,
-  name: String,
-  googleId: String,
-  secret: String
-});
-userSchema.plugin(passportLocalMongoose);
-userSchema.plugin(findOrCreate);
-const User = new mongoose.model("User", userSchema);
+// const userSchema = new mongoose.Schema ({
+//   username: String,
+//   name: String,
+//   googleId: String,
+//   secret: String
+// });
+// userSchema.plugin(passportLocalMongoose);
+// userSchema.plugin(findOrCreate);
+// const User = new mongoose.model("User", userSchema);
 
-passport.use(User.createStrategy());
-passport.serializeUser(function(user, done) {
-  done(null, user.id);
-});
-passport.deserializeUser(function(id, done) {
-  User.findById(id, function(err, user) {
-    done(err, user);
-  });
-});
-passport.use(new GoogleStrategy({
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: process.env.GOOGLE_CALLBACK_URL,
-    userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
-  },
-  function(accessToken, refreshToken, profile, cb) {
-    User.findOne({ googleId: profile.id, username: profile.emails[0].value }, function (err, user) {
-      if (err) {
-        console.log(err);
-      }
-      if (!user) { // no user found
-        console.log('no user found');
-      }
-
-      return cb(err, user);
-    });
-    // console.log('outside')
-    // User.find({ googleId: profile.id, username: profile.emails[0].value }, function (err, user) {
-    //   console.log('inside');
-    //   if (err) {
-    //     console.log(err);
-    //   } else {
-    //     console.log('yay');
-    //     console.log(user)
-    //   }
-    //   return cb(err, user)
-    // });
-  }
-));
+// passport.use(User.createStrategy());
+// passport.serializeUser(function(user, done) {
+//   done(null, user.id);
+// });
+// passport.deserializeUser(function(id, done) {
+//   User.findById(id, function(err, user) {
+//     done(err, user);
+//   });
+// });
+// passport.use(new GoogleStrategy({
+//     clientID: process.env.GOOGLE_CLIENT_ID,
+//     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+//     callbackURL: process.env.GOOGLE_CALLBACK_URL,
+//     userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
+//   },
+//   function(accessToken, refreshToken, profile, cb) {
+//     User.findOrCreate({ googleId: profile.id, username: profile.emails[0].value }, function (err, user) {
+//       if (err) {
+//         console.log(err);
+//       }
+//       console.log(user);
+//       return cb(err, user);
+//     });
+//   }
+// ));
 
 app.get("/auth/google",
   passport.authenticate("google", { scope: ["profile", "email"] })
