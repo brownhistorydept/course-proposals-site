@@ -7,9 +7,9 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const passport = require('passport');
-const passportLocalMongoose = require('passport-local-mongoose');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const findOrCreate = require('mongoose-findorcreate');
+// const passportLocalMongoose = require('passport-local-mongoose');
+// const GoogleStrategy = require('passport-google-oauth20').Strategy;
+// const findOrCreate = require('mongoose-findorcreate');
 
 const port = process.env.PORT || 4000;
 
@@ -23,6 +23,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+// connect to mongodb
 mongoose.connect(process.env.MONGODB_STRING, { useNewUrlParser: true, useUnifiedTopology: true });
 
 // const userSchema = new mongoose.Schema ({
