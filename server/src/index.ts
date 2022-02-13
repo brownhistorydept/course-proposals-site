@@ -1,30 +1,66 @@
-const express = require('express');
-import * as passportConfig from './config/passport'
 require('dotenv').config();
+
+import express from "express";
+import passport from "passport";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import session from "express-session";
+import MongoStore from "connect-mongo";
+
+import authRouter from "./routes/auth";
+
+import * as passportConfig from "./config/passport";
+import { mongoConnection } from "./config/mongo";
+
 passportConfig.init();
 const app = express();
-const cors = require('cors');
-const mongoose = require('mongoose');
-const session = require('express-session');
-const passport = require('passport');
-// const passportLocalMongoose = require('passport-local-mongoose');
-// const GoogleStrategy = require('passport-google-oauth20').Strategy;
-// const findOrCreate = require('mongoose-findorcreate');
 
-const port = process.env.PORT || 4000;
+mongoConnection();
 
-app.use(cors());
+// express session
+app.use(
+  session({
+      secret: process.env.SESSION_SECRET || "",
+      resave: false,
+      saveUninitialized: false,
+      cookie: { maxAge: 86400000 * 30 }, // 30 days cookie expiry
+      store: MongoStore.create({
+          mongoUrl: process.env.MONGODB_STRING,
+          // mongoOptions: { useUnifiedTopology: true },
+      }),
+  })
+);
+
+// parse incoming cookies of html requests
+app.use(cookieParser());
+// parse body of http request
 app.use(express.json());
-app.use(session({
-  secret: "Our little secret.",
-  resave: false,
-  saveUninitialized: false
-}));
+
+// initialize and set up passport to use sessions
 app.use(passport.initialize());
 app.use(passport.session());
 
-// connect to mongodb
-mongoose.connect(process.env.MONGODB_STRING, { useNewUrlParser: true, useUnifiedTopology: true });
+// set up cors to allow us to accept requests from front end client
+app.use(
+  cors({
+      origin: process.env.CLIENT_URL || "",
+      methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+      credentials: true,
+  })
+);
+
+// set up auth route
+app.use("/auth", authRouter);
+
+// server starts listening
+app.listen(process.env.PORT || 8080, () => {
+  console.log(`Server running on port ${process.env.PORT}`);
+});
+//
+
+
+
+
 
 // const userSchema = new mongoose.Schema ({
 //   username: String,
@@ -61,22 +97,3 @@ mongoose.connect(process.env.MONGODB_STRING, { useNewUrlParser: true, useUnified
 //     });
 //   }
 // ));
-
-app.get("/auth/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
-);
-// REDIRECT URI - must be specified in GCP
-app.get("/auth/google/callback",
-  passport.authenticate("google", { failureRedirect: "http://localhost:3000" }),
-  function(req, res) {
-    // Successful authentication, redirect secrets.
-    res.redirect("http://localhost:3000");
-  }
-);
-app.get("/logout", function(req, res){
-  res.redirect("http://localhost:3000/");
-});
-
-app.listen(port, () => {
-    console.log(`Server is running on port: ${port}`);
-});
