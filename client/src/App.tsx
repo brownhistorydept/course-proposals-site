@@ -1,7 +1,8 @@
 import React from "react";
-import logo from "./logo.svg";
+//import logo from "./logo.svg";
 import "./App.css";
 import NavBar from './components/NavBar';
+import CourseProposal from './components/CourseProposal';
 
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
@@ -18,10 +19,11 @@ function App() {
   return (
     <div className="App">
       <NavBar/>
-      <header className="App-header">
+      {/* <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>{!data ? "Loading..." : data}</p>
-      </header>
+      </header> */}
+      {/* <CourseProposal/> */}
     </div>
   );
 }
