@@ -54,12 +54,12 @@ const ResponsiveAppBar = () => {
             variant="h8"
             noWrap
             component="div"
-            sx={{ mr: 2, display: { xs: 'none', md: 'flex', marginRight:610 } }}
+            sx={{ mr: 2, display: { xs: 'none', md: 'flex'} }}
           >
             Department of History Course Proposals
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={{ justifyContent: 'flex-end', flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
                 key={page}
