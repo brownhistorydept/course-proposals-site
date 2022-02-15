@@ -66,6 +66,7 @@ export function passportInit() {
                     } else {
                         // creates new user if not in mongoDB collection
                         user = await User.create(newUser);
+                        // TODO: give student role by default
                         done(null, user);
                     }
                 } catch (err) {
