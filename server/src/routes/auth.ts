@@ -5,25 +5,24 @@ import { authCheck } from "../middleware/auth";
 
 const authRouter = Router();
 
-// authRouter.get("/auth/google",
-//   passport.authenticate("google", { scope: ["profile", "email"] })
-// );
-// REDIRECT URI - must be specified in GCP
-// authRouter.get("/auth/google/callback",
-//   passport.authenticate("google", { failureRedirect: "http://localhost:3000" }),
-//   function(req, res) {
-//     // Successful authentication, redirect secrets.
-//     res.redirect("http://localhost:3000");
-//   }
-// );
-// authRouter.get("/logout", function(req, res){
-//   res.redirect("http://localhost:3000/");
-// });
+// auth with google
+authRouter.get("/google",
+    passport.authenticate("google", {
+        hd: "brown.edu", // limits the authentication to brown.edu addresses
+        scope: ["profile", "email"],
+        prompt: "select_account",
+    })
+);
 
-// authRouter.listen(port, () => {
-//     console.log(`Server is running on port: ${port}`);
-// });
-
+// redirect to home page after successfully login via google
+authRouter.get("/google/callback",
+    passport.authenticate("google", {
+        successRedirect: process.env.CLIENT_URL || "http://localhost:3000",
+        failureRedirect: process.env.CLIENT_URL,
+        failureMessage: "/auth/login/failed",
+    })
+    // TODO: add a res.redirect to homepage on front end with an error message attached in json if login fails
+);
 
 // // when login success, retrieve user info
 // authRouter.get("/login/success", (req: Request, res: Response) => {
@@ -59,30 +58,9 @@ authRouter.get("/login/failed", (_req: Request, res: Response) => {
 
 // when logout, redirect to client
 authRouter.get("/logout", (req: Request, res: Response) => {
-    // req.logout();
+    // req.logout(); -- seems like this is from Passport.js
     res.redirect(process.env.CLIENT_URL || "/");
 });
-
-// auth with google
-authRouter.get(
-    "/google",
-    passport.authenticate("google", {
-        hd: "brown.edu", // limits the authentication to brown.edu addresses
-        scope: ["profile", "email"],
-        prompt: "select_account",
-    })
-);
-
-// redirect to home page after successfully login via google
-authRouter.get(
-    "/google/callback",
-    passport.authenticate("google", {
-        successRedirect: process.env.CLIENT_URL || "http://localhost:3000",
-        failureRedirect: process.env.CLIENT_URL,
-        failureMessage: "/auth/login/failed",
-    })
-    // TODO: add a res.redirect to homepage on front end with an error message attached in json if login fails
-);
 
 // just to test if authCheck actually works
 authRouter.get("/check-auth", authCheck, (req: Request, res: Response) => {

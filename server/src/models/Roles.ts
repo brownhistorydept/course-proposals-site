@@ -17,7 +17,7 @@ interface IRole {
     created_at: Date,
 }
 
-const roleSchema =  new Schema ({
+const roleSchema =  new Schema<IRole>({
     role: {type: String, enum: ROLES},
     names: String,
     can_submit_courses: Boolean,

@@ -4,10 +4,9 @@ import {
     Strategy as GoogleStrategy,
     VerifyCallback,
 } from "passport-google-oauth20";
-import User from "../models/User";
-import { IUser } from "../models/User";
+import User, { IUser } from "../models/User";
 
-export function init() {
+export function passportInit() {
     // serialize the user.id to save in the cookie session
     // so the browser will remember the user when login
     passport.serializeUser((user: any, done) => {
@@ -26,16 +25,15 @@ export function init() {
             });
     });
 
-    // sets up the GoogleStrategy with call back functions
-    // call back functions checks if a User exists in the MongoDB collection
-    // if not creates new user object otherwise retrieves existing user object
+    // sets up the GoogleStrategy with a callback function
+    // the callback function checks if a User exists in the MongoDB collection
+    // if not, it creates a new user object, else it retrieves the existing user object
     passport.use(
-        new GoogleStrategy(
-            {
-                clientID: process.env.GOOGLE_CLIENT_ID || "",
-                clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+        new GoogleStrategy({
+                clientID: process.env.GOOGLE_CLIENT_ID,
+                clientSecret: process.env.GOOGLE_CLIENT_SECRET,
                 callbackURL: "/auth/google/callback",
-                // userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
+                userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo" // allows Google+ to be disabled
             },
             async (
                 _accessToken: string,
@@ -43,7 +41,7 @@ export function init() {
                 profile: Profile,
                 done: VerifyCallback
             ) => {
-                // Error checking
+                // error checking
                 if (!profile) {
                     done(new Error("Profile is undefined"));
                     return;
@@ -62,7 +60,6 @@ export function init() {
                 try {
                     // searches for user in mongoDB collection by googleId
                     let user = await User.findOne({ googleId: profile.id });
-
                     if (user) {
                         // gets user if user exists in mongoDB collection
                         done(null, user);
