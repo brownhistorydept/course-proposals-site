@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-// import IRole = require("./Roles");
+import IRole = require("./Roles");
 const { model, Schema } = mongoose;
 
 // Mongoose schemas are separate from TypeScript interfaces, so you need to define both a document interface and a schema.
@@ -9,7 +9,7 @@ export interface IUser {
     googleId: string,
     displayName: string,
     email: string,
-    // role: IRole,
+    role: IRole,
     created_at?: Date,
 }
 
