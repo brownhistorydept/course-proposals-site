@@ -14,7 +14,7 @@ interface IRole {
     can_review_graduate_courses: Boolean,
     can_request_professor_action: Boolean,
     can_accept_reject_courses: Boolean,
-    created_at: Date,
+    created_at?: Date,
 }
 
 const roleSchema =  new Schema<IRole>({
