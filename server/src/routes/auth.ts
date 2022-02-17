@@ -26,7 +26,6 @@ authRouter.get("/google/callback",
 
 // when login success, retrieve user info
 authRouter.get("/login/success", (req: IGetUserAuthInfoRequest, res: Response) => {
-    console.log('yay');
     res.status(200).json({
         success: true,
         message: "user authentication successful",
@@ -37,7 +36,6 @@ authRouter.get("/login/success", (req: IGetUserAuthInfoRequest, res: Response) =
 
 // when login fails, send failed message
 authRouter.get("/login/failed", (_req: Request, res: Response) => {
-    console.log('nay');
     res.status(401).json({
         success: false,
         message: "user failed to authenticate",

@@ -1,16 +1,16 @@
 import mongoose from 'mongoose';
-import IRole = require("./Roles");
+import { ROLES, IPermissions } from "../models/Role";
 const { model, Schema } = mongoose;
 
 // Mongoose schemas are separate from TypeScript interfaces, so you need to define both a document interface and a schema.
 
 export interface IUser {
     _id?: string, // assigned by MongoDB
+    created_at?: Date,
     googleId: string,
     displayName: string,
     email: string,
-    role: IRole,
-    created_at?: Date,
+    role: string,
 }
 
 // do we want an auto-assigned _id or should email serve as a unique identifier?
@@ -19,7 +19,7 @@ const userSchema = new Schema<IUser>({
     googleId: { type: String, required: true },
     displayName: { type: String, required: true },
     email: { type: String, required: true },
-    // role: { type: Schema.Types.ObjectId, ref: "Role", required: true },
+    role: { type: String, enum: ROLES },
     created_at: { type: Date, default: Date.now },
 });
 
