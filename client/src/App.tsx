@@ -36,24 +36,25 @@ function App() {
       {/* { <h1>Welcome!</h1> }
       { <h4>To submit or review History CourseProposal proposals, log in with your Brown email</h4>}     */}
         <Box       
-        sx={{
-        width: 500,
-        height: 300,
-        margin: 'auto',
-      }}
-      >
-      <Typography
-            variant="h3"
-            align ="left"
-            mt={10}
+            sx={{
+            width: 500,
+            height: 300,
+            margin: 'auto',
+          }}
           >
-            Welcome!
+          <Typography
+                variant="h3"
+                align ="left"
+                mt={10}
+              >
+                Welcome!
           </Typography>
 
           <Typography
             variant="h5"
             align ="left"
-          >
+            marginTop="50px"
+            >
             To submit or review History course proposals, log in with your Brown email.
           </Typography>
 
