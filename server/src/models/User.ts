@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { ROLES, IPermissions } from "../models/Role";
+import { ROLES } from "./Permissions";
 const { model, Schema } = mongoose;
 
 // Mongoose schemas are separate from TypeScript interfaces, so you need to define both a document interface and a schema.
@@ -19,7 +19,7 @@ const userSchema = new Schema<IUser>({
     googleId: { type: String, required: true },
     displayName: { type: String, required: true },
     email: { type: String, required: true },
-    role: { type: String, enum: ROLES },
+    role: { type: String, enum: ROLES, required: true},
     created_at: { type: Date, default: Date.now },
 });
 
