@@ -15,16 +15,9 @@ import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 //   typography: {
 //     fontFamily: 'Roboto',
 //   }});
+import Auth from "./components/Auth"
 
 function App() {
-  const [data, setData] = React.useState(null);
-
-  React.useEffect(() => {
-    fetch("/auth/test")
-      .then((res) => res.json())
-      .then((data) => setData(data.message));
-  }, []);
-
   return (
     <div className="App">
       {/* <ThemeProvider theme={theme}> */}
@@ -64,7 +57,7 @@ function App() {
 
         <CourseInfo/>
 
-
+      <Auth/>
     </div>
   );
 }

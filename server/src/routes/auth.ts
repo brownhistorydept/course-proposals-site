@@ -1,55 +1,60 @@
-// need to change this file using new tutorial
-
 import { Request, Response, Router } from "express";
 import passport from "passport";
-
+import User, { IUser } from "../models/User";
+import { authCheck, IGetUserAuthInfoRequest } from "../middleware/auth";
 
 const authRouter = Router();
 
-// auth apis will go here http://www.passportjs.org/docs/google/
+// auth with google
+authRouter.get("/google",
+    passport.authenticate("google", {
+        hd: "brown.edu", // limits the authentication to brown.edu addresses
+        scope: ["profile", "email"],
+        prompt: "select_account",
+    })
+);
 
-authRouter.get("/test", (req, res) => {
-    res.json({ message: "Hello from server!" });
+// redirect to home page after successfully login via google
+authRouter.get("/google/callback",
+    passport.authenticate("google", {
+        successRedirect: process.env.CLIENT_URL,
+        failureRedirect: "/auth/login/failed",
+        failureMessage: "/auth/login/failed",
+    })
+    // TODO: add a res.redirect to homepage on front end with an error message attached in json if login fails
+);
+
+// when login success, retrieve user info
+authRouter.get("/login/success", (req: IGetUserAuthInfoRequest, res: Response) => {
+    res.status(200).json({
+        success: true,
+        message: "user authentication successful",
+        user: req.user,
+    });
 });
 
 
-authRouter.get('/auth/google',
-  passport.authenticate('google', { scope:
-      [ 'email', 'profile' ] }
-));
+// when login fails, send failed message
+authRouter.get("/login/failed", (_req: Request, res: Response) => {
+    res.status(401).json({
+        success: false,
+        message: "user failed to authenticate",
+    });
+});
 
-authRouter.get('/auth/google/callback',
-    passport.authenticate( 'google', {
-        successRedirect: '/dashboard',
-        failureRedirect: '/login'
-}));
+// when logout, redirect to client
+authRouter.get("/logout", (req: Request, res: Response) => {
+    // req.logout(); -- seems like this is from Passport.js
+    res.redirect(process.env.CLIENT_URL || "/");
+});
 
-//Define the Login Route
-authRouter.get("/login", (req, res) => {
-    console.log(`-------> User logging in`)
-    res.render("./../public/views/login.ejs")
-})
-
-//Use the req.isAuthenticated() function to check if user is Authenticated
-const checkAuthenticated = (req, res, next) => {
-  if (req.isAuthenticated()) { return next() }
-  res.redirect("/login")
-}
-
-//Define the Protected Route, by using the "checkAuthenticated" function defined above as middleware
-authRouter.get("/dashboard", checkAuthenticated, (req, res) => {
-  res.render(__dirname + "../../views/dashboard.ejs", {name: req.user.displayName})
-})
-
-//Define the Logout
-authRouter.post("/logout", (req,res) => {
-    req.logOut()
-    res.redirect("/login")
-    console.log(`-------> User Logged out`)
-})
-
+// just to test if authCheck actually works
+authRouter.get("/check-auth", authCheck, (req: IGetUserAuthInfoRequest, res: Response) => {
+    res.status(200).json({
+        success: true,
+        message: "user authenticated",
+        user: req.user,
+    });
+});
 
 export default authRouter;
-
-
-
