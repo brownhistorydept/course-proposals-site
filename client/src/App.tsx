@@ -6,6 +6,7 @@ import CourseProposal from './components/CourseProposal';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CourseInfo from './components/CourseInfo'
 
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
@@ -35,7 +36,7 @@ function App() {
       {/* <CourseProposal/> */}
       {/* { <h1>Welcome!</h1> }
       { <h4>To submit or review History CourseProposal proposals, log in with your Brown email</h4>}     */}
-        <Box       
+        <Box
             sx={{
             width: 500,
             height: 300,
@@ -60,8 +61,10 @@ function App() {
 
         </Box>
         {/* </ThemeProvider> */}
-      
-      
+
+        <CourseInfo/>
+
+
     </div>
   );
 }
