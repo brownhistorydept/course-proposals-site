@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@mui/core": "^5.0.0-alpha.54",
+    "dotenv": "^16.0.0"
+  }
+}
