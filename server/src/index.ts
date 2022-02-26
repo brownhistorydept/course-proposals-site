@@ -9,6 +9,7 @@ import session from "express-session";
 import MongoStore from "connect-mongo";
 
 import authRouter from "./routes/auth";
+import courseRouter from "./routes/courses";
 
 import { passportInit } from "./config/passport";
 import { mongoConnection } from "./config/mongo";
@@ -52,6 +53,7 @@ export function main() {
 
     // set up routes
     app.use("/auth", authRouter);
+    app.use("/courses", courseRouter);
 
     // server starts listening
     app.listen(process.env.PORT, () => {

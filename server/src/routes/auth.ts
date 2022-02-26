@@ -1,6 +1,5 @@
 import { Request, Response, Router } from "express";
 import passport from "passport";
-import User, { IUser } from "../models/User";
 import { authCheck, IGetUserAuthInfoRequest } from "../middleware/auth";
 
 const authRouter = Router();
