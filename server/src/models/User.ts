@@ -23,5 +23,5 @@ const userSchema = new Schema<IUser>({
     created_at: { type: Date, default: Date.now },
 });
 
-const User = model<IUser>("User", userSchema);
+const User = model<IUser>("User", userSchema, "users");
 export default User;

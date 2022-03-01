@@ -18,7 +18,7 @@ export interface ICourse {
     semester: String,
     final_time: String, // A,B... hour, so a string of this character
     time_ranking?: String[], // array of strings, e.g. [A, C, E]
-    professor?: IUser[],
+    professors?: IUser[],
     is_DIAP: Boolean,
     is_WRIT: Boolean,
     is_Premodern: Boolean,
@@ -38,7 +38,7 @@ const courseSchema = new Schema<ICourse>({
     semester: {type: String, enum: SEMESTERS, required: true},
     final_time: { type: String, enum: TIMES, required: true}, // A,B... hour, so a string of this character
     time_ranking: [{type: String}], // array of strings, e.g. [A, C, E]
-    professor: [{type: String}],
+    professors: [{type: Schema.Types.ObjectId, ref: 'User'}],
     is_DIAP: { type: Boolean, required: true},
     is_WRIT: { type: Boolean, required: true},
     is_Premodern: { type: Boolean, required: true},
