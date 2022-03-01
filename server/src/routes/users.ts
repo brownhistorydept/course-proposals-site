@@ -20,3 +20,5 @@ userRouter.get("/all", async (req: Request, res: Response) => {
     }
 }
 );
+
+export default userRouter;
