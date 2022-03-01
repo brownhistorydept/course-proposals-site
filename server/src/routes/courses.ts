@@ -64,6 +64,7 @@ courseRouter.post("/create", async (req: IGetUserAuthInfoRequest, res: Response)
         };
         const course = await Course.create(newCourse);
         console.log(course);
+        res.status(200).json({course});
     } else {
         res.status(401).json({
             message: "user does not have permission to create a course",

@@ -32,7 +32,7 @@ export interface ICourse {
 
 const courseSchema = new Schema<ICourse>({
     created_at: { type: Date, default: Date.now },
-    course_number: { type: Number, required: true},
+    course_number: { type: String, required: true},
     crn: {type: Number, required: false},
     course_title: { type: String, required: true},
     semester: {type: String, enum: SEMESTERS, required: true},
