@@ -18,7 +18,7 @@ export interface ICourse {
     semester: String,
     final_time: String, // A,B... hour, so a string of this character
     time_ranking?: String[], // array of strings, e.g. [A, C, E]
-    professors?: IUser[],
+    professors: IUser[],
     is_DIAP: Boolean,
     is_WRIT: Boolean,
     is_Premodern: Boolean,

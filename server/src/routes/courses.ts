@@ -47,9 +47,10 @@ courseRouter.post("/create", async (req: IGetUserAuthInfoRequest, res: Response)
         const newCourse: ICourse = {
             course_number: req.body.course_number,
             course_title: req.body.course_title,
+            crn: req.body.crn || '',
             semester: req.body.semester,
             final_time: req.body.final_time,
-            time_ranking: req.body.time_ranking,
+            time_ranking: req.body.time_ranking || [],
             professors: req.body.professor_ids,
             is_DIAP: req.body.is_DIAP,
             is_WRIT: req.body.is_WRIT,
@@ -59,7 +60,7 @@ courseRouter.post("/create", async (req: IGetUserAuthInfoRequest, res: Response)
             is_remote: req.body.is_remote,
             is_intro: req.body.is_intro,
             description: req.body.description,
-            further_notes: req.body.further_notes
+            further_notes: req.body.further_notes || ''
         };
         const course = await Course.create(newCourse);
         console.log(course);
