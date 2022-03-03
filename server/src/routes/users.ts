@@ -4,8 +4,6 @@ import User from "../models/User";
 const userRouter = Router();
 
 // get all users
-
-// get all courses
 userRouter.get("/all", async (req: Request, res: Response) => {
     
     try {

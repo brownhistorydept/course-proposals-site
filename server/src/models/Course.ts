@@ -16,6 +16,7 @@ export interface ICourse {
     crn?: Number,
     course_title: String,
     semester: String,
+    year: Number,
     final_time: String, // A,B... hour, so a string of this character
     time_ranking?: String[], // array of strings, e.g. [A, C, E]
     professors: IUser[],
@@ -36,6 +37,7 @@ const courseSchema = new Schema<ICourse>({
     crn: {type: Number, required: false},
     course_title: { type: String, required: true},
     semester: {type: String, enum: SEMESTERS, required: true},
+    year: {type: Number, required: true},
     final_time: { type: String, enum: TIMES, required: true}, // A,B... hour, so a string of this character
     time_ranking: [{type: String}], // array of strings, e.g. [A, C, E]
     professors: [{type: Schema.Types.ObjectId, ref: 'User'}],
