@@ -6,36 +6,54 @@ import { get_permissions } from "../models/Permissions";
 const courseRouter = Router();
 
 // get all courses
-courseRouter.get("/all", async (req: Request, res: Response) => {
+// courseRouter.get("/all", async (req: Request, res: Response) => {
     
+//     try {
+//         const results = await Course.find({}).populate('professors');
+//         res.status(200).json({results});
+//         console.log(results);
+//     } catch (err) {
+//         console.log(err);
+//         res.status(401).json({
+//             message: "getting courses failed",
+//         });
+//     }
+// }
+// );
+
+// search courses
+courseRouter.get("/search", async (req: Request, res: Response) => {
+
+    const search_term = JSON.parse(JSON.stringify(req.query));
+
     try {
-        const results = await Course.find({}).populate('professors');
+        const results = await Course.find(search_term).populate('professors');
         res.status(200).json({results});
         console.log(results);
     } catch (err) {
         console.log(err);
         res.status(401).json({
-            message: "getting courses failed",
+            message: "no course found with this search term",
         });
     }
 }
 );
 
-// get a specific course by its name
-courseRouter.get("/title", async (req: Request, res: Response) => {
+// // get a specific course by its name
+// courseRouter.get("/title", async (req: Request, res: Response) => {
 
-    try {
-        const results = await Course.find({course_title: req.body.course_title}).populate('professors');
-        res.status(200).json({results});
-        console.log(results);
-    } catch (err) {
-        console.log(err);
-        res.status(401).json({
-            message: "no course found with this name",
-        });
-    }
-}
-);
+//     try {
+//         const results = await Course.find({course_title: req.body.course_title}).populate('professors');
+//         res.status(200).json({results});
+//         console.log(results);
+//     } catch (err) {
+//         console.log(err);
+//         res.status(401).json({
+//             message: "no course found with this name",
+//         });
+//     }
+// }
+// );
 
 // create a course
 courseRouter.post("/create", async (req: IGetUserAuthInfoRequest, res: Response) => {
