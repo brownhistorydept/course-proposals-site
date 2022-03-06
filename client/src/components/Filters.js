@@ -27,7 +27,7 @@ export default function CheckboxesGroup() {
 
   return (
     <Box sx={{ display: 'flex', height: 50, }}>
-      <FormControl sx={{ m: 3, margin:0 }} component="fieldset" variant="standard">
+      <FormControl sx={{ m: 0}} component="fieldset" variant="standard">
         <FormGroup row={true}>
           <FormControlLabel
             control={

@@ -11,7 +11,8 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import FilterDropdown from './FilterDropdown';
+import FilterDropdown from './Professor';
+import FilterDropdown2 from './Level';
 import NavBar from './NavBar';
 import Filters from './Filters';
 import Item from './Item';
@@ -39,33 +40,48 @@ const ResponsiveAppBar = () => {
     setAnchorElUser(null);
   };
 
-
-  
-
   return (
-    <div> 
-      <NavBar/> 
-      <div> 
+    
+    <div align='left'> 
+      <Box sx={{
+            margin: 'auto', marginTop: 4, width: 0.8, paddingLeft: 0, border:0
+          }}>
         <br/>
-        <br/>
-        <Box sx={{ width: '50%', maxWidth: 500, border: 0, marginLeft: 17 }}>
-          <Typography variant="h3" gutterBottom component="div">
-            Course Catalog
+        <Box
+            sx={{
+            width: 500,
+            height: 120,
+            margin: 0,
+            paddingLeft: 2,
+          }}> 
+          <Typography variant="h3">
+              Course Catalog
           </Typography>
+          <SearchBar/>
         </Box>
-        <SearchBar/>
-        <Box sx={{ display: 'flex', marginLeft: 25, width: 1, p: 0, border: '0px solid'}}>
-          <Box sx={{display: 'grid', width: 0.3, gap: 0, border: '0px solid', flexGrow: 1, gridTemplateColumns: 'repeat(10, 1fr)'}}>
+        <Box sx={{ display: 'flex', width: 1, marginTop: 3, p: 0, border: '0px solid'}}>
+          <Box sx={{display: 'grid', width: 0.3, border: '0px solid', flexGrow: 1, gridTemplateColumns: 'repeat(10, 1fr)'}}>
               <Item>Filter By:</Item>
               <FilterDropdown/>
-              <FilterDropdown/>
+              <FilterDropdown2/>
           </Box>
-          <Box sx={{ display: 'flex', width: 1, gap: 0, border: '0px solid', gridTemplateColumns: 'repeat(10, 1fr)' }}>
+          <Box sx={{ display: 'flex', marginLeft:3, width: 1, gap: 0, border: '0px solid', flexGrow: 1, gridTemplateColumns: 'repeat(10, 1fr)' }}>
               <Item>Sort By:</Item>
               <Filters/> 
           </Box> 
-        </Box>   
-      </div>
+        </Box>  
+        <Box
+            sx={{
+            width: 1,
+            height: 120,
+            margin: 0,
+            paddingLeft: 2,
+          }}> 
+          <Typography variant="h5">
+              ________________________________________________________________________________________________
+          </Typography>
+        </Box>
+      </Box>
       
     </div>
   );

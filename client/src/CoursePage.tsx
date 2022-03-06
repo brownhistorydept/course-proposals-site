@@ -12,13 +12,14 @@ const courses = [
 function CoursePage() {
   return (
     <div className="CoursePage">
+      <NavBar/>
       <CourseProposal/>
       {courses.map((course, index) => (
             <CourseInfo course_number={course.course_number}
                         course_title={course.course_title}
                         professor={course.professor}/>
         ))}
-     
+
     </div>
   );
 }
