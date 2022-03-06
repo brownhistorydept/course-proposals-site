@@ -41,10 +41,9 @@ const ResponsiveAppBar = () => {
   };
 
   return (
-    
     <div align='left'> 
       <Box sx={{
-            margin: 'auto', marginTop: 4, width: 0.8, paddingLeft: 0, border:0
+            margin: 'auto', marginTop: 4, maxWidth:1060, paddingLeft: 0, border:0
           }}>
         <br/>
         <Box
@@ -59,13 +58,13 @@ const ResponsiveAppBar = () => {
           </Typography>
           <SearchBar/>
         </Box>
-        <Box sx={{ display: 'flex', width: 1, marginTop: 3, p: 0, border: '0px solid'}}>
+        <Box sx={{ display: 'flex', width: 1, marginTop: 3, marginLeft:1, p: 0, border: '0px solid'}}>
           <Box sx={{display: 'grid', width: 0.3, border: '0px solid', flexGrow: 1, gridTemplateColumns: 'repeat(10, 1fr)'}}>
               <Item>Filter By:</Item>
               <FilterDropdown/>
               <FilterDropdown2/>
           </Box>
-          <Box sx={{ display: 'flex', marginLeft:3, width: 1, gap: 0, border: '0px solid', flexGrow: 1, gridTemplateColumns: 'repeat(10, 1fr)' }}>
+          <Box sx={{ display: 'flex', marginLeft:7, width: 1, gap: 0, border: '0px solid', flexGrow: 1, gridTemplateColumns: 'repeat(10, 1fr)' }}>
               <Item>Sort By:</Item>
               <Filters/> 
           </Box> 
@@ -78,7 +77,7 @@ const ResponsiveAppBar = () => {
             paddingLeft: 2,
           }}> 
           <Typography variant="h5">
-              ________________________________________________________________________________________________
+              ___________________________________________________________________________________________________
           </Typography>
         </Box>
       </Box>

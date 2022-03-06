@@ -7,7 +7,7 @@ export default function TextFieldSizes() {
     <Box
       component="form"
       sx={{
-        '& .MuiTextField-root': { m: 1, width: '25ch' },
+        '& .MuiTextField-root': { m: 1, marginTop: 4, width: '25ch' },
       }}
       noValidate
       autoComplete="off"
@@ -17,7 +17,7 @@ export default function TextFieldSizes() {
           label="Search by keyword"
           id="outlined-size-small"
           size="small"
-          style = {{width: 1000}}
+          style = {{width: 1010}}
         />
         <br/>
       </div>
