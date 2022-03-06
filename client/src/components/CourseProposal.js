@@ -11,6 +11,12 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import FilterDropdown from './FilterDropdown';
+import NavBar from './NavBar';
+import Filters from './Filters';
+import Item from './Item';
+import SearchBar from './SearchBar';
+
 
 const pages = ['Course Catalog', 'My Courses', 'Account'];
 
@@ -33,83 +39,35 @@ const ResponsiveAppBar = () => {
     setAnchorElUser(null);
   };
 
+
+  
+
   return (
-    <AppBar position="static" style={{ background: '#992525' }}>
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-
-          <Box
-            component="img"
-            sx={{
-            height: 50,
-            width: 40,
-            maxHeight: { xs: 233, md: 167 },
-            maxWidth: { xs: 350, md: 250 },
-            marginRight: 2,
-            }}
-            alt="brown icon"
-            src= "https://www.savebay.org/wp-content/uploads/Brown-Logo_2016_2-Color-Process-ST_1300.jpg"
-          />
-
-          <Typography
-            variant="h8"
-            noWrap
-            component="div"
-            sx={{ mr: 2, display: { xs: 'none', md: 'flex', marginRight:610 } }}
-          >
-            Department of History Course Proposals
+    <div> 
+      <NavBar/> 
+      <div> 
+        <br/>
+        <br/>
+        <Box sx={{ width: '50%', maxWidth: 500, border: 0, marginLeft: 17 }}>
+          <Typography variant="h3" gutterBottom component="div">
+            Course Catalog
           </Typography>
-
-          {/* <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: 'block', md: 'none' },
-              }}
-            >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box> */}
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block', marginRight:3 }}
-              >
-                {page}
-              </Button>
-            ))}
+        </Box>
+        <SearchBar/>
+        <Box sx={{ display: 'flex', marginLeft: 25, width: 1, p: 0, border: '0px solid'}}>
+          <Box sx={{display: 'grid', width: 0.3, gap: 0, border: '0px solid', flexGrow: 1, gridTemplateColumns: 'repeat(10, 1fr)'}}>
+              <Item>Filter By:</Item>
+              <FilterDropdown/>
+              <FilterDropdown/>
           </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
+          <Box sx={{ display: 'flex', width: 1, gap: 0, border: '0px solid', gridTemplateColumns: 'repeat(10, 1fr)' }}>
+              <Item>Sort By:</Item>
+              <Filters/> 
+          </Box> 
+        </Box>   
+      </div>
+      
+    </div>
   );
 };
 export default ResponsiveAppBar;
