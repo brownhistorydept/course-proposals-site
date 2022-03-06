@@ -72,7 +72,7 @@ const ResponsiveAppBar = () => {
                 {page}
               </Button>
             ))}
-            <Profile User={user}/>
+            {/* <Profile User={user}/> */}
           </Box>
         </Toolbar>
       </Container>
