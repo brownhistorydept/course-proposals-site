@@ -10,8 +10,9 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import Profile from './Profile'
 
-const pages = ['Course Catalog', 'My Courses', 'Account'];
+const pages = ['Course Catalog', 'My Courses'];
 
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -31,6 +32,8 @@ const ResponsiveAppBar = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  // add user props 
 
   return (
     <AppBar position="static" style={{ background: '#992525' }}>
@@ -69,6 +72,7 @@ const ResponsiveAppBar = () => {
                 {page}
               </Button>
             ))}
+            <Profile User={user}/>
           </Box>
         </Toolbar>
       </Container>
