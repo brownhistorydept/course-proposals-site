@@ -80,8 +80,7 @@ export default function Profile(props: {
         <Typography
             sx={{ mr: 2, display: { xs: 'none', md: 'flex', margin: '10px'} }}
             >
-            {console.log(props.User)}
-            {props.User?.displayName}
+            {props.User ? props.User.displayName : "name here"}
         </Typography>
         <Typography
             sx={{ mr: 2, display: { xs: 'none', md: 'flex', margin: '10px'} }}
