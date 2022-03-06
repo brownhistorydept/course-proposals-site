@@ -1,6 +1,6 @@
 import GoogleButton from 'react-google-button'
 import React, { useEffect, useState } from "react";
-import { IUser } from '../types';
+import { IUser } from '../../../server/src/models/User';
 
 function Auth() {
 

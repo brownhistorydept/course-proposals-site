@@ -3,48 +3,50 @@ import NavBar from './components/NavBar';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Auth from "./components/Auth"
-import { useState } from "react";
-import { IUser } from "./types";
+import React, { useEffect, useState } from "react";
+import { IUser } from "../../server/src/models/User";
+import { fetchUser } from "./utils/auth";
+import CourseInfo from './components/CourseInfo'
+import FilterDropdown from './components/FilterDropdown';
+import CourseProposal from './components/CourseProposal';
 
-// async function checkAuth() {
-//   try {
-//       const res = await fetch(
-//           `${process.env.REACT_APP_SERVER_URL}/auth/check-auth`,
-//           {
-//               method: "GET",
-//               credentials: "include",
-//               headers: {
-//                   Accept: "application/json",
-//                   "Content-Type": "application/json",
-//                   "Access-Control-Allow-Credentials": "true",
-//               },
-//           }
-//       );
-//
-//       if (res.status === 200) {
-//           const resJson = await res.json();
-//           // console.log(resJson.user);
-//           return {isAuth: true, user: resJson.user};
-//       } else {
-//           throw new Error("user is not authenticated");
-//       }
-//   } catch (error) {
-//       // console.error(error);
-//       return {isAuth: false, user:null}
-//   }
-// }
+const courses = [
+  {course_number: "0250", course_title: "American Exceptionalism: The History of an Idea", professor: "Michael Vorenberg"},
+  {course_number: "0150D", course_title: "Refugees: A Twentieth-Century History", professor: "Vazira F-Y Zamindar"},
+  {course_number: "0150G", course_title: "History of Law: Great Trials", professor: "Holly A Case"}
+]
+
 
 function App() {
-  // let isAuth = false;
-  // let user;
-  // checkAuth().then((x) => {
-  //   isAuth = x.isAuth;
-  //   user = x.user;
-  // });
 
-  if (true) {
-    return (
-      <div className="App">
+  const [user, setUser] = useState<IUser>();
+  const [, setError] = useState("");
+    // called once when components on page have rendered
+    useEffect(() => {
+        async function getUser() {
+            await fetchUser(setUser, setError);
+        }
+        getUser();
+    }, []);
+
+ 
+    console.log(user?.displayName)
+  return(
+  user?
+    <div className="CoursePage">
+      <NavBar/>
+      <CourseProposal/>
+      {courses.map((course, index) => (
+            <CourseInfo course_number={course.course_number}
+                        course_title={course.course_title}
+                        professor={course.professor}/>
+        ))}
+
+    </div>
+    
+    
+    
+    :<div className="App">
         <NavBar/>
           <Box
               sx={{
@@ -74,12 +76,7 @@ function App() {
 
           </Box>
     </div>
-)} else {
-    return(
-        <div><h1>Hi</h1></div>
-    );
-
-}
+  )
 
 }
 
