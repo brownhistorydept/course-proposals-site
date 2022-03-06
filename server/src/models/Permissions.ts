@@ -14,6 +14,16 @@ export interface IPermissions {
 
 export function get_permissions(role: string): IPermissions {
     let perm_obj: IPermissions;
+    perm_obj = {
+        can_submit_courses: true,
+        can_edit_submission_while_not_under_review: true,
+        can_edit_submission_while_under_review: false,
+        can_review_undergrad_courses: true,
+        can_review_graduate_courses: false,
+        can_request_professor_action: true,
+        can_accept_reject_courses: true,
+    }
+    console.log(role);
     switch (role) {
         case "student": 
             perm_obj = {
@@ -81,6 +91,10 @@ export function get_permissions(role: string): IPermissions {
                 can_accept_reject_courses: true,
             }
             break;
+        default:
+            
+            console.log("role: " + role);
     }
+    console.log("role: " + role);
     return perm_obj;
 }
