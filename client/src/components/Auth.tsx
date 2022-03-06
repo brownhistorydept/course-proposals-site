@@ -80,8 +80,6 @@ function Auth() {
   return (
     <div>
       <GoogleButton onClick={handleLoginClick}/>
-      {/* <button onClick={checkAuth}>Check Auth</button> */}
-      <p>User: {user?.displayName}</p>
     </div>
   );
 }

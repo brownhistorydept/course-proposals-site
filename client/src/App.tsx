@@ -1,65 +1,83 @@
-import React from "react";
-//import logo from "./logo.svg";
 import "./App.css";
 import NavBar from './components/NavBar';
-import CourseProposal from './components/CourseProposal';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import CourseInfo from './components/CourseInfo'
-
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-
-
-// const theme = createTheme({
-//   typography: {
-//     fontFamily: 'Roboto',
-//   }});
 import Auth from "./components/Auth"
+import React, { useEffect, useState } from "react";
+import { IUser } from "../../server/src/models/User";
+import { fetchUser } from "./utils/auth";
+import CourseInfo from './components/CourseInfo'
+import FilterDropdown from './components/FilterDropdown';
+import CourseProposal from './components/CourseProposal';
+
+const courses = [
+  {course_number: "0250", course_title: "American Exceptionalism: The History of an Idea", professor: "Michael Vorenberg"},
+  {course_number: "0150D", course_title: "Refugees: A Twentieth-Century History", professor: "Vazira F-Y Zamindar"},
+  {course_number: "0150G", course_title: "History of Law: Great Trials", professor: "Holly A Case"}
+]
+
 
 function App() {
-  return (
-    <div className="App">
-      {/* <ThemeProvider theme={theme}> */}
+
+  const [user, setUser] = useState<IUser>();
+  const [, setError] = useState("");
+    // called once when components on page have rendered
+    useEffect(() => {
+        async function getUser() {
+            await fetchUser(setUser, setError);
+        }
+        getUser();
+    }, []);
+
+ 
+    console.log(user?.displayName)
+  return(
+  user?
+    <div className="CoursePage">
       <NavBar/>
-      {/* <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>{!data ? "Loading..." : data}</p>
-      </header> */}
-      {/* <CourseProposal/> */}
-      {/* { <h1>Welcome!</h1> }
-      { <h4>To submit or review History CourseProposal proposals, log in with your Brown email</h4>}     */}
-        <Box
-            sx={{
-            width: 500,
-            height: 300,
-            margin: 'auto',
-          }}
-          >
-          <Typography
-                variant="h3"
-                align ="left"
-                mt={10}
-              >
-                Welcome!
-          </Typography>
+      <CourseProposal/>
+      {courses.map((course, index) => (
+            <CourseInfo course_number={course.course_number}
+                        course_title={course.course_title}
+                        professor={course.professor}/>
+        ))}
 
-          <Typography
-            variant="h5"
-            align ="left"
-            marginTop="50px"
-            >
-            To submit or review History course proposals, log in with your Brown email.
-          </Typography>
-
-        </Box>
-        {/* </ThemeProvider> */}
-
-        <CourseInfo/>
-
-      <Auth/>
     </div>
-  );
+    
+    
+    
+    :<div className="App">
+        <NavBar/>
+          <Box
+              sx={{
+              width: 500,
+              height: 300,
+              margin: 'auto',
+            }}
+            >
+            <Typography
+                  variant="h3"
+                  align ="left"
+                  mt={10}
+                >
+                  Welcome!
+            </Typography>
+
+            <Typography
+              variant="h5"
+              align ="left"
+              marginTop="50px"
+              marginBottom="20px"
+              >
+              To submit or review History course proposals, log in with your Brown email.
+            </Typography>
+
+            <Auth/>
+
+          </Box>
+    </div>
+  )
+
 }
 
 export default App;

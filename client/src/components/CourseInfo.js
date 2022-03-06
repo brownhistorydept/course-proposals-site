@@ -13,16 +13,18 @@ const Img = styled('img')({
   maxHeight: '100%',
 });
 
-export default function ComplexGrid() {
+export default function ComplexGrid({course_number,course_title,professor}) {
   return (
     <Paper
       sx={{
         p: 2,
-        margin: 'auto',
+        mx: 'auto',
+        my: 2,
         maxWidth: 1000,
         flexGrow: 1,
         backgroundColor: "#ededed",
       }}
+
     >
       <Grid container spacing={3}>
 
@@ -31,16 +33,16 @@ export default function ComplexGrid() {
 
             <Grid item xs container >
               <Typography gutterBottom variant="body1" sx={{fontWeight: 'bold', pr:2}}>
-                HIST 0250
+                HIST {course_number}
               </Typography>
               <Typography variant="body1" gutterBottom>
-                American Exceptionalism: The History of an Idea
+                {course_title}
               </Typography>
              </Grid>
 
              <Grid item xs container >
                <Typography gutterBottom variant="body1" sx={{pr:8}}>
-                 Michael Vorenberg
+                 {professor}
                </Typography>
                <Typography gutterBottom variant="body1" sx={{pr:8}}>
                  Spring 2022
