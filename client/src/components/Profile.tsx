@@ -14,7 +14,7 @@ import Logout from '@mui/icons-material/Logout';
 import { IUser } from '../../../server/src/models/User';
 
 export default function Profile(props: {
-    User: IUser | undefined;
+    user: IUser | undefined;
 }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -36,7 +36,9 @@ export default function Profile(props: {
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
           >
-            <Avatar sx={{ width: 32, height: 32 }}>M</Avatar> {/* change from initial to google prof pic */}
+            <Avatar sx={{ width: 32, height: 32 }}>
+              {props.user ? props.user.displayName.charAt(0) : ""}
+            </Avatar> {/* change from initial to google prof pic */}
             {/* import fetchUser from './utils/auth' */}
             {/* instead of <Avatar, use <Image> with src= function to get image */}
           </IconButton>
@@ -80,17 +82,17 @@ export default function Profile(props: {
         <Typography
             sx={{ mr: 2, display: { xs: 'none', md: 'flex', margin: '10px'} }}
             >
-            {props.User ? props.User.displayName : "name here"}
+            {props.user ? props.user.displayName : "Name"}
         </Typography>
         <Typography
             sx={{ mr: 2, display: { xs: 'none', md: 'flex', margin: '10px'} }}
             >
-            email
+            {props.user ? props.user.email : "Email"}
         </Typography>
         <Typography
             sx={{ mr: 2, display: { xs: 'none', md: 'flex', margin: '10px'} }}
             >
-            role
+            Role: {props.user ? props.user.role : "Role"}
         </Typography>
         <Divider />
         <MenuItem>

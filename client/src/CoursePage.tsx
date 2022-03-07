@@ -12,7 +12,8 @@ const courses = [
 function CoursePage() {
   return (
     <div className="CoursePage">
-      <NavBar/>
+      {/* need to pass the user to NavBar, which passes it to Profile */}
+      <NavBar user = {undefined}/> 
       <CourseProposal/>
       {courses.map((course, index) => (
             <CourseInfo course_number={course.course_number}

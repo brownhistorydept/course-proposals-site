@@ -34,7 +34,7 @@ function App() {
   return(
   user?
     <div className="CoursePage">
-      <NavBar/>
+      <NavBar user={user} />
       <CourseProposal/>
       {courses.map((course, index) => (
             <CourseInfo course_number={course.course_number}
@@ -45,9 +45,8 @@ function App() {
     </div>
     
     
-    
     :<div className="App">
-        <NavBar/>
+      <NavBar user={user} />
           <Box
               sx={{
               width: 500,
