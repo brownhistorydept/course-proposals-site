@@ -1,6 +1,6 @@
 import GoogleButton from 'react-google-button'
 import React, { useEffect, useState } from "react";
-import { IUser } from '../types';
+import { IUser } from '../../../server/src/models/User';
 
 function Auth() {
 
@@ -80,8 +80,6 @@ function Auth() {
   return (
     <div>
       <GoogleButton onClick={handleLoginClick}/>
-      {/* <button onClick={checkAuth}>Check Auth</button> */}
-      <p>User: {user?.displayName}</p>
     </div>
   );
 }

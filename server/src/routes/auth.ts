@@ -16,7 +16,7 @@ authRouter.get("/google",
 // redirect to home page after successfully login via google
 authRouter.get("/google/callback",
     passport.authenticate("google", {
-        successRedirect: process.env.CLIENT_URL,
+        successRedirect: `${process.env.CLIENT_URL}`,
         failureRedirect: "/auth/login/failed",
         failureMessage: "/auth/login/failed",
     })

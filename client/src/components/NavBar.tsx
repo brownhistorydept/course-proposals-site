@@ -10,17 +10,22 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import Profile from './Profile'
+import { IUser } from '../../../server/src/models/User';
 
-const pages = ['Course Catalog', 'My Courses', 'Account'];
+const pages = ['Course Catalog', 'My Courses'];
 
-const ResponsiveAppBar = () => {
+export default function NavBar(props: {
+  user: IUser | undefined; }) {
+
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
-  const handleOpenNavMenu = (event) => {
+  const handleOpenNavMenu = (event : any) => {
     setAnchorElNav(event.currentTarget);
   };
-  const handleOpenUserMenu = (event) => {
+
+  const handleOpenUserMenu = (event : any) => {
     setAnchorElUser(event.currentTarget);
   };
 
@@ -51,7 +56,7 @@ const ResponsiveAppBar = () => {
           />
 
           <Typography
-            variant="h8"
+            variant="h6"
             noWrap
             component="div"
             sx={{ mr: 2, display: { xs: 'none', md: 'flex'} }}
@@ -69,10 +74,10 @@ const ResponsiveAppBar = () => {
                 {page}
               </Button>
             ))}
+            <Profile user={props.user}/>
           </Box>
         </Toolbar>
       </Container>
     </AppBar>
   );
 };
-export default ResponsiveAppBar;
