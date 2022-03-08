@@ -51,13 +51,22 @@ export function passportInit() {
                     done(new Error("Invalid domain!"));
                     return;
                 }
+
+                // set profile photo
+                let displayPicURL = "https://i.ibb.co/WKq909Y/profile.webp"; // default
+                if (profile.photos) {
+                    displayPicURL = profile.photos[0].value;
+                }
+
                 // creates a new user object
                 const newUser: IUser = {
                     googleId: profile.id,
                     displayName: profile.displayName,
                     email: profile._json.email,
+                    displayPictureURL: displayPicURL,
                     role: "student",
                 };
+                
                 try {
                     // searches for user in mongoDB collection by googleId
                     let user = await User.findOne({ googleId: profile.id });

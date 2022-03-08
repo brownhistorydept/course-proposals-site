@@ -6,6 +6,8 @@ export const GEO_REGIONS = ["Africa", "East Asia", "Europe", "Latin America", "M
 export const COURSE_TYPES = ["FYS", "SYS", "Seminar", "Lecture"];
 export const SEMESTERS = ["Fall", "Spring", "Winter", "Summer"];
 export const TIMES = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q"];
+export const PROPOSAL_STATUSES = ["under review by director", "accepted by director", "rejected by director", "under review by CCC", "accepted by CCC", "rejected by CCC"];
+export const COURSE_STATUSES = ["new", "revised", "existing"];
 
 // do we think my designation of optional variables is fair? Might be something to run by the client,
 // not sure whether more/less of these are optional than I might think
@@ -27,6 +29,8 @@ export interface ICourse {
     geography: String, // has to be from geo_regions list
     is_remote: Boolean,
     is_intro: Boolean,
+    proposal_status: String,
+    course_status: String, // new, revised, or existing --> these are existing hist. dept. standards that we're replicating here
     description: String,
     further_notes?: String,
 }
@@ -48,6 +52,8 @@ const courseSchema = new Schema<ICourse>({
     geography: { type: String, enum: GEO_REGIONS, required: true}, // has to be from geo_regions list
     is_remote: {type: Boolean, required: true},
     is_intro: {type: Boolean, required: true},
+    proposal_status: {type: String, enum: PROPOSAL_STATUSES, required: true},
+    course_status: {type: Boolean, enum: COURSE_STATUSES, required: true},
     description: { type: String, required: true},
     further_notes: { type: String},
 });

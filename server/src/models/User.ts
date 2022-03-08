@@ -10,6 +10,7 @@ export interface IUser {
     googleId: string,
     displayName: string,
     email: string,
+    displayPictureURL: string,
     role: string,
 }
 
@@ -20,6 +21,7 @@ const userSchema = new Schema<IUser>({
     displayName: { type: String, required: true },
     email: { type: String, required: true },
     role: { type: String, enum: ROLES, required: true},
+    displayPictureURL: { type: String, required: true},
     created_at: { type: Date, default: Date.now },
 });
 

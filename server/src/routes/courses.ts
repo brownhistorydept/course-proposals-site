@@ -23,38 +23,66 @@ courseRouter.get("/search", async (req: Request, res: Response) => {
 }
 );
 
-// create a course
-courseRouter.post("/create", async (req: IGetUserAuthInfoRequest, res: Response) => {
+function get_course_status(proposed_course, original_course) {
+    
+    if (!original_course) {
+        return "new";
+    }
+
+    if (original_course.title != proposed_course.title || 
+        original_course.description != proposed_course.description || 
+        original_course.is_DIAP != proposed_course.description.is_DIAP || 
+        original_course.is_remote != proposed_course.description.is_remote || 
+        original_course.is_WRIT != proposed_course.description.is_WRIT) {
+            return "revised";
+        } else {
+            return "existing";
+        }
+};
+
+interface ICourseSubmission {
+    course_number: String,
+    crn?: Number,
+    course_title: String,
+    semester: String,
+    year: Number,
+    final_time: String,
+    time_ranking?: String[],
+    professors: String[], // this is the only difference from ICourse: this is just an array of Object IDs, gets populated later
+    is_DIAP: Boolean,
+    is_WRIT: Boolean,
+    is_Premodern: Boolean,
+    course_type: String,
+    geography: String,
+    is_remote: Boolean,
+    is_intro: Boolean,
+    description: String,
+    further_notes?: String,
+}
+
+interface ICourseProposalRequest {
+    original_course?: ICourse, // this is the course upon which the proposed course is based. Should pass back the full ICourse Object, including the populated professor IUser objects
+    proposed_course: ICourseSubmission, // this will have professors as an array of strings, where each string is the professor's Object ID
+}
+
+// submit a course
+courseRouter.post("/submit-proposal", async (req: IGetUserAuthInfoRequest, res: Response) => {
 
     const permissions = get_permissions(req.user.role);
 
+    const original_and_proposed = req.body as ICourseProposalRequest;
+    const status = get_course_status(original_and_proposed.proposed_course, original_and_proposed.original_course);
+
     if (permissions.can_submit_courses) {
-  
-        const newCourse: ICourse = {
-            course_number: req.body.course_number,
-            course_title: req.body.course_title,
-            crn: req.body.crn || '',
-            semester: req.body.semester,
-            year: req.body.year,
-            final_time: req.body.final_time,
-            time_ranking: req.body.time_ranking || [],
-            professors: req.body.professor_ids,
-            is_DIAP: req.body.is_DIAP,
-            is_WRIT: req.body.is_WRIT,
-            is_Premodern: req.body.is_Premodern,
-            course_type: req.body.course_type,
-            geography: req.body.geography,
-            is_remote: req.body.is_remote,
-            is_intro: req.body.is_intro,
-            description: req.body.description,
-            further_notes: req.body.further_notes || ''
-        };
-        const course = await Course.create(newCourse);
-        console.log(course);
-        res.status(200).json({course});
+        
+        const newCourse = await Course.create({...original_and_proposed.proposed_course, proposal_status: "under review by director", course_status: status});
+        res.status(200).json({newCourse});
+
+        // TODO: notify relevant parties via email
+
     } else {
         res.status(401).json({
-            message: "user does not have permission to create a course",
+            message: "submission failed",
         });
     }
 }

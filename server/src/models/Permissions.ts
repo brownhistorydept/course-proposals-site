@@ -81,6 +81,9 @@ export function get_permissions(role: string): IPermissions {
                 can_accept_reject_courses: true,
             }
             break;
+        default:
+            throw "Unrecognized role; probably missing .env server file";
     }
+
     return perm_obj;
 }
