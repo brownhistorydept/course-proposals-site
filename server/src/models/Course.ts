@@ -53,7 +53,7 @@ const courseSchema = new Schema<ICourse>({
     is_remote: {type: Boolean, required: true},
     is_intro: {type: Boolean, required: true},
     proposal_status: {type: String, enum: PROPOSAL_STATUSES, required: true},
-    course_status: {type: Boolean, enum: COURSE_STATUSES, required: true},
+    course_status: {type: String, enum: COURSE_STATUSES, required: true},
     description: { type: String, required: true},
     further_notes: { type: String},
 });

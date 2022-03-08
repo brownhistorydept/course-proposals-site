@@ -29,14 +29,14 @@ function get_course_status(proposed_course, original_course) {
         return "new";
     }
 
-    if (original_course.title != proposed_course.title || 
-        original_course.description != proposed_course.description || 
-        original_course.is_DIAP != proposed_course.description.is_DIAP || 
-        original_course.is_remote != proposed_course.description.is_remote || 
-        original_course.is_WRIT != proposed_course.description.is_WRIT) {
-            return "revised";
-        } else {
+    if ((original_course.course_title === proposed_course.course_title) && 
+        (original_course.description === proposed_course.description) &&  
+        (original_course.is_DIAP === proposed_course.is_DIAP) &&  
+        (original_course.is_remote === proposed_course.is_remote) &&  
+        (original_course.is_WRIT === proposed_course.is_WRIT)) {
             return "existing";
+        } else {
+            return "revised";
         }
 };
 
@@ -66,7 +66,7 @@ interface ICourseProposalRequest {
 }
 
 // submit a course
-courseRouter.post("/submit-proposal", async (req: IGetUserAuthInfoRequest, res: Response) => {
+courseRouter.post("/submit", async (req: IGetUserAuthInfoRequest, res: Response) => {
 
     const permissions = get_permissions(req.user.role);
 
