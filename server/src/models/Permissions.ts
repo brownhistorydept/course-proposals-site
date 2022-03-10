@@ -12,7 +12,7 @@ export interface IPermissions {
     can_accept_reject_courses: Boolean,
 }
 
-export function get_permissions(role: string): IPermissions {
+export function getPermissions(role: string): IPermissions {
     switch (role) {
         case "student": 
             return {

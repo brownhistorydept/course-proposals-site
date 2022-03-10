@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express";
 import Course, { ICourse } from "../models/Course"
 import { IGetUserAuthInfoRequest } from "../middleware/auth";
-import { get_permissions } from "../models/Permissions";
+import { getPermissions } from "../models/Permissions";
 
 const courseRouter = Router();
 
@@ -20,7 +20,7 @@ courseRouter.get("/search", async (req: Request, res: Response) => {
     }
 });
 
-function get_course_status(proposed_course, original_course) {
+function getCourseStatus(proposed_course, original_course) {
     if (!original_course) {
         return "new";
     }
@@ -62,9 +62,9 @@ interface ICourseProposalRequest {
 
 // submit a course
 courseRouter.post("/submit", async (req: IGetUserAuthInfoRequest, res: Response) => {
-    const permissions = get_permissions(req.user.role);
+    const permissions = getPermissions(req.user.role);
     const proposalRequest = req.body as ICourseProposalRequest;
-    const status = get_course_status(proposalRequest.proposed, proposalRequest.original);
+    const status = getCourseStatus(proposalRequest.proposed, proposalRequest.original);
 
     if (permissions.can_submit_courses) {
         const newCourse = await Course.create({

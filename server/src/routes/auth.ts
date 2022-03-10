@@ -32,7 +32,6 @@ authRouter.get("/login/success", (req: IGetUserAuthInfoRequest, res: Response) =
     });
 });
 
-
 // when login fails, send failed message
 authRouter.get("/login/failed", (_req: Request, res: Response) => {
     res.status(401).json({
