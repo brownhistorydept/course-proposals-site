@@ -5,19 +5,50 @@ import { getPermissions } from "../models/Permissions";
 
 const courseRouter = Router();
 
+function search(search_term) {
+    return Course.find(search_term).populate('professors');;
+}
+
+/**
+ * See all current/past finalized courses and current/past proposed courses
+ * Prof. needs to their specific proposed/finalized courses
+ */
+
+
+
 // search courses
-courseRouter.get("/search", async (req: Request, res: Response) => {
+courseRouter.get("/search/:finalized", async (req: IGetUserAuthInfoRequest, res: Response) => {
+    // if frontend wants to get only current courses, they have to pass back year in search term
+
+    const permissions = getPermissions(req.user.role);
+    let status_term;
+    
+    if (req.params.finalized) { 
+        status_term = {proposal_status: "accepted by CCC"};
+    } else { // want proposed courses
+        if (permissions.can_review_undergrad_courses && permissions.can_review_graduate_courses) { // manager
+            status_term = {proposal_status: {$ne: "accepted by CCC"}};
+        } else if (permissions.can_review_undergrad_courses) { // undergraduate reviewer or director
+            status_term = {proposal_status: {$ne: "accepted by CCC"}, is_undergrad: true};
+        } else if (permissions.can_review_graduate_courses) { // graduate director
+            status_term = {proposal_status: {$ne: "accepted by CCC"}, is_undergrad: false};
+        } else if (req.user.role == "professor") { // give them their proposed courses only
+            status_term = {proposal_status: {$ne: "accepted by CCC"}, professor: req.user._id}
+        }
+    }
+
     const search_term = JSON.parse(JSON.stringify(req.query));
     try {
-        const results = await Course.find(search_term).populate('professors');
-        res.status(200).json({results});
-        console.log(results);
+        // status_term must come after search_term to make sure that if proposed_status is in search term, the updated value in status_term overwrites it
+        const result = await search({ ...search_term, status_term}); 
+        res.status(200).json({result});
     } catch (err) {
         console.log(err);
         res.status(401).json({
             message: "no course found with this search term",
         });
     }
+    
 });
 
 function getCourseStatus(proposed_course, original_course) {
@@ -81,5 +112,57 @@ courseRouter.post("/submit", async (req: IGetUserAuthInfoRequest, res: Response)
         });
     }
 });
+
+courseRouter.post("/accept", async (req: IGetUserAuthInfoRequest, res: Response) => {
+    
+    const permissions = getPermissions(req.user.role);
+
+    if (permissions.can_accept_reject_courses) {
+        const course = req.body as ICourse;
+        if (req.user.role == "undergraduate director" && course.is_undergrad) {
+            course.proposal_status = "accepted by director";
+        } else if (req.user.role == "graduate director" && !course.is_undergrad) {
+            course.proposal_status = "accepted by director";
+        } else if (req.user.role == "manager") {
+            course.proposal_status = "accepted by CCC";
+        } else {
+            res.status(401).json({
+                message: "do not have permission to accept this specific course",
+            });
+        }
+    } else {
+        res.status(401).json({
+            message: "do not have permission to accept courses"
+
+        });
+    }
+});
+
+courseRouter.post("/reject", async (req: IGetUserAuthInfoRequest, res: Response) => {
+    
+    const permissions = getPermissions(req.user.role);
+
+    if (permissions.can_accept_reject_courses) {
+        const course = req.body as ICourse;
+        if (req.user.role == "undergraduate director" && course.is_undergrad) {
+            course.proposal_status = "rejected by director";
+        } else if (req.user.role == "graduate director" && !course.is_undergrad) {
+            course.proposal_status = "rejected by director";
+        } else if (req.user.role == "manager") {
+            course.proposal_status = "rejected by CCC";
+        } else {
+            res.status(401).json({
+                message: "do not have permission to reject this specific course",
+            });
+        }
+    } else {
+        res.status(401).json({
+            message: "do not have permission to reject courses"
+
+        });
+    }
+});
+
+
 
 export default courseRouter;

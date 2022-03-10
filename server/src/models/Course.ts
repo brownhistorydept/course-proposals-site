@@ -28,6 +28,7 @@ export interface ICourse {
     course_type: String,
     geography: String, // has to be from geo_regions list
     is_remote: Boolean,
+    is_undergrad: Boolean, // if false, then grad
     is_intro: Boolean,
     proposal_status: String,
     course_status: String, // new, revised, or existing --> these are existing hist. dept. standards that we're replicating here
@@ -51,6 +52,7 @@ const courseSchema = new Schema<ICourse>({
     course_type: { type: String, enum: COURSE_TYPES, required: true},
     geography: { type: String, enum: GEO_REGIONS, required: true}, // has to be from geo_regions list
     is_remote: {type: Boolean, required: true},
+    is_undergrad: {type: Boolean, required: true},
     is_intro: {type: Boolean, required: true},
     proposal_status: {type: String, enum: PROPOSAL_STATUSES, required: true},
     course_status: {type: String, enum: COURSE_STATUSES, required: true},
