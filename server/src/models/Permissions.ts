@@ -13,19 +13,9 @@ export interface IPermissions {
 }
 
 export function get_permissions(role: string): IPermissions {
-    let perm_obj: IPermissions = {
-        can_submit_courses: false,
-        can_edit_submission_while_not_under_review: false,
-        can_edit_submission_while_under_review: false,
-        can_review_undergrad_courses: false,
-        can_review_graduate_courses: false,
-        can_request_professor_action: false,
-        can_accept_reject_courses: false,
-    };
-
     switch (role) {
         case "student": 
-            perm_obj = {
+            return {
                 can_submit_courses: false,
                 can_edit_submission_while_not_under_review: false,
                 can_edit_submission_while_under_review: false,
@@ -34,9 +24,8 @@ export function get_permissions(role: string): IPermissions {
                 can_request_professor_action: false,
                 can_accept_reject_courses: false,
             }
-            break;
         case "professor":
-            perm_obj = {
+            return {
                 can_submit_courses: true,
                 can_edit_submission_while_not_under_review: true,
                 can_edit_submission_while_under_review: false,
@@ -45,9 +34,8 @@ export function get_permissions(role: string): IPermissions {
                 can_request_professor_action: false,
                 can_accept_reject_courses: false,
             }
-            break;
         case "undergraduate_reviewer":
-            perm_obj = {
+            return {
                 can_submit_courses: true,
                 can_edit_submission_while_not_under_review: true,
                 can_edit_submission_while_under_review: false,
@@ -56,9 +44,8 @@ export function get_permissions(role: string): IPermissions {
                 can_request_professor_action: true,
                 can_accept_reject_courses: false,
             }
-            break;
         case "undergraduate_director":
-            perm_obj = {
+            return {
                 can_submit_courses: true,
                 can_edit_submission_while_not_under_review: true,
                 can_edit_submission_while_under_review: false,
@@ -67,9 +54,8 @@ export function get_permissions(role: string): IPermissions {
                 can_request_professor_action: true,
                 can_accept_reject_courses: true,
             }
-            break;
         case "graduate_director":
-            perm_obj = {
+            return {
                 can_submit_courses: true,
                 can_edit_submission_while_not_under_review: true,
                 can_edit_submission_while_under_review: false,
@@ -78,9 +64,8 @@ export function get_permissions(role: string): IPermissions {
                 can_request_professor_action: true,
                 can_accept_reject_courses: true,
             }
-            break;
         case "manager":
-            perm_obj = {
+            return {
                 can_submit_courses: true,
                 can_edit_submission_while_not_under_review: true,
                 can_edit_submission_while_under_review: true,
@@ -89,10 +74,7 @@ export function get_permissions(role: string): IPermissions {
                 can_request_professor_action: true,
                 can_accept_reject_courses: true,
             }
-            break;
         default:
             throw "Unrecognized role; probably missing .env server file";
     }
-
-    return perm_obj;
 }
