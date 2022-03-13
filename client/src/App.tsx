@@ -6,14 +6,55 @@ import Auth from "./components/Auth"
 import React, { useEffect, useState } from "react";
 import { IUser } from "../../server/src/models/User";
 import { fetchUser } from "./utils/auth";
+import { fetchCourses } from "./utils/courses";
+import { ICourse } from "../../server/src/models/Course";
 import CourseInfo from './components/CourseInfo'
 import FilterDropdown from './components/FilterDropdown';
 import CourseProposal from './components/CourseProposal';
 
 const courses = [
-  {course_number: "0250", course_title: "American Exceptionalism: The History of an Idea", professor: "Michael Vorenberg"},
-  {course_number: "0150D", course_title: "Refugees: A Twentieth-Century History", professor: "Vazira F-Y Zamindar"},
-  {course_number: "0150G", course_title: "History of Law: Great Trials", professor: "Holly A Case"}
+  {course_number: "HIST 0250", 
+      course_title: "American Exceptionalism: The History of an Idea", 
+      professors: [{displayName: "Michael Vorenberg"}],
+      crn: 24823,
+      semester: "Spring",
+      year: 2021,
+      is_DIAP: true,
+      is_WRIT: true,
+      is_Premodern: true,
+      geography: "North America",
+      is_remote: true,
+      is_undergrad: true,
+      is_intro: true,
+  },
+  {course_number: "HIST 0150D", 
+      course_title: "Refugees: A Twentieth-Century History",
+      professors: [{displayName: "Vazira F-Y Zamindar"}],
+      crn: 12312,
+      semester: "Fall",
+      year: 2022,
+      is_DIAP: false,
+      is_WRIT: true,
+      is_Premodern: false,
+      geography: "Europe",
+      is_remote: true,
+      is_undergrad: false,
+      is_intro: true,
+  },
+  {course_number: "HIST 0150G", 
+      course_title: "History of Law: Great Trials", 
+      professors: [{displayName: "Holly A Case"}],
+      crn: 32321,
+      semester: "Spring",
+      year: 2022,
+      is_DIAP: false,
+      is_WRIT: false,
+      is_Premodern: false,
+      geography: "MESA",
+      is_remote: true,
+      is_undergrad: true,
+      is_intro: true,
+  }
 ]
 
 
@@ -29,17 +70,26 @@ function App() {
         getUser();
     }, []);
 
+    
+    // const [courses, setCourses] = useState<ICourse[]>();
+    //   // called once when components on page have rendered
+    //   useEffect(() => {
+    //       async function getCourses() {
+    //           await fetchCourses(setCourses, setError);
+    //       }
+    //       getCourses();
+    //   }, []);
+
+      
  
-    console.log(user?.displayName)
   return(
   user?
     <div className="CoursePage">
       <NavBar user={user} />
       <CourseProposal/>
-      {courses.map((course, index) => (
-            <CourseInfo course_number={course.course_number}
-                        course_title={course.course_title}
-                        professor={course.professor}/>
+      {console.log(courses)}
+      {courses?.map((course, index) => (
+            <CourseInfo course={course}/>
         ))}
 
     </div>
