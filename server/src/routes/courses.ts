@@ -21,9 +21,16 @@ courseRouter.get("/search/:finalized", async (req: IGetUserAuthInfoRequest, res:
     // if frontend wants to get only current courses, they have to pass back year in search term
 
     const permissions = getPermissions(req.user.role);
-    let status_term;
     
-    if (req.params.finalized) { 
+    
+    // convert from string ("true"/"false") to boolean
+    if (typeof req.params.finalized === 'undefined') {
+        res.status(401).json({
+            message: "specify whether you want finalized courses or all courses",
+        });
+    }
+    let status_term;
+    if (new Boolean(req.params.finalized)) { 
         status_term = {proposal_status: "accepted by CCC"};
     } else { // want proposed courses
         if (permissions.can_review_undergrad_courses && permissions.can_review_graduate_courses) { // manager
