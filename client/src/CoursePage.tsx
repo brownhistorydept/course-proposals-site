@@ -15,11 +15,11 @@ function CoursePage() {
       {/* need to pass the user to NavBar, which passes it to Profile */}
       <NavBar user = {undefined}/> 
       <CourseProposal/>
-      {courses.map((course, index) => (
+      {/* {courses.map((course, index) => (
             <CourseInfo course_number={course.course_number}
                         course_title={course.course_title}
                         professor={course.professor}/>
-        ))}
+        ))} */}
 
     </div>
   );
