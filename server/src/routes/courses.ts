@@ -73,24 +73,34 @@ function getCourseStatus(proposed_course, original_course) {
     }
 };
 
+// change this - only difference is that professors is string[], not IUser[]
 interface ICourseSubmission {
+    _id?: String, // assigned by MongoDB
+    created_at?: Date,
     course_number: String,
     crn?: Number,
     course_title: String,
-    semester: String,
-    year: Number,
-    final_time: String,
-    time_ranking?: String[],
-    professors: String[], // this is the only difference from ICourse: this is just an array of Object IDs, gets populated later
+    description: String,
+    professors: String[],
+    // booleans
+    is_undergrad: Boolean, // if false, then grad
     is_DIAP: Boolean,
     is_WRIT: Boolean,
     is_Premodern: Boolean,
-    course_type: String,
-    geography: String,
-    is_remote: Boolean,
+    is_FYS: Boolean,
+    is_SYS: Boolean,
+    is_capstone: Boolean,
+    is_lecture: Boolean,
     is_intro: Boolean,
-    description: String,
-    further_notes?: String,
+    is_remote: Boolean,
+    // enums
+    semester: String,
+    year: Number,
+    final_time: String, // A,B... hour, so a string of this character
+    time_ranking?: String[], // array of strings, e.g. [A, C, E]
+    geography: String, // has to be from geo_regions list
+    proposal_status: String,
+    course_status: String, // new, revised, or existing --> these are existing hist. dept. standards that we're replicating here
 }
 
 interface ICourseProposalRequest {
@@ -118,6 +128,15 @@ courseRouter.post("/submit", async (req: IGetUserAuthInfoRequest, res: Response)
             message: "submission failed",
         });
     }
+});
+
+// NOT TO BE USED BY FRONTEND
+courseRouter.post("/submit-dev-only", async (req: IGetUserAuthInfoRequest, res: Response) => {
+    const proposalRequest = req.body as ICourseSubmission;
+    const newCourse = await Course.create({
+        ...proposalRequest
+    });
+    res.status(200).json({newCourse});
 });
 
 courseRouter.post("/accept", async (req: IGetUserAuthInfoRequest, res: Response) => {
