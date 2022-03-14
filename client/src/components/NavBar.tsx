@@ -63,19 +63,30 @@ export default function NavBar(props: {
           >
             Department of History Course Proposals
           </Typography>
-
+          
+          {props.user && (
           <Box sx={{ justifyContent: 'flex-end', flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
+            
               <Button
-                key={page}
+                key='Course Catalog'
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block', marginRight:3, textTransform :'none' }}
+                href="/"
               >
-                {page}
+                Course Catalog
               </Button>
-            ))}
+
+              <Button
+                key='My Courses'
+                onClick={handleCloseNavMenu}
+                sx={{ my: 2, color: 'white', display: 'block', marginRight:3, textTransform :'none' }}
+                href="/my_courses"
+              >
+                My Courses
+              </Button>
             <Profile user={props.user}/>
           </Box>
+          )}
         </Toolbar>
       </Container>
     </AppBar>

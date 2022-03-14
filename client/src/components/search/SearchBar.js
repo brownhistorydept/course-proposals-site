@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 
@@ -14,7 +13,7 @@ export default function TextFieldSizes() {
     >
       <div>
         <TextField
-          label="Search by keyword"
+          label="Search by Course Name"
           id="outlined-size-small"
           size="small"
           style = {{width: 1010}}
