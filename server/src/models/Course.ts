@@ -4,7 +4,7 @@ const { model, Schema } = mongoose;
 
 export const GEO_REGIONS = ["Africa", "East Asia", "Europe", "Latin America", "MESA", "North America", "Global"]; // taken from dept. spreadsheet tracking courses, https://docs.google.com/spreadsheets/d/1NT5l7zAqlXDCivZXcTdsdceSnMD5v28ke6550tnBrnE/edit?usp=sharing
 export const SEMESTERS = ["Fall", "Spring", "Winter", "Summer"];
-export const TIMES = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q"];
+export const TIMES = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "T"];
 export const PROPOSAL_STATUSES = ["under review by director", "accepted by director", "rejected by director", "under review by CCC", "accepted by CCC", "rejected by CCC"];
 export const COURSE_STATUSES = ["new", "revised", "existing"];
 
@@ -34,7 +34,7 @@ export interface ICourse {
     year: Number,
     final_time: String, // A,B... hour, so a string of this character
     time_ranking?: String[], // array of strings, e.g. [A, C, E]
-    geography: String, // has to be from geo_regions list
+    geography?: String[], // has to be from geo_regions list
     proposal_status: String,
     course_status: String, // new, revised, or existing --> these are existing hist. dept. standards that we're replicating here
 }
@@ -61,8 +61,8 @@ const courseSchema = new Schema<ICourse>({
     semester: {type: String, enum: SEMESTERS, required: true},
     year: {type: Number, required: true},
     final_time: { type: String, enum: TIMES, required: true}, // A,B... hour, so a string of this character
-    time_ranking: [{type: String}], // array of strings, e.g. [A, C, E]
-    geography: { type: String, enum: GEO_REGIONS, required: true}, // has to be from geo_regions list
+    time_ranking: {type: [String], enum: TIMES, required: false}, // array of strings, e.g. [A, C, E]
+    geography: {type: [String], enum: GEO_REGIONS, required: false}, // has to be from geo_regions list
     proposal_status: {type: String, enum: PROPOSAL_STATUSES, required: true},
     course_status: {type: String, enum: COURSE_STATUSES, required: true},
 });

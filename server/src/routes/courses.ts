@@ -9,13 +9,6 @@ function search(search_term) {
     return Course.find(search_term).populate('professors');;
 }
 
-/**
- * See all current/past finalized courses and current/past proposed courses
- * Prof. needs to their specific proposed/finalized courses
- */
-
-
-
 // search courses
 courseRouter.get("/search/:finalized", async (req: IGetUserAuthInfoRequest, res: Response) => {
     // if frontend wants to get only current courses, they have to pass back year in search term
@@ -98,7 +91,7 @@ interface ICourseSubmission {
     year: Number,
     final_time: String, // A,B... hour, so a string of this character
     time_ranking?: String[], // array of strings, e.g. [A, C, E]
-    geography: String, // has to be from geo_regions list
+    geography: String[], // has to be from geo_regions list
     proposal_status: String,
     course_status: String, // new, revised, or existing --> these are existing hist. dept. standards that we're replicating here
 }
