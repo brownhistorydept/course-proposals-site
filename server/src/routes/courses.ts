@@ -9,23 +9,25 @@ function search(search_term) {
     return Course.find(search_term).populate('professors');;
 }
 
+// this function is janky - should use a legit library
+function strToBool(str: string): boolean {
+    const test = str.trim().toLowerCase();
+    return !((test === 'false') || (test === '0') || (test === ''));
+}
+
 // search courses
 courseRouter.get("/search/:finalized", async (req: IGetUserAuthInfoRequest, res: Response) => {
     // if frontend wants to get only current courses, they have to pass back year in search term
-
-    const permissions = getPermissions(req.user.role);
-    
-    
-    // convert from string ("true"/"false") to boolean
     if (typeof req.params.finalized === 'undefined') {
         res.status(401).json({
             message: "specify whether you want finalized courses or all courses",
         });
     }
     let status_term;
-    if (new Boolean(req.params.finalized)) { 
+    if (strToBool(req.params.finalized)) { 
         status_term = {proposal_status: "accepted by CCC"};
     } else { // want proposed courses
+        const permissions = getPermissions(req.user.role);
         if (permissions.can_review_undergrad_courses && permissions.can_review_graduate_courses) { // manager
             status_term = {proposal_status: {$ne: "accepted by CCC"}};
         } else if (permissions.can_review_undergrad_courses) { // undergraduate reviewer or director
@@ -37,10 +39,11 @@ courseRouter.get("/search/:finalized", async (req: IGetUserAuthInfoRequest, res:
         }
     }
 
+    // NEED TO DEAL WITH PARSING SEARCH PARAMS (perhaps express middleware)
     const search_term = JSON.parse(JSON.stringify(req.query));
     try {
         // status_term must come after search_term to make sure that if proposed_status is in search term, the updated value in status_term overwrites it
-        const result = await search({ ...search_term, status_term}); 
+        const result = await search({ ...search_term, ...status_term}); 
         res.status(200).json({result});
     } catch (err) {
         console.log(err);
