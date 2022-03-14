@@ -11,42 +11,44 @@ export const COURSE_STATUSES = ["new", "revised", "existing"];
 // do we think my designation of optional variables is fair? Might be something to run by the client,
 // not sure whether more/less of these are optional than I might think
 export interface ICourse {
-    _id?: String, // assigned by MongoDB
+    _id?: string, 
     created_at?: Date,
-    course_number: String,
-    crn?: Number,
-    course_title: String,
-    description: String,
+    // core attributes
+    course_number: string,
+    crn?: number,
+    course_title: string,
+    description: string,
     professors: IUser[],
-    // booleans
-    is_undergrad: Boolean, // if false, then grad
-    is_DIAP: Boolean,
-    is_WRIT: Boolean,
-    is_Premodern: Boolean,
-    is_FYS: Boolean,
-    is_SYS: Boolean,
-    is_capstone: Boolean,
-    is_lecture: Boolean,
-    is_intro: Boolean,
-    is_remote: Boolean,
-    // enums
-    semester: String,
-    year: Number,
-    final_time: String, // A,B... hour, so a string of this character
-    time_ranking?: String[], // array of strings, e.g. [A, C, E]
-    geography?: String[], // has to be from geo_regions list
-    proposal_status: String,
-    course_status: String, // new, revised, or existing --> these are existing hist. dept. standards that we're replicating here
+    // boolean designations
+    is_undergrad: boolean, // if false, then grad
+    is_DIAP: boolean,
+    is_WRIT: boolean,
+    is_Premodern: boolean,
+    is_FYS: boolean,
+    is_SYS: boolean,
+    is_capstone: boolean,
+    is_lecture: boolean,
+    is_intro: boolean,
+    is_remote: boolean,
+    // enumerated designations
+    semester: string,
+    year: number,
+    final_time: string, // A,B... hour, so a string of this character
+    time_ranking?: string[], // array of strings, e.g. [A, C, E]
+    geography?: string[], // has to be from geo_regions list
+    proposal_status: string,
+    course_status: string, // new, revised, or existing --> these are existing hist. dept. standards that we're replicating here
 }
 
 const courseSchema = new Schema<ICourse>({
     created_at: { type: Date, default: Date.now },
+    // core attributes
     course_number: { type: String, required: true},
     crn: {type: Number, required: false},
     course_title: { type: String, required: true},
     description: { type: String, required: true},
     professors: [{type: Schema.Types.ObjectId, ref: 'User'}],
-    // booleans
+    // boolean designations
     is_undergrad: {type: Boolean, required: true},
     is_DIAP: { type: Boolean, required: true},
     is_WRIT: { type: Boolean, required: true},
@@ -57,7 +59,7 @@ const courseSchema = new Schema<ICourse>({
     is_lecture: { type: Boolean, required: true},
     is_intro: {type: Boolean, required: true},
     is_remote: {type: Boolean, required: true},
-    // enums
+    // enumerated designations
     semester: {type: String, enum: SEMESTERS, required: true},
     year: {type: Number, required: true},
     final_time: { type: String, enum: TIMES, required: true}, // A,B... hour, so a string of this character

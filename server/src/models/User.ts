@@ -5,7 +5,7 @@ const { model, Schema } = mongoose;
 // Mongoose schemas are separate from TypeScript interfaces, so you need to define both a document interface and a schema.
 
 export interface IUser {
-    _id?: string, // assigned by MongoDB
+    _id?: string,
     created_at?: Date,
     googleId: string,
     displayName: string,
