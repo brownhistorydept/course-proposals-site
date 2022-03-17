@@ -74,7 +74,7 @@ function App() {
       // called once when components on page have rendered
       useEffect(() => {
           async function getCourses() {
-              await fetchCourses(setCourses, setError);
+              await fetchCourses(setCourses, setError, null);
           }
           getCourses();
       }, []);
