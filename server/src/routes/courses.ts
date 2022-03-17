@@ -127,6 +127,22 @@ courseRouter.post("/submit", async (req: IGetUserAuthInfoRequest, res: Response)
 });
 
 // NOT TO BE USED BY FRONTEND
+courseRouter.get("/search-dev-only", async (req: IGetUserAuthInfoRequest, res: Response) => {
+    // NEED TO DEAL WITH PARSING SEARCH PARAMS (perhaps express middleware)
+    const search_term = JSON.parse(JSON.stringify(req.query));
+    try {
+        // status_term must come after search_term to make sure that if proposed_status is in search term, the updated value in status_term overwrites it
+        const result = await search(search_term); 
+        res.status(200).json({result});
+    } catch (err) {
+        console.log(err);
+        res.status(401).json({
+            message: "no course found with this search term",
+        });
+    }
+});
+
+// NOT TO BE USED BY FRONTEND
 courseRouter.post("/submit-dev-only", async (req: IGetUserAuthInfoRequest, res: Response) => {
     const proposalRequest = req.body as ICourseSubmission;
     const newCourse = await Course.create({
