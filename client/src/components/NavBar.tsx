@@ -84,6 +84,15 @@ export default function NavBar(props: {
               >
                 My Courses
               </Button>
+
+              <Button
+                key='Course Proposal'
+                onClick={handleCloseNavMenu}
+                sx={{ my: 2, color: 'white', display: 'block', marginRight:3, textTransform :'none' }}
+                href="/course_proposal"
+              >
+                Course Proposal
+              </Button>
             <Profile user={props.user}/>
           </Box>
           )}
