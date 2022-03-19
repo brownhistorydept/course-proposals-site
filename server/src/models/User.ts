@@ -20,7 +20,7 @@ const userSchema = new Schema<IUser>({
     googleId: { type: String, required: true },
     displayName: { type: String, required: true },
     email: { type: String, required: true },
-    role: { type: String, enum: ROLES, required: true},
+    role: { type: String, enum: Object.values(ROLES), required: true},
     displayPictureURL: { type: String, required: true},
     created_at: { type: Date, default: Date.now },
 });

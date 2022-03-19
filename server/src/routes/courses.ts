@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express";
-import Course, { ICourse } from "../models/Course"
+import Course, { ICourse, PROPOSAL_STATUS, COURSE_STATUS } from "../models/Course"
 import { IGetUserAuthInfoRequest } from "../middleware/auth";
-import { getPermissions } from "../models/Permissions";
+import { getPermissions, ROLES } from "../models/Permissions";
 
 const courseRouter = Router();
 
@@ -25,17 +25,17 @@ courseRouter.get("/search/:finalized", async (req: IGetUserAuthInfoRequest, res:
     }
     let status_term;
     if (strToBool(req.params.finalized)) { 
-        status_term = {proposal_status: "accepted by CCC"};
+        status_term = {proposal_status: PROPOSAL_STATUS.CCC_ACCEPTED};
     } else { // want proposed courses
         const permissions = getPermissions(req.user.role);
         if (permissions.can_review_undergrad_courses && permissions.can_review_graduate_courses) { // manager
-            status_term = {proposal_status: {$ne: "accepted by CCC"}};
+            status_term = {proposal_status: {$ne: PROPOSAL_STATUS.CCC_ACCEPTED}};
         } else if (permissions.can_review_undergrad_courses) { // undergraduate reviewer or director
-            status_term = {proposal_status: {$ne: "accepted by CCC"}, is_undergrad: true};
+            status_term = {proposal_status: {$ne: PROPOSAL_STATUS.CCC_ACCEPTED}, is_undergrad: true};
         } else if (permissions.can_review_graduate_courses) { // graduate director
-            status_term = {proposal_status: {$ne: "accepted by CCC"}, is_undergrad: false};
-        } else if (req.user.role == "professor") { // give them their proposed courses only
-            status_term = {proposal_status: {$ne: "accepted by CCC"}, professor: req.user._id}
+            status_term = {proposal_status: {$ne: PROPOSAL_STATUS.CCC_ACCEPTED}, is_undergrad: false};
+        } else if (req.user.role == ROLES.PROFESSOR) { // give them their proposed courses only
+            status_term = {proposal_status: {$ne: PROPOSAL_STATUS.CCC_ACCEPTED}, professor: req.user._id}
         }
     }
 
@@ -56,16 +56,16 @@ courseRouter.get("/search/:finalized", async (req: IGetUserAuthInfoRequest, res:
 
 function getCourseStatus(proposed_course, original_course) {
     if (!original_course) {
-        return "new";
+        return COURSE_STATUS.NEW;
     }
     if (original_course.course_title === proposed_course.course_title && 
         original_course.description === proposed_course.description &&  
         original_course.is_DIAP === proposed_course.is_DIAP &&  
         original_course.is_remote === proposed_course.is_remote &&  
         original_course.is_WRIT === proposed_course.is_WRIT) {
-        return "existing";
+        return COURSE_STATUS.EXISTING;
     } else {
-        return "revised";
+        return COURSE_STATUS.REVISED;
     }
 };
 
@@ -113,7 +113,7 @@ courseRouter.post("/submit", async (req: IGetUserAuthInfoRequest, res: Response)
     if (permissions.can_submit_courses) {
         const newCourse = await Course.create({
             ...proposalRequest.proposed, 
-            proposal_status: "under review by director", 
+            proposal_status: PROPOSAL_STATUS.DIRECTOR_REVIEW, 
             course_status: status
         });
         res.status(200).json({newCourse});
@@ -152,17 +152,15 @@ courseRouter.post("/submit-dev-only", async (req: IGetUserAuthInfoRequest, res: 
 });
 
 courseRouter.post("/accept", async (req: IGetUserAuthInfoRequest, res: Response) => {
-    
     const permissions = getPermissions(req.user.role);
-
     if (permissions.can_accept_reject_courses) {
         const course = req.body as ICourse;
-        if (req.user.role == "undergraduate director" && course.is_undergrad) {
-            course.proposal_status = "accepted by director";
-        } else if (req.user.role == "graduate director" && !course.is_undergrad) {
-            course.proposal_status = "accepted by director";
-        } else if (req.user.role == "manager") {
-            course.proposal_status = "accepted by CCC";
+        if (req.user.role == ROLES.UG_DIRECTOR && course.is_undergrad) {
+            course.proposal_status = PROPOSAL_STATUS.DIRECTOR_ACCEPTED;
+        } else if (req.user.role == ROLES.GRAD_DIRECTOR && !course.is_undergrad) {
+            course.proposal_status = PROPOSAL_STATUS.DIRECTOR_ACCEPTED;
+        } else if (req.user.role == ROLES.MANAGER) {
+            course.proposal_status = PROPOSAL_STATUS.CCC_ACCEPTED;
         } else {
             res.status(401).json({
                 message: "do not have permission to accept this specific course",
@@ -177,17 +175,15 @@ courseRouter.post("/accept", async (req: IGetUserAuthInfoRequest, res: Response)
 });
 
 courseRouter.post("/reject", async (req: IGetUserAuthInfoRequest, res: Response) => {
-    
     const permissions = getPermissions(req.user.role);
-
     if (permissions.can_accept_reject_courses) {
         const course = req.body as ICourse;
-        if (req.user.role == "undergraduate director" && course.is_undergrad) {
-            course.proposal_status = "rejected by director";
-        } else if (req.user.role == "graduate director" && !course.is_undergrad) {
-            course.proposal_status = "rejected by director";
-        } else if (req.user.role == "manager") {
-            course.proposal_status = "rejected by CCC";
+        if (req.user.role == ROLES.UG_DIRECTOR && course.is_undergrad) {
+            course.proposal_status = PROPOSAL_STATUS.DIRECTOR_REJECTED;
+        } else if (req.user.role == ROLES.GRAD_DIRECTOR && !course.is_undergrad) {
+            course.proposal_status = PROPOSAL_STATUS.DIRECTOR_REJECTED;
+        } else if (req.user.role == ROLES.MANAGER) {
+            course.proposal_status = PROPOSAL_STATUS.CCC_REJECTED;
         } else {
             res.status(401).json({
                 message: "do not have permission to reject this specific course",
@@ -200,7 +196,5 @@ courseRouter.post("/reject", async (req: IGetUserAuthInfoRequest, res: Response)
         });
     }
 });
-
-
 
 export default courseRouter;

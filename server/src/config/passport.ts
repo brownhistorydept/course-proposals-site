@@ -5,6 +5,7 @@ import {
     VerifyCallback,
 } from "passport-google-oauth20";
 import User, { IUser } from "../models/User";
+import { ROLES } from "../models/Permissions"
 
 export function passportInit() {
     // serialize the user.id to save in the cookie session
@@ -64,7 +65,7 @@ export function passportInit() {
                     displayName: profile.displayName,
                     email: profile._json.email,
                     displayPictureURL: displayPicURL,
-                    role: "student",
+                    role: ROLES.STUDENT,
                 };
                 
                 try {
