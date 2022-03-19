@@ -126,6 +126,44 @@ courseRouter.post("/submit", async (req: IGetUserAuthInfoRequest, res: Response)
     }
 });
 
+// edit a course
+// course_id should be the _id of the course as a string, and the field to change should be passed back in req.query
+courseRouter.post("/edit/:course_id", async (req: IGetUserAuthInfoRequest, res: Response) => {
+    const permissions = getPermissions(req.user.role);
+    const course_id = JSON.parse(JSON.stringify(req.params.course_id));
+    const found_course = await Course.findOne({_id: course_id}) as ICourse;
+
+    if (found_course.proposal_status === PROPOSAL_STATUS.DIRECTOR_REVIEW && !permissions.can_edit_submission_while_under_review) {
+        res.status(401).json({
+            message: "do not have permission to edit courses that are under review"
+        });
+        return;
+    }
+
+    if (!permissions.can_edit_submission_while_not_under_review) {
+        res.status(401).json({
+            message: "do not have permission to edit courses"
+        });
+        return;
+    }
+
+    try {
+        console.log(req.params.course_id);
+        console.log(req.query);
+        await Course.updateOne({_id: course_id}, {...req.query});
+        
+        res.status(200).json({
+            message: "editing course succeeded"
+        });
+
+    } catch (err) {
+        console.log(err);
+        res.status(401).json({
+            message: "editing course failed",
+        });
+    }
+});
+
 // NOT TO BE USED BY FRONTEND
 courseRouter.get("/search-dev-only", async (req: IGetUserAuthInfoRequest, res: Response) => {
     // NEED TO DEAL WITH PARSING SEARCH PARAMS (perhaps express middleware)

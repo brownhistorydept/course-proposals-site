@@ -29,10 +29,9 @@ export async function fetchCourses(
                 throw new Error("Failed to fetch courses");
             }
         } else{
-            var url = new URL(`${process.env.REACT_APP_SERVER_URL}/courses/search/true`)
+            var url = new URL(`${process.env.REACT_APP_SERVER_URL}/courses/search/false`)
             Object.keys(params).forEach(key => url.searchParams.append(key, params[key]))
-            const res = await fetch(
-                `${process.env.REACT_APP_SERVER_URL}/courses/search/true`,
+            const res = await fetch(url.toString(), 
                 {
                     method: "GET",
                     credentials: "include",

@@ -14,8 +14,6 @@ export interface IUser {
     role: string,
 }
 
-// do we want an auto-assigned _id or should email serve as a unique identifier?
-// https://stackoverflow.com/questions/10352900/mongoose-how-to-set-a-schema-field-to-be-the-id
 const userSchema = new Schema<IUser>({
     googleId: { type: String, required: true },
     displayName: { type: String, required: true },
