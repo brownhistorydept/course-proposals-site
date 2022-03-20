@@ -17,7 +17,7 @@ const Img = styled('img')({
   maxHeight: '100%',
 });
 
-export default function ComplexGrid({course}) {
+export default function ComplexGrid({course, status}) {
   return (
     <Paper
       sx={{
@@ -106,10 +106,15 @@ export default function ComplexGrid({course}) {
               </Grid>  
             </Grid>
 
+            <Grid item xs container >
+              {status && <Typography variant="body1" fontWeight="bold" gutterBottom>Status: &nbsp;</Typography>} 
+              {status && <Typography variant="body1" gutterBottom>{course.proposal_status} </Typography>} 
+            </Grid>
+
           </Grid>
         </Grid>
 
-        <Grid item align="center" justify="center" my={2} mr={2}>
+        <Grid item align="center" justify="center" my="auto" mr={2}>
           <Button variant="contained" sx={{textTransform:"none", backgroundColor:"#992525"}}>
               <Typography gutterBottom variant="body1">
                 New Proposal
