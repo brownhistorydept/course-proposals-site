@@ -66,7 +66,7 @@ userRouter.post("/change-role/:id/:role", async (req: IGetUserAuthInfoRequest, r
         return;
     }
 
-    const user = JSON.parse(JSON.stringify(req.params.id));
+    const user = req.params.id;
     
     try {
         await User.updateOne({_id: user}, {

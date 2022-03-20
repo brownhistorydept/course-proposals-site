@@ -14,7 +14,7 @@ export const PROPOSAL_STATUS = Object.freeze({
     // undergraduate or graduate director rejects
     DIRECTOR_REJECTED: "rejected by director",
     // THIS IS NOT USED YET - manually triggered by manager???
-    CCC_REVIEW: "under review by CCC",
+    // CCC_REVIEW: "under review by CCC",
     // manager accepts, reflecting CCC decision
     CCC_ACCEPTED: "accepted by CCC",
     // manager rejects, reflecting CCC decision
@@ -36,7 +36,7 @@ export interface ICourse {
     crn?: number,
     course_title: string,
     description: string,
-    professors: IUser[],
+    professors: IUser[] | string[],
     // boolean designations
     is_undergrad: boolean, // if false, then grad
     is_DIAP: boolean,
