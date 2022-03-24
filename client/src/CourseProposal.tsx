@@ -27,6 +27,13 @@ function CourseProposal() {
         
     }, []);
 
+  const [courseNumber, setCourseNumber] = useState('');
+  const [courseTitle, setCourseTitle] = useState('');
+  const [crn, setCrn] = useState(0);
+  const [isUndergrad, setIsUndergrad] = useState(1);
+  const [geography, setGeography] = useState('');
+  const [description, setDescription] = useState('');
+  const [capstone, setCapstone] = useState(false);
 
   return (
     <div className="CourseProposal">
@@ -51,26 +58,27 @@ function CourseProposal() {
       </Box>
 
       <Grid container spacing={2} maxWidth={1000} mx="auto">
-
               <Grid item xs={2}>
-              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Number</Typography>
+                <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Number *</Typography>
               </Grid>
               <Grid item xs={10}>
               <TextField
-                id="course_number"
                 size='small'
                 defaultValue="HIST "
+                required
+                onChange={(e)=>setCourseNumber(e.target.value)}
               />
               </Grid>
 
               <Grid item xs={2}>
-              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Title</Typography>
+              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Title *</Typography>
               </Grid>
               <Grid item xs={10}>
               <TextField
-                id="course_title"
                 size='small'
                 fullWidth
+                required
+                onChange={(e)=>setCourseTitle(e.target.value)}
               />
               </Grid>
               
@@ -86,20 +94,24 @@ function CourseProposal() {
               </Grid>
               <Grid item xs={10}>
               <TextField
-                id="crn"
                 size='small'
+                onChange={(e)=>setCrn(parseInt(e.target.value))}
               />
               </Grid>
 
               <Grid item xs={2}>
-              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Level</Typography>
+              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Level *</Typography>
               </Grid>
               <Grid item xs={10}>
               <Select
-                id="is_undergrad"
                 size='small'
                 autoWidth
                 defaultValue={1}
+                onChange={(e)=>{
+                  let val = e.target.value as number
+                  setIsUndergrad(val)
+                }
+                  }
               >
                 <MenuItem value={1}>Undergraduate</MenuItem>
                 <MenuItem value={0}>Graduate</MenuItem>
@@ -107,15 +119,17 @@ function CourseProposal() {
               </Grid>
 
               <Grid item xs={2}>
-              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Region</Typography>
+              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Geography</Typography>
               </Grid>
               <Grid item xs={10}>
               <Select
-                id="geography"
                 size='small'
                 autoWidth
-                defaultValue={"Global"}
+                defaultValue = ""
+                onChange={(e)=>setGeography(e.target.value)}
+                
               >
+                <MenuItem value=""><em>N/A</em></MenuItem>
                 <MenuItem value="Africa">Africa</MenuItem>
                 <MenuItem value="East Asia">East Asia</MenuItem>
                 <MenuItem value="Europe">Europe</MenuItem>
@@ -127,21 +141,22 @@ function CourseProposal() {
               </Grid>
 
               <Grid item xs={2}>
-              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Description </Typography>
+              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Description* </Typography>
               </Grid>
               <Grid item xs={10}>
               <TextField
-                id="description"
-                fullWidth
+              fullWidth
                 multiline={true}
                 rows={5}
+                onChange={(e)=>setDescription(e.target.value)}
               />
+              <Typography variant="body2" mx="auto">* required fields </Typography>
               </Grid>
 
               <Grid item xs={3}></Grid>
               <Grid item xs={3}>
                 <FormGroup>
-                  <FormControlLabel control={<Checkbox />} label="Capstone" />
+                  <FormControlLabel control={<Checkbox onClick={(e)=>{setCapstone((e.target as HTMLInputElement).checked)}}/>} label="Capstone" />
                   <FormControlLabel control={<Checkbox />} label="First-Year Seminar" />
                   <FormControlLabel control={<Checkbox />} label="Sophomore Seminar" />
                   <FormControlLabel control={<Checkbox />} label="Intro" />
@@ -158,10 +173,32 @@ function CourseProposal() {
               </Grid>
               <Grid item xs={3}></Grid>
               
-            <Grid item marginX="auto">
-              <Button variant="contained" sx={{textTransform:"none", backgroundColor:"#992525"}}>
+              
+            <Grid item marginX="auto" >
+              <Button 
+                variant="contained" 
+                sx={{textTransform:"none", backgroundColor:"#992525", mx:1}}
+                onClick={() => {
+                  console.log(`no ${courseNumber}`)
+                  console.log(`title ${courseTitle}`)
+                  console.log(`crn ${crn}`)
+                  console.log(`is_undergrad ${isUndergrad}`)
+                  console.log(`geog ${geography}`)
+                  console.log(`desc ${description}`)
+                  console.log(`capstone ${capstone}`)
+                }}>
                   <Typography gutterBottom variant="body1">
                     Submit
+                  </Typography>
+              </Button>
+              <Button 
+                variant="contained" 
+                sx={{textTransform:"none", backgroundColor:"#992525", mx:1}}
+                onClick={() => {
+                  window.location.reload();
+                }}>
+                  <Typography gutterBottom variant="body1">
+                    Clear
                   </Typography>
               </Button>
             </Grid>
