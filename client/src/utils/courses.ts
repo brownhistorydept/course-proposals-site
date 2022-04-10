@@ -5,13 +5,14 @@ import { ICourse } from '../../../server/src/models/Course';
 export async function fetchCourses(
     setCourses: (courses: ICourse[]) => void,
     setError: (error: string) => void,
-    params: any
+    params: any,
+    approved: boolean
   ) {
       console.log(params);
     try {
         if (params == null){
             const res = await fetch(
-                `${process.env.REACT_APP_SERVER_URL}/courses/search/true`,
+                `${process.env.REACT_APP_SERVER_URL}/courses/search/${approved}`,
                 {
                     method: "GET",
                     credentials: "include",
@@ -29,10 +30,9 @@ export async function fetchCourses(
                 throw new Error("Failed to fetch courses");
             }
         } else{
-            var url = new URL(`${process.env.REACT_APP_SERVER_URL}/courses/search/true`)
+            var url = new URL(`${process.env.REACT_APP_SERVER_URL}/courses/search/${approved}`)
             Object.keys(params).forEach(key => url.searchParams.append(key, params[key]))
-            const res = await fetch(
-                `${process.env.REACT_APP_SERVER_URL}/courses/search/true`,
+            const res = await fetch(url.toString(), 
                 {
                     method: "GET",
                     credentials: "include",
@@ -45,7 +45,6 @@ export async function fetchCourses(
             );
             if (res.status === 200) {
                 const resJson = await res.json();
-                console.log(resJson);
                 setCourses(resJson.result);
             } else {
                 throw new Error("Failed to fetch courses");

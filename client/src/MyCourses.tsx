@@ -6,33 +6,36 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { ICourse } from "../../server/src/models/Course";
 import { fetchCourses } from "./utils/courses";
-import mongoose from 'mongoose';
-
+import CourseInfo from './components/CourseInfo';
 
 
 function MyCourses() {
 
   const [user, setUser] = useState<IUser>();
-  const [courses, setCourses] = useState<ICourse[]>();
+  const [approvedCourses, setApprovedCourses] = useState<ICourse[]>();
+  const [pendingCourses, setPendingCourses] = useState<ICourse[]>();
   const [, setError] = useState("");
     // called once when components on page have rendered
     useEffect(() => {
-      var params = {};
+      var params = {}; 
         async function getUser() {
           await fetchUser(setUser, setError);
         }
+
+        getUser(); 
+    }, []);
+
+    useEffect(() => {
+      var params = {}; 
         async function getCourses() {
-            params = {professors: new mongoose.Types.ObjectId(user?._id)};
-            // params = {professors: user?._id }
-            await fetchCourses(setCourses, setError, params);
+            params = {professors: user?._id }
+            await fetchCourses(setApprovedCourses, setError, params, true);
+            await fetchCourses(setPendingCourses, setError, params, false);
           
         }
-        getUser().then(()=>
-          getCourses()
-        );
-        
+        getCourses(); 
       
-    }, []);
+    }, [user]);
 
 
   return (
@@ -43,17 +46,32 @@ function MyCourses() {
             margin: 'auto', marginTop: 4, maxWidth:1060, paddingLeft: 0, border:0
           }}>
         <br/>
-        <Box
-            sx={{
-            width: 500,
-            height: 120,
-            margin: 0,
-            paddingLeft: 2,
-          }}> 
-            <Typography variant="h3">
+        <Box sx={{width: 500,  margin: 0, paddingLeft: 2,}}> 
+            <Typography variant="h3" paddingBottom={5}>
                 My Courses
             </Typography>
+
+
+            <Typography variant="h5" color="#992525" fontWeight={500} marginBottom={3}>
+                Approved
+            </Typography>
+            {typeof(approvedCourses)=="undefined" && <Typography variant="body1"> No courses found </Typography>} 
+            </Box>
+            {approvedCourses?.map((course, index) => (
+              <CourseInfo course={course} status={false}/> 
+            ))}
+
+
+          <Box sx={{width: 500, margin: 0, paddingLeft: 2,}}> 
+           <Typography variant="h5" color="#992525" fontWeight={500} marginBottom={3} marginTop={5}>
+              Submitted
+          </Typography>
+          {typeof(pendingCourses)=="undefined" && <Typography variant="body1"> No courses found </Typography>} 
           </Box>
+          {pendingCourses?.map((course, index) => (
+            <CourseInfo course={course} status={true}/> 
+          ))}
+         
       </Box>
 
     </div>

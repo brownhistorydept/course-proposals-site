@@ -1,4 +1,12 @@
-export const ROLES = ["student", "professor", "undergraduate reviewer", "undergraduate director", "graduate director", "manager"];
+export const ROLES = Object.freeze({
+    STUDENT: "student",
+    PROFESSOR: "professor",
+    UG_REVIEWER: "undergraduate reviewer",
+    UG_DIRECTOR: "undergraduate director",
+    GRAD_DIRECTOR: "graduate director",
+    MANAGER: "manager",
+});
+// ["student", "professor", "undergraduate reviewer", "undergraduate director", "graduate director", "manager"];
 
 export interface IPermissions {
     _id?: string, 
@@ -14,7 +22,7 @@ export interface IPermissions {
 
 export function getPermissions(role: string): IPermissions {
     switch (role) {
-        case "student": 
+        case ROLES.STUDENT: 
             return {
                 can_submit_courses: false,
                 can_edit_submission_while_not_under_review: false,
@@ -24,7 +32,7 @@ export function getPermissions(role: string): IPermissions {
                 can_request_professor_action: false,
                 can_accept_reject_courses: false,
             }
-        case "professor":
+        case ROLES.PROFESSOR:
             return {
                 can_submit_courses: true,
                 can_edit_submission_while_not_under_review: true,
@@ -34,7 +42,7 @@ export function getPermissions(role: string): IPermissions {
                 can_request_professor_action: false,
                 can_accept_reject_courses: false,
             }
-        case "undergraduate_reviewer":
+        case ROLES.UG_REVIEWER:
             return {
                 can_submit_courses: true,
                 can_edit_submission_while_not_under_review: true,
@@ -44,7 +52,7 @@ export function getPermissions(role: string): IPermissions {
                 can_request_professor_action: true,
                 can_accept_reject_courses: false,
             }
-        case "undergraduate_director":
+        case ROLES.UG_DIRECTOR:
             return {
                 can_submit_courses: true,
                 can_edit_submission_while_not_under_review: true,
@@ -54,7 +62,7 @@ export function getPermissions(role: string): IPermissions {
                 can_request_professor_action: true,
                 can_accept_reject_courses: true,
             }
-        case "graduate_director":
+        case ROLES.GRAD_DIRECTOR:
             return {
                 can_submit_courses: true,
                 can_edit_submission_while_not_under_review: true,
@@ -64,7 +72,7 @@ export function getPermissions(role: string): IPermissions {
                 can_request_professor_action: true,
                 can_accept_reject_courses: true,
             }
-        case "manager":
+        case ROLES.MANAGER:
             return {
                 can_submit_courses: true,
                 can_edit_submission_while_not_under_review: true,

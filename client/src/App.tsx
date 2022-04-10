@@ -74,7 +74,7 @@ function App() {
       // called once when components on page have rendered
       useEffect(() => {
           async function getCourses() {
-              await fetchCourses(setCourses, setError, null);
+              await fetchCourses(setCourses, setError, null, true);
           }
           getCourses();
       }, []);
@@ -97,6 +97,11 @@ function App() {
       {/* {console.log(user)} */}
       {console.log("Professors:" + professors)}
       {console.log("hi")}
+
+      {courses?.map((course, index) => (
+            <CourseInfo course={course} status={false}/>
+        ))}
+
     </div>
     
     

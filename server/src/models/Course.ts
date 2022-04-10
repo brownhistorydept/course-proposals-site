@@ -2,11 +2,29 @@ import { IUser } from "./User";
 import mongoose from 'mongoose';
 const { model, Schema } = mongoose;
 
-export const GEO_REGIONS = ["Africa", "East Asia", "Europe", "Latin America", "MESA", "North America", "Global"]; // taken from dept. spreadsheet tracking courses, https://docs.google.com/spreadsheets/d/1NT5l7zAqlXDCivZXcTdsdceSnMD5v28ke6550tnBrnE/edit?usp=sharing
-export const SEMESTERS = ["Fall", "Spring", "Winter", "Summer"];
-export const TIMES = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "T"];
-export const PROPOSAL_STATUSES = ["under review by director", "accepted by director", "rejected by director", "under review by CCC", "accepted by CCC", "rejected by CCC"];
-export const COURSE_STATUSES = ["new", "revised", "existing"];
+// taken from dept. spreadsheet tracking courses, https://docs.google.com/spreadsheets/d/1NT5l7zAqlXDCivZXcTdsdceSnMD5v28ke6550tnBrnE/edit?usp=sharing
+export const GEO_REGIONS = Object.freeze(["Africa", "East Asia", "Europe", "Latin America", "MESA", "North America", "Global"]);
+export const SEMESTERS = Object.freeze(["Fall", "Spring", "Winter", "Summer"]);
+export const TIMES = Object.freeze(["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "T"]);
+export const PROPOSAL_STATUS = Object.freeze({
+    // initial/default status
+    DIRECTOR_REVIEW: "under review by director",
+    // undergraduate or graduate director accepts
+    DIRECTOR_ACCEPTED: "accepted by director",
+    // undergraduate or graduate director rejects
+    DIRECTOR_REJECTED: "rejected by director",
+    // THIS IS NOT USED YET - manually triggered by manager???
+    // CCC_REVIEW: "under review by CCC",
+    // manager accepts, reflecting CCC decision
+    CCC_ACCEPTED: "accepted by CCC",
+    // manager rejects, reflecting CCC decision
+    CCC_REJECTED: "rejected by CCC",
+});
+export const COURSE_STATUS = Object.freeze({
+    NEW: "new",
+    REVISED: "revised",
+    EXISTING: "existing",
+});
 
 // do we think my designation of optional variables is fair? Might be something to run by the client,
 // not sure whether more/less of these are optional than I might think
@@ -18,7 +36,7 @@ export interface ICourse {
     crn?: number,
     course_title: string,
     description: string,
-    professors: IUser[],
+    professors: IUser[] | string[],
     // boolean designations
     is_undergrad: boolean, // if false, then grad
     is_DIAP: boolean,
@@ -65,8 +83,8 @@ const courseSchema = new Schema<ICourse>({
     final_time: { type: String, enum: TIMES, required: true}, // A,B... hour, so a string of this character
     time_ranking: {type: [String], enum: TIMES, required: false}, // array of strings, e.g. [A, C, E]
     geography: {type: [String], enum: GEO_REGIONS, required: false}, // has to be from geo_regions list
-    proposal_status: {type: String, enum: PROPOSAL_STATUSES, required: true},
-    course_status: {type: String, enum: COURSE_STATUSES, required: true},
+    proposal_status: {type: String, enum: Object.values(PROPOSAL_STATUS), required: true},
+    course_status: {type: String, enum: Object.values(COURSE_STATUS), required: true},
 });
 
 const Course = model<ICourse>("Course", courseSchema);
