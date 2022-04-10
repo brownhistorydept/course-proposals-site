@@ -24,7 +24,7 @@ export async function fetchUser(
             const resJson = await res.json();
             setUser(resJson.user);
         } else {
-            throw new Error("failed to authenticate user");
+            throw new Error("Failed to authenticate user");
         }
     } catch (error) {
         setError("Failed to authenticate user");

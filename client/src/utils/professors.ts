@@ -23,11 +23,12 @@ export async function fetchProfessors(
         if (res.status === 200) {
             const resJson = await res.json();
             console.log(resJson)
+            setProfessors(resJson.results)
             // setUser(resJson.user);
         } else {
-            throw new Error("failed to authenticate user");
+            throw new Error("Failed to fetch professors");
         }
     } catch (error) {
-        setError("Failed to authenticate user");
+        setError("Failed to fetch professors");
     }
   } 

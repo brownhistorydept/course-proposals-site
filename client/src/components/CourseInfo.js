@@ -18,6 +18,24 @@ const Img = styled('img')({
 });
 
 export default function ComplexGrid({course}) {
+  const [professor, setProfessor] = React.useState('');
+
+  const [level, setLevel] = React.useState('');
+
+  const [geography, setGeography] = React.useState('');
+
+  const [filters, setFilters] = React.useState({
+    diap: false,
+    writ: false,
+    rem: false,
+    p: false,
+    intro: false, 
+    fys: false, 
+    sys: false, 
+    capstone: false, 
+    lecture: false, 
+  })
+
   return (
     <Paper
       sx={{

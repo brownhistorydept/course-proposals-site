@@ -7,7 +7,7 @@ import { fetchProfessors } from "../../utils/professors";
 import { useEffect, useState } from "react";
 // import { IUser } from "../../../../server/src/models/User";
 
-export default function SelectLabels() {
+export default function SelectLabels({professors}) {
   
   // const [, setError] = useState("");
   // const [professors, setProfessors] = useState<IUser>("");
@@ -20,11 +20,13 @@ export default function SelectLabels() {
   //   }, []);
 
   const [professor, setProfessors] = React.useState('');
+
   const handleChange = (event) => {
     setProfessors(event.target.value);
+    console.log(professor);
   };
 
-  const profs = ["Professor A", "Professor B", "Professor C"];
+  const profs = professors;
  
   return (
     <div>
@@ -38,9 +40,9 @@ export default function SelectLabels() {
           onChange={handleChange}
           sx = {{height:30, padding: 0, border: 0 }}
         > 
-          {profs.map((prof) => (
-            <MenuItem value={1}>
-              {prof}
+          {professors.map((prof) => (
+            <MenuItem value={prof}>
+              {prof.displayName}
             </MenuItem>
           ))}
         </Select>

@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { IUser } from "../../server/src/models/User";
 import { fetchUser } from "./utils/auth";
 import { fetchCourses } from "./utils/courses";
+import { fetchProfessors } from "./utils/professors";
 import { ICourse } from "../../server/src/models/Course";
 import CourseInfo from './components/CourseInfo'
 import Search from './components/Search';
@@ -69,7 +70,6 @@ function App() {
         getUser();
     }, []);
 
-    
     const [courses, setCourses] = useState<ICourse[]>();
       // called once when components on page have rendered
       useEffect(() => {
@@ -79,19 +79,24 @@ function App() {
           getCourses();
       }, []);
 
-      
+  const [professors, setProfessors] = useState<IUser[]>();
+      // called once when components on page have rendered
+      useEffect(() => {
+          async function getProfessors() {
+              await fetchProfessors(setProfessors, setError);
+          }
+          getProfessors();
+      }, []);
  
   return(
   user?
     <div className="CoursePage">
       <NavBar user={user} />
-      <Search/>
-      {/* {console.log(courses)} */}
+      <Search professor={professors} courses={courses}/>
+      {console.log(courses)}
       {/* {console.log(user)} */}
-      {courses?.map((course, index) => (
-            <CourseInfo course={course}/>
-        ))}
-
+      {console.log("Professors:" + professors)}
+      {console.log("hi")}
     </div>
     
     
