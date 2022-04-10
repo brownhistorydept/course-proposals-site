@@ -58,3 +58,34 @@ export async function fetchCourses(
         setError("Failed to fetch courses");
     }
   }
+
+  export async function submitCourse(
+    setSuccess: (success: boolean) => void,
+    setError: (error: string) => void,
+    course_info: ICourse
+  ) {
+    try {
+        const res = await fetch(
+            `${process.env.REACT_APP_SERVER_URL}/courses/submit`,
+            {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Credentials": "true",
+                },
+                body: JSON.stringify(course_info),
+            }
+        );
+        // if the user is logged in, set the user and authenticated flag
+        if (res.status === 200) {
+            const resJson = await res.json();
+            console.log(resJson)
+        } else {
+            throw new Error("failed to submit user");
+        }
+    } catch (error) {
+        setError("Failed to authenticate user");
+    }
+  } 

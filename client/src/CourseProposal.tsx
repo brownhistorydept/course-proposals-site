@@ -12,6 +12,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
+import { submitCourse } from './utils/courses';
+import { ICourse } from '../../server/src/models/Course';
 
 
 function CourseProposal() {
@@ -34,6 +36,18 @@ function CourseProposal() {
   const [geography, setGeography] = useState('');
   const [description, setDescription] = useState('');
   const [capstone, setCapstone] = useState(false);
+  const [fys, setFys] = useState(false);
+  const [sys, setSys] = useState(false);
+  const [intro, setIntro] = useState(false);
+  const [lecture, setLecture] = useState(false);
+  const [writ, setWrit] = useState(false);
+  const [diap, setDiap] = useState(false);
+  const [remote, setRemote] = useState(false);
+  const [premodern, setPremodern] = useState(false);
+  const [semester, setSemester] = useState('Fall');
+  const [year, setYear] = useState(0);
+  const [time, setTime] = useState('A');
+  const [success, setSuccess] = useState(false);
 
   return (
     <div className="CourseProposal">
@@ -100,6 +114,31 @@ function CourseProposal() {
               </Grid>
 
               <Grid item xs={2}>
+              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Semester *</Typography>
+              </Grid>
+              <Grid item xs={10}>
+              <Select
+                size='small'
+                autoWidth
+                defaultValue={"Fall"}
+                onChange={(e)=>{
+                  setSemester(e.target.value)
+                }}
+                sx={{marginRight: 1}}
+              >
+                <MenuItem value={"Fall"}>Fall</MenuItem>
+                <MenuItem value={"Winter"}>Winter</MenuItem>
+                <MenuItem value={"Spring"}>Spring</MenuItem>
+                <MenuItem value={"Summer"}>Summer</MenuItem>
+              </Select>
+              <TextField
+                size='small'
+                onChange={(e)=>{setYear(parseInt(e.target.value))}}
+                label="Year"
+              />
+              </Grid>
+
+              <Grid item xs={2}>
               <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Level *</Typography>
               </Grid>
               <Grid item xs={10}>
@@ -141,6 +180,25 @@ function CourseProposal() {
               </Grid>
 
               <Grid item xs={2}>
+              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Time *</Typography>
+              </Grid>
+              <Grid item xs={10}>
+              <Select
+                size='small'
+                autoWidth
+                defaultValue={"A"}
+                onChange={(e)=>{setTime(e.target.value)}}
+              >
+                <MenuItem value={"A"}>A</MenuItem> <MenuItem value={"B"}>B</MenuItem> <MenuItem value={"C"}>C</MenuItem>
+                <MenuItem value={"D"}>D</MenuItem> <MenuItem value={"E"}>E</MenuItem> <MenuItem value={"F"}>F</MenuItem>
+                <MenuItem value={"G"}>G</MenuItem> <MenuItem value={"H"}>H</MenuItem> <MenuItem value={"I"}>I</MenuItem>
+                <MenuItem value={"J"}>J</MenuItem> <MenuItem value={"K"}>K</MenuItem> <MenuItem value={"L"}>L</MenuItem>
+                <MenuItem value={"M"}>M</MenuItem> <MenuItem value={"N"}>N</MenuItem> <MenuItem value={"O"}>O</MenuItem>
+                <MenuItem value={"P"}>P</MenuItem> <MenuItem value={"Q"}>Q</MenuItem> <MenuItem value={"T"}>T</MenuItem>
+              </Select>
+              </Grid>
+
+              <Grid item xs={2}>
               <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Description* </Typography>
               </Grid>
               <Grid item xs={10}>
@@ -157,18 +215,18 @@ function CourseProposal() {
               <Grid item xs={3}>
                 <FormGroup>
                   <FormControlLabel control={<Checkbox onClick={(e)=>{setCapstone((e.target as HTMLInputElement).checked)}}/>} label="Capstone" />
-                  <FormControlLabel control={<Checkbox />} label="First-Year Seminar" />
-                  <FormControlLabel control={<Checkbox />} label="Sophomore Seminar" />
-                  <FormControlLabel control={<Checkbox />} label="Intro" />
-                  <FormControlLabel control={<Checkbox />} label="Lecture" />
+                  <FormControlLabel control={<Checkbox onClick={(e)=>{setFys((e.target as HTMLInputElement).checked)}}/>} label="First-Year Seminar" />
+                  <FormControlLabel control={<Checkbox onClick={(e)=>{setSys((e.target as HTMLInputElement).checked)}}/>} label="Sophomore Seminar" />
+                  <FormControlLabel control={<Checkbox onClick={(e)=>{setIntro((e.target as HTMLInputElement).checked)}}/>} label="Intro" />
+                  <FormControlLabel control={<Checkbox onClick={(e)=>{setLecture((e.target as HTMLInputElement).checked)}}/>} label="Lecture" />
                 </FormGroup>
               </Grid>
               <Grid item xs={3}>
                 <FormGroup>
-                    <FormControlLabel control={<Checkbox />} label="WRIT" />
-                    <FormControlLabel control={<Checkbox />} label="DIAP" />
-                    <FormControlLabel control={<Checkbox />} label="Remote" />
-                    <FormControlLabel control={<Checkbox />} label="Premodern" />
+                    <FormControlLabel control={<Checkbox onClick={(e)=>{setWrit((e.target as HTMLInputElement).checked)}}/>} label="WRIT" />
+                    <FormControlLabel control={<Checkbox onClick={(e)=>{setDiap((e.target as HTMLInputElement).checked)}}/>} label="DIAP" />
+                    <FormControlLabel control={<Checkbox onClick={(e)=>{setRemote((e.target as HTMLInputElement).checked)}}/>} label="Remote" />
+                    <FormControlLabel control={<Checkbox onClick={(e)=>{setPremodern((e.target as HTMLInputElement).checked)}}/>} label="Premodern" />
                 </FormGroup>
               </Grid>
               <Grid item xs={3}></Grid>
@@ -179,13 +237,35 @@ function CourseProposal() {
                 variant="contained" 
                 sx={{textTransform:"none", backgroundColor:"#992525", mx:1}}
                 onClick={() => {
-                  console.log(`no ${courseNumber}`)
-                  console.log(`title ${courseTitle}`)
-                  console.log(`crn ${crn}`)
-                  console.log(`is_undergrad ${isUndergrad}`)
-                  console.log(`geog ${geography}`)
-                  console.log(`desc ${description}`)
-                  console.log(`capstone ${capstone}`)
+                  if (courseNumber === "" || courseTitle === "" || description==="" || year===0 || year===NaN){
+                    alert("Please fill all required fields")
+                  } else {
+                    var undergrad = isUndergrad === 1
+                    const course: ICourse = {
+                      course_number: courseNumber,
+                      crn: crn,
+                      course_title: courseTitle,
+                      description: description,
+                      professors: [user!],
+                      is_undergrad: undergrad,
+                      is_DIAP: diap,
+                      is_WRIT: writ,
+                      is_Premodern: premodern,
+                      is_FYS: fys,
+                      is_SYS: sys,
+                      is_capstone: capstone,
+                      is_lecture: lecture,
+                      is_intro: intro,
+                      is_remote: remote,
+                      semester: semester,
+                      year: year,
+                      final_time: time,
+                      geography: [geography],
+                      proposal_status: "under review by director",
+                      course_status: "new"
+                  };
+                    submitCourse(setSuccess, setError, course)
+                  }
                 }}>
                   <Typography gutterBottom variant="body1">
                     Submit
