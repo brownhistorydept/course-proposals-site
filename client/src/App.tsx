@@ -98,9 +98,9 @@ function App() {
       {console.log("Professors:" + professors)}
       {console.log("hi")}
 
-      {courses?.map((course, index) => (
+      {/* {courses?.map((course, index) => (
             <CourseInfo course={course} status={false}/>
-        ))}
+        ))} */}
 
     </div>
     

@@ -4,11 +4,8 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Typography from '@mui/material/Typography';
-import ProfDropdown from './search/Professor';
-import LevelDropdown from './search/Level';
-import GeoDropdown from './search/Geography';
-import Filters from './search/Filters';
-import SearchBar from './search/SearchBar';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
@@ -48,7 +45,6 @@ export default function ResponsiveAppBar({professor, courses}) {
   })
 
   
-
   // const courses = [
 //   {course_number: "HIST 0250", 
 //       course_title: "American Exceptionalism: The History of an Idea", 
@@ -95,6 +91,10 @@ export default function ResponsiveAppBar({professor, courses}) {
 // ]
 
   const allCourses = courses;
+  
+  const filtersDict = {
+    
+  }
 
   const sortByProf = (courses, prof) => {
     const sortedList = [];
@@ -131,8 +131,12 @@ export default function ResponsiveAppBar({professor, courses}) {
     return sortedList
   }
 
+
+
   const sortByFilters = (courses, filtersDict) => {
     const sortedList = [];
+    var filtersList = filtersSelected();
+    console.log(filtersList);
     for (var i = 0, len = courses.length; i < len; i++) {
       var l = allCourses[i];
       if (l.is_DIAP == filtersDict.diap && l.is_WRIT == filtersDict.writ && l.is_remote == filtersDict.rem 
@@ -260,6 +264,7 @@ export default function ResponsiveAppBar({professor, courses}) {
 
   const selectGeography = (event) => {
     if (event.target.value == "All") {
+      setGeography(event.target.value);
       setConsider({
         ...consider,
         ['geography']: false,
@@ -313,7 +318,28 @@ export default function ResponsiveAppBar({professor, courses}) {
           <Typography variant="h3">
               Course Catalog
           </Typography>
-          <SearchBar/>
+          <Box sx={{display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)'}}>
+            <Box
+              component="form"
+              sx={{
+                '& .MuiTextField-root': { m: 1, marginTop: 4, width: '25ch' },
+              }}
+              noValidate
+              autoComplete="off"
+            >
+              <div>
+                <TextField
+                  label="Search by Course Name"
+                  id="outlined-size-small"
+                  // onChange={}
+                  size="small"
+                  style = {{width: 900}}
+                />
+                <br/>
+              </div>
+            </Box>
+            <Button style={{maxHeight: '40px', marginTop: 32}} variant="outlined">Search</Button>
+          </Box>
         </Box>
         <Box sx={{ display: 'flex', width: 1, marginTop: 3, marginLeft:1, p: 0, border: '0px solid', marginBottom: 2}}>
           <Box sx={{display: 'grid', paddingLeft: 1, width: 0.3, border: '0px solid', flexGrow: 1, gridTemplateColumns: 'repeat(10, 1fr)'}}>
@@ -345,7 +371,6 @@ export default function ResponsiveAppBar({professor, courses}) {
                     defaultValue="All"
                     labelId="demo-simple-select-helper-label"
                     id="demo-simple-select-helper"
-                    defaultValue=""
                     value={level}
                     label="Level"
                     onChange={selectLevel}
@@ -458,7 +483,7 @@ export default function ResponsiveAppBar({professor, courses}) {
         </Box>
       </Box>
       {sort().map((course, index) => (
-            <CourseInfo course={course}/>
+            <CourseInfo course={course} status={false}/>
         ))
         }
     </div>
