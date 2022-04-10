@@ -42,6 +42,7 @@ export default function ResponsiveAppBar({professor, courses}) {
     level: false,
     geography: false,
     filters: false,
+    search: false,
   })
 
   
@@ -92,14 +93,22 @@ export default function ResponsiveAppBar({professor, courses}) {
 
   const allCourses = courses;
   
-  const filtersDict = {
-    
+  const filtersMap = {
+    "diap": "is_DIAP",
+    "writ": "is_WRIT",
+    "rem": "is_remote",
+    "p": "is_Premodern",
+    "intro": "is_intro",
+    "fys": "is_FYS",
+    "sys": "is_SYS",
+    "capstone": "is_capstone",
+    "lecture": "is_lecture",
   }
 
   const sortByProf = (courses, prof) => {
     const sortedList = [];
     for (var i = 0, len = courses.length; i < len; i++) {
-      var l = allCourses[i];
+      var l = courses[i];
       if (l.professors[0]['displayName'] == prof) {
         sortedList.push(l);
       } 
@@ -110,7 +119,7 @@ export default function ResponsiveAppBar({professor, courses}) {
   const sortByLevel = (courses, lev) => {
     const sortedList = [];
     for (var i = 0, len = courses.length; i < len; i++) {
-      var l = allCourses[i];
+      var l = courses[i];
       console.log(l);
       if (l.is_undergrad == lev) {
         sortedList.push(l);
@@ -122,7 +131,7 @@ export default function ResponsiveAppBar({professor, courses}) {
   const sortByGeo = (courses, geo) => {
     const sortedList = [];
     for (var i = 0, len = courses.length; i < len; i++) {
-      var l = allCourses[i];
+      var l = courses[i];
       console.log(l);
       if (l.geography == geo) {
         sortedList.push(l);
@@ -131,18 +140,39 @@ export default function ResponsiveAppBar({professor, courses}) {
     return sortedList
   }
 
-
+  const trueFilters = () => {
+    var trueFilt = []
+    for (const [key, value] of Object.entries(filters)) {
+      if (value) {
+        trueFilt.push(key)
+      }
+    }
+    return trueFilt
+  }
 
   const sortByFilters = (courses, filtersDict) => {
     const sortedList = [];
-    var filtersList = filtersSelected();
-    console.log(filtersList);
+    var filtersList = trueFilters();
+
+    var mappedList = filtersList.map(x => filtersMap[x])
+    console.log(mappedList);
+    console.log(courses);
+
     for (var i = 0, len = courses.length; i < len; i++) {
-      var l = allCourses[i];
-      if (l.is_DIAP == filtersDict.diap && l.is_WRIT == filtersDict.writ && l.is_remote == filtersDict.rem 
-        && l.is_Premodern == filtersDict.p && l.is_intro == filtersDict.intro) {
-          sortedList.push(l);
-        } 
+      var l = courses[i];
+      console.log(l);
+      var add = true; 
+
+      for (var j = 0, len2 = mappedList.length; j < len2; j++) {
+        console.log(l[mappedList[j]]);
+        if (l[mappedList[j]] != true) {
+          add = false;
+        }
+      }
+      
+      if (add) {
+        sortedList.push(l);
+      }
     }
     return sortedList
   }
@@ -227,16 +257,29 @@ export default function ResponsiveAppBar({professor, courses}) {
         toSort = sortByFilters(toSort, filters)
       }
 
+      console.log(toSort);
+      if (consider['search']) {
+        toSort = sortBySearched(toSort, searched)
+      }
+
       return toSort;
     }  
   }
 
   const selectProfessor = (event) => {
-    setProfessorSelected(event.target.value);
-    setConsider({
-      ...consider,
-      ['professor']: true,
-    });
+    if (event.target.value == "All") {
+      setProfessorSelected(event.target.value);
+      setConsider({
+        ...consider,
+        ['professor']: false,
+      });
+    } else {
+      setProfessorSelected(event.target.value);
+      setConsider({
+        ...consider,
+        ['professor']: true,
+      });
+    }
   };
 
   const selectLevel = (event) => {
@@ -283,22 +326,53 @@ export default function ResponsiveAppBar({professor, courses}) {
       ...filters,
       [event.target.name]: event.target.checked,
     });
-
-    console.log(filters)
-
-    if (filtersSelected()) {
-      setConsider({
-        ...consider,
-        ['filters']: true,
-      });
-    } else {
-      setConsider({
-        ...consider,
-        ['filters']: false,
-      });
-    }
-    
+    setConsider({
+      ...consider,
+      ['filters']: true,
+      })
   };
+
+  const selectSearched = (event) => {
+    if (event.target.value == "") {
+      setSearched(event.target.value)
+      setConsider({
+        ...consider,
+        ['search']: false,
+        })
+    } else {
+      setSearched(event.target.value)
+      setConsider({
+        ...consider,
+        ['search']: true,
+        })
+    }
+    console.log(searched);
+  };
+
+  const sortBySearched = (courses, searchString) => {
+    var lowerArr = searchString.split(" ").map(element => element.toLowerCase());
+    console.log(lowerArr);
+    const sortedList = [];
+
+    for (var i = 0, len = courses.length; i < len; i++) {
+      var l = courses[i];
+      console.log(l);
+      var courseString = l['course_title'];
+      var noPunc = courseString.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+      var finalString = noPunc.replace(/\s{2,}/g," ");
+      console.log(finalString);
+      var stringArr = finalString.split(" ").map(element => element.toLowerCase())
+      console.log(stringArr);
+
+      for (var j = 0, len2 = lowerArr.length; j < len2; j++) {
+          if (stringArr.includes(lowerArr[j])) {
+            sortedList.push(l);
+          }
+      }
+    }
+    //make hashset
+    return sortedList
+  }
 
   const {diap, writ, rem, p, intro, fys, sys, capstone, lecture} = filters;
 
@@ -331,7 +405,7 @@ export default function ResponsiveAppBar({professor, courses}) {
                 <TextField
                   label="Search by Course Name"
                   id="outlined-size-small"
-                  // onChange={}
+                  onChange={selectSearched}
                   size="small"
                   style = {{width: 900}}
                 />
@@ -350,12 +424,13 @@ export default function ResponsiveAppBar({professor, courses}) {
                   <Select
                     labelId="demo-simple-select-helper-label"
                     id="demo-simple-select-helper"
-                    defaultValue=""
+                    defaultValue="All"
                     value={professorSelected}
                     label="Professor"
                     onChange={selectProfessor}
                     sx = {{height:30, padding: 0, border: 0 }}
                   > 
+                    <MenuItem value="All">All</MenuItem>
                     {professor.map((prof) => (
                       <MenuItem value={prof}>
                         {prof.displayName}
@@ -368,7 +443,7 @@ export default function ResponsiveAppBar({professor, courses}) {
                 <FormControl sx={{ m: 1, width: 120, height:20}} size="small">
                 <InputLabel sx={{ m: 0, margin: 0, height:1, border:0, padding:0, fontSize: 14}} id="demo-simple-select-helper-label">Level</InputLabel>
                   <Select
-                    defaultValue="All"
+                    defaultValue=""
                     labelId="demo-simple-select-helper-label"
                     id="demo-simple-select-helper"
                     value={level}
