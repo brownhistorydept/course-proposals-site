@@ -12,52 +12,6 @@ import { ICourse } from "../../server/src/models/Course";
 import CourseInfo from './components/CourseInfo'
 import Search from './components/Search';
 
-// const courses = [
-//   {course_number: "HIST 0250", 
-//       course_title: "American Exceptionalism: The History of an Idea", 
-//       professors: [{displayName: "Michael Vorenberg"}],
-//       crn: 24823,
-//       semester: "Spring",
-//       year: 2021,
-//       is_DIAP: true,
-//       is_WRIT: true,
-//       is_Premodern: true,
-//       geography: "North America",
-//       is_remote: true,
-//       is_undergrad: true,
-//       is_intro: true,
-//   },
-//   {course_number: "HIST 0150D", 
-//       course_title: "Refugees: A Twentieth-Century History",
-//       professors: [{displayName: "Vazira F-Y Zamindar"}],
-//       crn: 12312,
-//       semester: "Fall",
-//       year: 2022,
-//       is_DIAP: false,
-//       is_WRIT: true,
-//       is_Premodern: false,
-//       geography: "Europe",
-//       is_remote: true,
-//       is_undergrad: false,
-//       is_intro: true,
-//   },
-//   {course_number: "HIST 0150G", 
-//       course_title: "History of Law: Great Trials", 
-//       professors: [{displayName: "Holly A Case"}],
-//       crn: 32321,
-//       semester: "Spring",
-//       year: 2022,
-//       is_DIAP: false,
-//       is_WRIT: false,
-//       is_Premodern: false,
-//       geography: "MESA",
-//       is_remote: true,
-//       is_undergrad: true,
-//       is_intro: true,
-//   }
-// ]
-
-
 function App() {
 
   const [user, setUser] = useState<IUser>();
@@ -93,10 +47,10 @@ function App() {
     <div className="CoursePage">
       <NavBar user={user} />
       <Search professor={professors} courses={courses}/>
-      {console.log(courses)}
+      {/* {console.log(courses)} */}
       {/* {console.log(user)} */}
-      {console.log("Professors:" + professors)}
-      {console.log("hi")}
+      {/* {console.log("Professors:" + professors)}
+      {console.log("hi")} */}
 
       {/* {courses?.map((course, index) => (
             <CourseInfo course={course} status={false}/>

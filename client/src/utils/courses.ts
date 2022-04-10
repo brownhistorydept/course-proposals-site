@@ -1,4 +1,6 @@
 import { ICourse } from '../../../server/src/models/Course';
+import { IUser } from '../../../server/src/models/User';
+import { IGetUserAuthInfoRequest } from '../../../server/src/middleware/auth';
 
 // fetches the user if the user is logged in on the backend
 
@@ -8,7 +10,7 @@ export async function fetchCourses(
     params: any,
     approved: boolean
   ) {
-      console.log(params);
+    //   console.log(params);
     try {
         if (params == null){
             const res = await fetch(
@@ -62,9 +64,10 @@ export async function fetchCourses(
   export async function submitCourse(
     setSuccess: (success: boolean) => void,
     setError: (error: string) => void,
-    course_info: ICourse
+    course_info: any,
   ) {
     try {
+        // console.log(course_info)
         const res = await fetch(
             `${process.env.REACT_APP_SERVER_URL}/courses/submit`,
             {
@@ -75,7 +78,7 @@ export async function fetchCourses(
                     "Content-Type": "application/json",
                     "Access-Control-Allow-Credentials": "true",
                 },
-                body: JSON.stringify(course_info),
+                body: course_info,
             }
         );
         // if the user is logged in, set the user and authenticated flag

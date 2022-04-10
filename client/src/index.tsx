@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import App from './App';
 import MyCourses from './MyCourses';
 import CourseProposal from './CourseProposal';
+import CourseApproval from './CourseApproval';
 
 ReactDOM.render(
   <Router>
@@ -11,6 +12,7 @@ ReactDOM.render(
       <Route path="/" element={<App />} />
       <Route path="/my_courses" element={<MyCourses />} />
       <Route path="/course_proposal" element={<CourseProposal />} />
+      <Route path="/approve_courses" element={<CourseApproval />} />
     </Routes>
   </Router>,
   document.getElementById('root')

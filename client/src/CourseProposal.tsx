@@ -31,7 +31,7 @@ function CourseProposal() {
 
   const [courseNumber, setCourseNumber] = useState('');
   const [courseTitle, setCourseTitle] = useState('');
-  const [crn, setCrn] = useState(0);
+  // const [crn, setCrn] = useState(0);
   const [isUndergrad, setIsUndergrad] = useState(1);
   const [geography, setGeography] = useState('');
   const [description, setDescription] = useState('');
@@ -75,10 +75,12 @@ function CourseProposal() {
               <Grid item xs={2}>
                 <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Number *</Typography>
               </Grid>
-              <Grid item xs={10}>
+              <Grid item xs={0.5}>
+              <Typography variant="body1" width="2">HIST</Typography>
+              </Grid>
+              <Grid item xs={9.5}>
               <TextField
                 size='small'
-                defaultValue="HIST "
                 required
                 onChange={(e)=>setCourseNumber(e.target.value)}
               />
@@ -103,7 +105,7 @@ function CourseProposal() {
               <Typography variant="body1" my="auto">{user?.displayName}</Typography>
               </Grid>
 
-              <Grid item xs={2}>
+              {/* <Grid item xs={2}>
               <Typography variant="body1" fontWeight="bold" my="auto" align='right'>CRN</Typography>
               </Grid>
               <Grid item xs={10}>
@@ -111,7 +113,7 @@ function CourseProposal() {
                 size='small'
                 onChange={(e)=>setCrn(parseInt(e.target.value))}
               />
-              </Grid>
+              </Grid> */}
 
               <Grid item xs={2}>
               <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Semester *</Typography>
@@ -239,14 +241,19 @@ function CourseProposal() {
                 onClick={() => {
                   if (courseNumber === "" || courseTitle === "" || description==="" || year===0 || year===NaN){
                     alert("Please fill all required fields")
+                  } else if (isNaN(parseInt(courseNumber))){ 
+                    alert("Course Number has to be a numerical value")
+                  } else if (isNaN(year)){ 
+                    alert("Year has to be a numerical value")
                   } else {
                     var undergrad = isUndergrad === 1
-                    const course: ICourse = {
-                      course_number: courseNumber,
-                      crn: crn,
+                    var course = {
+                      user: user,
+                      course_number: `HIST ${courseNumber}`,
+                      // crn: crn,
                       course_title: courseTitle,
                       description: description,
-                      professors: [user!],
+                      professors: [user],
                       is_undergrad: undergrad,
                       is_DIAP: diap,
                       is_WRIT: writ,
@@ -264,7 +271,7 @@ function CourseProposal() {
                       proposal_status: "under review by director",
                       course_status: "new"
                   };
-                    submitCourse(setSuccess, setError, course)
+                    // submitCourse(setSuccess, setError, course)
                   }
                 }}>
                   <Typography gutterBottom variant="body1">
