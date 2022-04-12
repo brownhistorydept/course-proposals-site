@@ -9,49 +9,39 @@ function search(search_term) {
     return Course.find(search_term).populate('professors');;
 }
 
-// this function is janky - should use a legit library
-function strToBool(str: string): boolean {
-    const test = str.trim().toLowerCase();
-    return !((test === 'false') || (test === '0') || (test === ''));
-}
-
 // search courses
-courseRouter.get("/search/:finalized", async (req: IGetUserAuthInfoRequest, res: Response) => {
-    // if frontend wants to get only current courses, they have to pass back year in search term
-    if (typeof req.params.finalized === 'undefined') {
-        res.status(401).json({
-            message: "specify whether you want finalized courses or all courses",
-        });
-    }
-    let status_term;
-    if (strToBool(req.params.finalized)) { 
-        status_term = {proposal_status: PROPOSAL_STATUS.CCC_ACCEPTED};
-    } else { // want proposed courses
-        const permissions = getPermissions(req.user.role);
-        if (permissions.can_review_undergrad_courses && permissions.can_review_graduate_courses) { // manager
-            status_term = {proposal_status: {$ne: PROPOSAL_STATUS.CCC_ACCEPTED}};
-        } else if (permissions.can_review_undergrad_courses) { // undergraduate reviewer or director
-            status_term = {proposal_status: {$ne: PROPOSAL_STATUS.CCC_ACCEPTED}, is_undergrad: true};
-        } else if (permissions.can_review_graduate_courses) { // graduate director
-            status_term = {proposal_status: {$ne: PROPOSAL_STATUS.CCC_ACCEPTED}, is_undergrad: false};
-        } else if (req.user.role == ROLES.PROFESSOR) { // give them their proposed courses only
-            status_term = {proposal_status: {$ne: PROPOSAL_STATUS.CCC_ACCEPTED}, professor: req.user._id}
-        }
+courseRouter.get("/search", async (req: IGetUserAuthInfoRequest, res: Response) => {
+    
+    // restrict searches based on role
+    let restrictions;
+
+    if (req.user.role == ROLES.GRAD_DIRECTOR) {
+        restrictions = {is_undergrad: false};
+    } else if (req.user.role == ROLES.UG_DIRECTOR || req.user.role == ROLES.UG_REVIEWER) {
+        restrictions = {is_undergrad: true};
+    } else if (req.user.role == ROLES.PROFESSOR) {
+        restrictions = {professor: req.user._id};
+    } else if (req.user.role == ROLES.STUDENT) {
+        restrictions = {proposal_status: PROPOSAL_STATUS.CCC_ACCEPTED};
     }
 
-    // NEED TO DEAL WITH PARSING SEARCH PARAMS (perhaps express middleware)
     const search_term = req.query;
+    
     try {
-        // status_term must come after search_term to make sure that if proposed_status is in search term, the updated value in status_term overwrites it
-        const result = await search({ ...search_term, ...status_term}); 
-        res.status(200).json({result});
+        const result = await search({...search_term, ...restrictions}); 
+        if (result.length == 0) {
+            res.status(401).json({
+                message: "No results found.",
+            });
+        } else {
+            res.status(200).json({result});
+        }
     } catch (err) {
         console.log(err);
         res.status(401).json({
-            message: "no course found with this search term",
+            message: "at least one of the fields in the search term has the wrong type; see ICourse in models/Courses.ts for correct types",
         });
-    }
-    
+    }  
 });
 
 function getCourseStatus(proposed_course, original_course) {
@@ -137,16 +127,23 @@ courseRouter.post("/edit/:course_id", async (req: IGetUserAuthInfoRequest, res: 
 courseRouter.get("/search-dev-only", async (req: IGetUserAuthInfoRequest, res: Response) => {
     // NEED TO DEAL WITH PARSING SEARCH PARAMS (perhaps express middleware)
     const search_term = req.query;
+    console.log(search_term);
     try {
-        // status_term must come after search_term to make sure that if proposed_status is in search term, the updated value in status_term overwrites it
         const result = await search(search_term); 
-        res.status(200).json({result});
+        console.log(result);
+        if (result.length == 0) {
+            res.status(401).json({
+                message: "No results found.",
+            });
+        } else {
+            res.status(200).json({result});
+        }
     } catch (err) {
         console.log(err);
         res.status(401).json({
-            message: "no course found with this search term",
+            message: "at least one of the fields in the search term has the wrong type; see ICourse in models/Courses.ts for correct types",
         });
-    }
+    }  
 });
 
 // NOT TO BE USED BY FRONTEND

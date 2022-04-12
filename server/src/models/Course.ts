@@ -33,7 +33,7 @@ export interface ICourse {
     created_at?: Date,
     // core attributes
     course_number: string,
-    crn?: number,
+    // crn?: number,
     course_title: string,
     description: string,
     professors: IUser[] | string[],
@@ -51,18 +51,19 @@ export interface ICourse {
     // enumerated designations
     semester: string,
     year: number,
-    final_time: string, // A,B... hour, so a string of this character
-    time_ranking?: string[], // array of strings, e.g. [A, C, E]
-    geography?: string[], // has to be from geo_regions list
-    proposal_status: string,
-    course_status: string, // new, revised, or existing --> these are existing hist. dept. standards that we're replicating here
+    // final_time: string, // A,B... hour, so a string of this character
+    time_ranking: string[], // array of strings, e.g. [A, C, E]
+    geography?: string[], // has to be from geo_regions list -- this is optional b/c we're not sure if graduate courses use these
+    // these are optional so that frontend can pass back proposed courses w/o them, but we always set them in submit
+    proposal_status?: string,
+    course_status?: string, // new, revised, or existing --> these are existing hist. dept. standards that we're replicating here
 }
 
 const courseSchema = new Schema<ICourse>({
     created_at: { type: Date, default: Date.now },
     // core attributes
     course_number: { type: String, required: true},
-    crn: {type: Number, required: false},
+    // crn: {type: Number, required: false},
     course_title: { type: String, required: true},
     description: { type: String, required: true},
     professors: [{type: Schema.Types.ObjectId, ref: 'User'}],
@@ -80,11 +81,11 @@ const courseSchema = new Schema<ICourse>({
     // enumerated designations
     semester: {type: String, enum: SEMESTERS, required: true},
     year: {type: Number, required: true},
-    final_time: { type: String, enum: TIMES, required: true}, // A,B... hour, so a string of this character
-    time_ranking: {type: [String], enum: TIMES, required: false}, // array of strings, e.g. [A, C, E]
+    // final_time: { type: String, enum: TIMES, required: true}, // A,B... hour, so a string of this character
+    time_ranking: {type: [String], enum: TIMES, required: true}, // array of strings, e.g. [A, C, E]
     geography: {type: [String], enum: GEO_REGIONS, required: false}, // has to be from geo_regions list
-    proposal_status: {type: String, enum: Object.values(PROPOSAL_STATUS), required: true},
-    course_status: {type: String, enum: Object.values(COURSE_STATUS), required: true},
+    proposal_status: {type: String, enum: Object.values(PROPOSAL_STATUS), required: false},
+    course_status: {type: String, enum: Object.values(COURSE_STATUS), required: false},
 });
 
 const Course = model<ICourse>("Course", courseSchema);
