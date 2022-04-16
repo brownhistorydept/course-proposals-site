@@ -1,6 +1,5 @@
 import { ICourse } from '../../../server/src/models/Course';
-import { IUser } from '../../../server/src/models/User';
-import { IGetUserAuthInfoRequest } from '../../../server/src/middleware/auth';
+// import { IUser } from '../../../server/src/models/User';
 
 // fetches the user if the user is logged in on the backend
 
@@ -8,13 +7,12 @@ export async function fetchCourses(
     setCourses: (courses: ICourse[]) => void,
     setError: (error: string) => void,
     params: any,
-    approved: boolean
   ) {
     //   console.log(params);
     try {
         if (params == null){
             const res = await fetch(
-                `${process.env.REACT_APP_SERVER_URL}/courses/search/${approved}`,
+                `${process.env.REACT_APP_SERVER_URL}/courses/search`,
                 {
                     method: "GET",
                     credentials: "include",
@@ -32,7 +30,7 @@ export async function fetchCourses(
                 throw new Error("Failed to fetch courses");
             }
         } else{
-            var url = new URL(`${process.env.REACT_APP_SERVER_URL}/courses/search/${approved}`)
+            var url = new URL(`${process.env.REACT_APP_SERVER_URL}/courses/search`)
             Object.keys(params).forEach(key => url.searchParams.append(key, params[key]))
             const res = await fetch(url.toString(), 
                 {
@@ -67,17 +65,17 @@ export async function fetchCourses(
     course_info: any,
   ) {
     try {
-        // console.log(course_info)
+        console.log(course_info)
         const res = await fetch(
             `${process.env.REACT_APP_SERVER_URL}/courses/submit`,
             {
                 method: "POST",
                 credentials: "include",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Credentials": "true",
-                },
+                // headers: {
+                //     Accept: "application/json",
+                //     "Content-Type": "application/json",
+                //     "Access-Control-Allow-Credentials": "true",
+                // },
                 body: course_info,
             }
         );

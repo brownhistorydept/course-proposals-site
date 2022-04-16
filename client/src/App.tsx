@@ -9,7 +9,7 @@ import { fetchUser } from "./utils/auth";
 import { fetchCourses } from "./utils/courses";
 import { fetchProfessors } from "./utils/professors";
 import { ICourse } from "../../server/src/models/Course";
-import CourseInfo from './components/CourseInfo'
+// import CourseInfo from './components/CourseInfo'
 import Search from './components/Search';
 
 function App() {
@@ -28,7 +28,8 @@ function App() {
       // called once when components on page have rendered
       useEffect(() => {
           async function getCourses() {
-              await fetchCourses(setCourses, setError, null, true);
+              const params = {proposal_status: "accepted by CCC"}
+              await fetchCourses(setCourses, setError, params);
           }
           getCourses();
       }, []);
