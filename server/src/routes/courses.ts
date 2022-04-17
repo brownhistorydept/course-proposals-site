@@ -16,7 +16,7 @@ function strToBool(str: string): boolean {
 }
 
 // search courses
-courseRouter.get("/search:finalized", async (req: IGetUserAuthInfoRequest, res: Response) => {
+courseRouter.get("/search/:finalized", async (req: IGetUserAuthInfoRequest, res: Response) => {
     
     // restrict searches based on role
     let restrictions;
@@ -44,6 +44,36 @@ courseRouter.get("/search:finalized", async (req: IGetUserAuthInfoRequest, res: 
     
     try {
         const result = await search({...search_term, ...finalized_term, ...restrictions}); 
+        if (result.length == 0) {
+            res.status(401).json({
+                message: "No results found.",
+            });
+        } else {
+            res.status(200).json({result});
+        }
+    } catch (err) {
+        console.log(err);
+        res.status(401).json({
+            message: "at least one of the fields in the search term has the wrong type; see ICourse in models/Courses.ts for correct types",
+        });
+    }  
+});
+
+// NOT TO BE USED BY FRONTEND
+courseRouter.get("/search-dev-only/:finalized", async (req: IGetUserAuthInfoRequest, res: Response) => {
+    const search_term = req.query;
+    let finalized_term = {};
+
+    if (!search_term.proposal_status && typeof req.params.finalized !== 'undefined') { // if finalized exists (has been set)
+        if (strToBool(req.params.finalized)) { // if finalized is true
+            finalized_term = {proposal_status: PROPOSAL_STATUS.CCC_ACCEPTED};
+        } else { // want proposed courses
+            finalized_term = {proposal_status: {$ne: PROPOSAL_STATUS.CCC_ACCEPTED}};
+        }
+    }
+    
+    try {
+        const result = await search({...search_term, ...finalized_term}); 
         if (result.length == 0) {
             res.status(401).json({
                 message: "No results found.",
@@ -138,28 +168,6 @@ courseRouter.post("/edit/:course_id", async (req: IGetUserAuthInfoRequest, res: 
     }
 });
 
-// NOT TO BE USED BY FRONTEND
-courseRouter.get("/search-dev-only", async (req: IGetUserAuthInfoRequest, res: Response) => {
-    // NEED TO DEAL WITH PARSING SEARCH PARAMS (perhaps express middleware)
-    const search_term = req.query;
-    console.log(search_term);
-    try {
-        const result = await search(search_term); 
-        console.log(result);
-        if (result.length == 0) {
-            res.status(401).json({
-                message: "No results found.",
-            });
-        } else {
-            res.status(200).json({result});
-        }
-    } catch (err) {
-        console.log(err);
-        res.status(401).json({
-            message: "at least one of the fields in the search term has the wrong type; see ICourse in models/Courses.ts for correct types",
-        });
-    }  
-});
 
 // NOT TO BE USED BY FRONTEND
 courseRouter.post("/submit-dev-only", async (req: IGetUserAuthInfoRequest, res: Response) => {
