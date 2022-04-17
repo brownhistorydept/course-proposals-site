@@ -32,7 +32,7 @@ function CourseProposal() {
         getUser();
         
     }, []);
-  // let prof_dict: { [key: string]: IUser } = {};
+
   const [professorValues, setProfessorsValues] = useState<IUser[]>();
     // called once when components on page have rendered
     useEffect(() => {
@@ -40,10 +40,9 @@ function CourseProposal() {
             await fetchProfessors(setProfessorsValues, setError);
         }
         getProfessors();
-        // professorValues?.map((prof)=>{
-        //   prof_dict[prof.displayName] = prof
-        // })
+        
     }, []);
+
 
   const [courseNumber, setCourseNumber] = useState('');
   const [courseTitle, setCourseTitle] = useState('');
@@ -151,7 +150,6 @@ function CourseProposal() {
               </FormControl>
               {/* <Typography variant="body1" my="auto">{user?.displayName}</Typography> */}
               </Grid>
-
               {/* <Grid item xs={2}>
               <Typography variant="body1" fontWeight="bold" my="auto" align='right'>CRN</Typography>
               </Grid>
@@ -343,6 +341,12 @@ function CourseProposal() {
                 variant="contained" 
                 sx={{textTransform:"none", backgroundColor:"#992525", mx:1}}
                 onClick={() => {
+                  let profMap = new Map<string, string>();
+                  professorValues?.map((prof)=>{
+                    profMap.set(prof.displayName!,prof._id!)
+                  })
+      
+
                   if (courseNumber === "" || courseTitle === "" || description==="" || year===0 ){
                     alert("Please fill all required fields")
                   } else if (isNaN(parseInt(courseNumber))){ 
@@ -352,12 +356,16 @@ function CourseProposal() {
                   } else if (time1===time2 || time2 === time3 || time1===time3){
                     alert("Please enter differnt times for Time Ranking")
                   } else {
+                    var profId: string[] = []
+                    professors.map((prof)=>{
+                      profId.push(profMap.get(prof)!)
+                    })
                     var undergrad = isUndergrad === 1
                     var course = {
                       course_number: `HIST ${courseNumber}`,
                       course_title: courseTitle,
                       description: description,
-                      professors: professors,
+                      professors: profId,
                       is_undergrad: undergrad,
                       is_DIAP: diap,
                       is_WRIT: writ,
