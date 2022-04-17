@@ -55,7 +55,7 @@ function CourseApproval() {
             {typeof(courses)=="undefined" && <Typography variant="body1"> No courses found </Typography>} 
             </Box>
             {courses?.map((course, index) => (
-              <CourseInfo course={course} status={true}/> 
+              <CourseInfo course={course} status={true} edit={false} approve={true}/> 
             ))}
 
          

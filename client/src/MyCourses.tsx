@@ -59,7 +59,7 @@ function MyCourses() {
             {typeof(approvedCourses)=="undefined" && <Typography variant="body1"> No courses found </Typography>} 
             </Box>
             {approvedCourses?.map((course, index) => (
-              <CourseInfo course={course} status={false}/> 
+              <CourseInfo course={course} status={false} edit={true} approve={false}/> 
             ))}
 
 
@@ -70,7 +70,7 @@ function MyCourses() {
           {typeof(pendingCourses)=="undefined" && <Typography variant="body1"> No courses found </Typography>} 
           </Box>
           {pendingCourses?.map((course, index) => (
-            <CourseInfo course={course} status={true}/> 
+            <CourseInfo course={course} status={true} edit={true} approve={false}/> 
           ))}
          
       </Box>

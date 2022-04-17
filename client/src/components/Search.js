@@ -513,7 +513,7 @@ export default function ResponsiveAppBar({professor, courses}) {
         </Box>
       </Box>
       {sort().map((course, index) => (
-            <CourseInfo course={course} status={false}/>
+            <CourseInfo course={course} status={false} edit={false} approve={false}/>
         ))
         }
     </div>
