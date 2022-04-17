@@ -9,8 +9,14 @@ function search(search_term) {
     return Course.find(search_term).populate('professors');;
 }
 
+// this function is janky - should use a legit library
+function strToBool(str: string): boolean {
+    const test = str.trim().toLowerCase();
+    return !((test === 'false') || (test === '0') || (test === ''));
+}
+
 // search courses
-courseRouter.get("/search", async (req: IGetUserAuthInfoRequest, res: Response) => {
+courseRouter.get("/search:finalized", async (req: IGetUserAuthInfoRequest, res: Response) => {
     
     // restrict searches based on role
     let restrictions;
@@ -26,9 +32,18 @@ courseRouter.get("/search", async (req: IGetUserAuthInfoRequest, res: Response) 
     }
 
     const search_term = req.query;
+    let finalized_term = {};
+
+    if (!search_term.proposal_status && typeof req.params.finalized !== 'undefined') { // if finalized exists (has been set)
+        if (strToBool(req.params.finalized)) { // if finalized is true
+            finalized_term = {proposal_status: PROPOSAL_STATUS.CCC_ACCEPTED};
+        } else { // want proposed courses
+            finalized_term = {proposal_status: {$ne: PROPOSAL_STATUS.CCC_ACCEPTED}};
+        }
+    }
     
     try {
-        const result = await search({...search_term, ...restrictions}); 
+        const result = await search({...search_term, ...finalized_term, ...restrictions}); 
         if (result.length == 0) {
             res.status(401).json({
                 message: "No results found.",
