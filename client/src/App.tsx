@@ -28,8 +28,8 @@ function App() {
       // called once when components on page have rendered
       useEffect(() => {
           async function getCourses() {
-              const params = {proposal_status: "accepted by CCC"}
-              await fetchCourses(setCourses, setError, params);
+              // const params = {finalized: true}
+              await fetchCourses(setCourses, setError, null, true);
           }
           getCourses();
       }, []);
