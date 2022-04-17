@@ -10,7 +10,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import * as React from 'react';
-import { LocalLaundryService } from '@mui/icons-material';
+// import { LocalLaundryService } from '@mui/icons-material';
 
 import CourseInfo from './CourseInfo'
 
@@ -23,7 +23,7 @@ export default function ResponsiveAppBar({professor, courses}) {
 
   const [geography, setGeography] = React.useState('');
 
-  const [initialState, setInitialState] = React.useState(true);
+  // const [initialState, setInitialState] = React.useState(true);
 
   const [filters, setFilters] = React.useState({
     diap: false,
@@ -45,51 +45,6 @@ export default function ResponsiveAppBar({professor, courses}) {
     search: false,
   })
 
-  
-  // const courses = [
-//   {course_number: "HIST 0250", 
-//       course_title: "American Exceptionalism: The History of an Idea", 
-//       professors: [{displayName: "Michael Vorenberg"}],
-//       crn: 24823,
-//       semester: "Spring",
-//       year: 2021,
-//       is_DIAP: true,
-//       is_WRIT: true,
-//       is_Premodern: true,
-//       geography: "North America",
-//       is_remote: true,
-//       is_undergrad: true,
-//       is_intro: true,
-//   },
-//   {course_number: "HIST 0150D", 
-//       course_title: "Refugees: A Twentieth-Century History",
-//       professors: [{displayName: "Vazira F-Y Zamindar"}],
-//       crn: 12312,
-//       semester: "Fall",
-//       year: 2022,
-//       is_DIAP: false,
-//       is_WRIT: true,
-//       is_Premodern: false,
-//       geography: "Europe",
-//       is_remote: true,
-//       is_undergrad: false,
-//       is_intro: true,
-//   },
-//   {course_number: "HIST 0150G", 
-//       course_title: "History of Law: Great Trials", 
-//       professors: [{displayName: "Holly A Case"}],
-//       crn: 32321,
-//       semester: "Spring",
-//       year: 2022,
-//       is_DIAP: false,
-//       is_WRIT: false,
-//       is_Premodern: false,
-//       geography: "MESA",
-//       is_remote: true,
-//       is_undergrad: true,
-//       is_intro: true,
-//   }
-// ]
 
   const allCourses = courses;
   
@@ -109,7 +64,7 @@ export default function ResponsiveAppBar({professor, courses}) {
     const sortedList = [];
     for (var i = 0, len = courses.length; i < len; i++) {
       var l = courses[i];
-      if (l.professors[0]['displayName'] == prof) {
+      if (l.professors[0]['displayName'] === prof) {
         sortedList.push(l);
       } 
     }
@@ -121,7 +76,7 @@ export default function ResponsiveAppBar({professor, courses}) {
     for (var i = 0, len = courses.length; i < len; i++) {
       var l = courses[i];
       console.log(l);
-      if (l.is_undergrad == lev) {
+      if (l.is_undergrad === lev) {
         sortedList.push(l);
       } 
     }
@@ -133,7 +88,7 @@ export default function ResponsiveAppBar({professor, courses}) {
     for (var i = 0, len = courses.length; i < len; i++) {
       var l = courses[i];
       console.log(l);
-      if (l.geography == geo) {
+      if (l.geography === geo) {
         sortedList.push(l);
       } 
     }
@@ -165,7 +120,7 @@ export default function ResponsiveAppBar({professor, courses}) {
 
       for (var j = 0, len2 = mappedList.length; j < len2; j++) {
         console.log(l[mappedList[j]]);
-        if (l[mappedList[j]] != true) {
+        if (l[mappedList[j]] !== true) {
           add = false;
         }
       }
@@ -202,7 +157,7 @@ export default function ResponsiveAppBar({professor, courses}) {
   //   }, []);
 
   const considerNone = () => {
-    for (const [key, value] of Object.entries(consider)) {
+    for (const [, value] of Object.entries(consider)) {
       if (value) {
         return false
       }
@@ -210,14 +165,14 @@ export default function ResponsiveAppBar({professor, courses}) {
     return true
   }
 
-  const filtersSelected = () => {
-    for (const [key, value] of Object.entries(filters)) {
-      if (value) {
-        return true
-      }
-    }
-    return false
-  }
+  // const filtersSelected = () => {
+  //   for (const [key, value] of Object.entries(filters)) {
+  //     if (value) {
+  //       return true
+  //     }
+  //   }
+  //   return false
+  // }
 
   const sort = () => {
     if (considerNone()) {
@@ -267,7 +222,7 @@ export default function ResponsiveAppBar({professor, courses}) {
   }
 
   const selectProfessor = (event) => {
-    if (event.target.value == "All") {
+    if (event.target.value === "All") {
       setProfessorSelected(event.target.value);
       setConsider({
         ...consider,
@@ -283,21 +238,21 @@ export default function ResponsiveAppBar({professor, courses}) {
   };
 
   const selectLevel = (event) => {
-    if (event.target.value == "Undergraduate") {
+    if (event.target.value === "Undergraduate") {
       setLevel(true);
       setConsider({
         ...consider,
         ['level']: true,
       });
     }
-    else if (event.target.value == "Graduate") {
+    else if (event.target.value === "Graduate") {
       setLevel(false);
       setConsider({
         ...consider,
         ['level']: true,
       });
     }
-    else if (event.target.value == "All") {
+    else if (event.target.value === "All") {
       setConsider({
         ...consider,
         ['level']: false,
@@ -306,7 +261,7 @@ export default function ResponsiveAppBar({professor, courses}) {
   };
 
   const selectGeography = (event) => {
-    if (event.target.value == "All") {
+    if (event.target.value === "All") {
       setGeography(event.target.value);
       setConsider({
         ...consider,
@@ -333,7 +288,7 @@ export default function ResponsiveAppBar({professor, courses}) {
   };
 
   const selectSearched = (event) => {
-    if (event.target.value == "") {
+    if (event.target.value === "") {
       setSearched(event.target.value)
       setConsider({
         ...consider,
@@ -558,7 +513,7 @@ export default function ResponsiveAppBar({professor, courses}) {
         </Box>
       </Box>
       {sort().map((course, index) => (
-            <CourseInfo course={course} status={false}/>
+            <CourseInfo course={course} status={false} edit={false} approve={false}/>
         ))
         }
     </div>

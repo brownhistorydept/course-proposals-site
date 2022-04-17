@@ -16,7 +16,6 @@ function CourseApproval() {
   const [, setError] = useState("");
     // called once when components on page have rendered
     useEffect(() => {
-      var params = {}; 
         async function getUser() {
           await fetchUser(setUser, setError);
         }
@@ -28,7 +27,7 @@ function CourseApproval() {
       var params = {}; 
         async function getCourses() {
             params = {proposal_status: "under review by director"}
-            await fetchCourses(setCourses, setError, params, false);
+            await fetchCourses(setCourses, setError, params);
           
         }
         getCourses(); 
@@ -56,7 +55,7 @@ function CourseApproval() {
             {typeof(courses)=="undefined" && <Typography variant="body1"> No courses found </Typography>} 
             </Box>
             {courses?.map((course, index) => (
-              <CourseInfo course={course} status={true}/> 
+              <CourseInfo course={course} status={true} edit={false} approve={true}/> 
             ))}
 
          

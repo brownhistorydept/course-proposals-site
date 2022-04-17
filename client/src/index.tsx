@@ -5,6 +5,7 @@ import App from './App';
 import MyCourses from './MyCourses';
 import CourseProposal from './CourseProposal';
 import CourseApproval from './CourseApproval';
+import CoursePropInfo from './CoursePropInfo'
 
 ReactDOM.render(
   <Router>
@@ -13,6 +14,8 @@ ReactDOM.render(
       <Route path="/my_courses" element={<MyCourses />} />
       <Route path="/course_proposal" element={<CourseProposal />} />
       <Route path="/approve_courses" element={<CourseApproval />} />
+      <Route path="/view_course" element={<CoursePropInfo/>} />
+      
     </Routes>
   </Router>,
   document.getElementById('root')

@@ -22,7 +22,7 @@ export async function fetchProfessors(
         // if the user is logged in, set the user and authenticated flag
         if (res.status === 200) {
             const resJson = await res.json();
-            console.log(resJson)
+            // console.log(resJson)
             setProfessors(resJson.results)
             // setUser(resJson.user);
         } else {

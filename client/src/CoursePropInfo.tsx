@@ -6,21 +6,18 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
-import Select from '@mui/material/Select';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
 import { submitCourse } from './utils/courses';
-import FormControl from '@mui/material/FormControl';
-import ListItemText from '@mui/material/ListItemText';
-import { fetchProfessors } from "./utils/professors";
-import InputLabel from '@mui/material/InputLabel';
-// import { ICourse } from '../../server/src/models/Course';
+import { ICourse } from '../../server/src/models/Course';
+import {useLocation} from 'react-router'
 
 
-function CourseProposal() {
+function CoursePropInfo() {
 
   const [user, setUser] = useState<IUser>();
   const [, setError] = useState("");
@@ -32,25 +29,25 @@ function CourseProposal() {
         getUser();
         
     }, []);
-  // let prof_dict: { [key: string]: IUser } = {};
-  const [professorValues, setProfessorsValues] = useState<IUser[]>();
-    // called once when components on page have rendered
-    useEffect(() => {
-        async function getProfessors() {
-            await fetchProfessors(setProfessorsValues, setError);
-        }
-        getProfessors();
-        // professorValues?.map((prof)=>{
-        //   prof_dict[prof.displayName] = prof
-        // })
-    }, []);
+
+    console.log("Hi")
+    // let data = useLocation();
+    let course = useLocation().state
+    console.log(course)
+    console.log()
+    // console.log(props.location)
+    // let id = props.location.state?.id;
+    // console.log(id);
+
+    // if (props.location.state.courseinfo) {
+    //     console.log(props.location.state.course);
+    // }
 
   const [courseNumber, setCourseNumber] = useState('');
   const [courseTitle, setCourseTitle] = useState('');
-  const [professors, setProfessors] = useState<string[]>([]);
   // const [crn, setCrn] = useState(0);
   const [isUndergrad, setIsUndergrad] = useState(1);
-  const [geography, setGeography] = useState<string[]>([]);
+  const [geography, setGeography] = useState('');
   const [description, setDescription] = useState('');
   const [capstone, setCapstone] = useState(false);
   const [fys, setFys] = useState(false);
@@ -63,16 +60,9 @@ function CourseProposal() {
   const [premodern, setPremodern] = useState(false);
   const [semester, setSemester] = useState('Fall');
   const [year, setYear] = useState(0);
-  const [time1, setTime1] = useState('A');
-  const [time2, setTime2] = useState('B');
-  const [time3, setTime3] = useState('C');
+  const [time, setTime] = useState('A');
   const [success, setSuccess] = useState(false);
 
-  const geographyValues = [
-    'Africa',"East Asia","Latin America", "MESA", "North America","Global"
-  ]
-  const timeValues = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "T"]
-  
   return (
     <div className="CourseProposal">
 
@@ -123,33 +113,10 @@ function CourseProposal() {
               </Grid>
               
               <Grid item xs={2}>
-              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Professors *</Typography>
+              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Professor</Typography>
               </Grid>
               <Grid item xs={10}>
-              <FormControl fullWidth>
-                <Select
-                  size='small'
-                  multiple
-                  value={professors}
-                  onChange={(event)=>{
-                    const {
-                      target: { value },
-                    } = event;
-                    setProfessors(
-                      typeof value === 'string' ? value.split(',') : value,
-                    );
-                  }}
-                  renderValue={(selected) => selected.join(', ')}
-                >
-                  {professorValues?.map((prof) => (
-                    <MenuItem key={prof.displayName} value={prof.displayName}>
-                      <Checkbox checked={professors.indexOf(prof.displayName) > -1} />
-                      <ListItemText primary={prof.displayName} />
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              {/* <Typography variant="body1" my="auto">{user?.displayName}</Typography> */}
+              <Typography variant="body1" my="auto">{user?.displayName}</Typography>
               </Grid>
 
               {/* <Grid item xs={2}>
@@ -187,7 +154,6 @@ function CourseProposal() {
               />
               </Grid>
 
-
               <Grid item xs={2}>
               <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Level *</Typography>
               </Grid>
@@ -211,37 +177,14 @@ function CourseProposal() {
               <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Geography</Typography>
               </Grid>
               <Grid item xs={10}>
-              <FormControl fullWidth>
-                <Select
-                  size='small'
-                  multiple
-                  value={geography}
-                  onChange={(event)=>{
-                    const {
-                      target: { value },
-                    } = event;
-                    setGeography(
-                      typeof value === 'string' ? value.split(',') : value,
-                    );
-                  }}
-                  renderValue={(selected) => selected.join(', ')}
-                >
-                  {geographyValues.map((name) => (
-                    <MenuItem key={name} value={name}>
-                      <Checkbox checked={geography.indexOf(name) > -1} />
-                      <ListItemText primary={name} />
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              {/* <Select
+              <Select
                 size='small'
                 autoWidth
-                multiple
-                value={geography}
-                renderValue={(selected) => selected.join(', ')}
-                onChange={(e)=>console.log(e.target.value)}
+                defaultValue = ""
+                onChange={(e)=>setGeography(e.target.value)}
+                
               >
+                <MenuItem value=""><em>N/A</em></MenuItem>
                 <MenuItem value="Africa">Africa</MenuItem>
                 <MenuItem value="East Asia">East Asia</MenuItem>
                 <MenuItem value="Europe">Europe</MenuItem>
@@ -249,59 +192,26 @@ function CourseProposal() {
                 <MenuItem value="MESA">MESA</MenuItem>
                 <MenuItem value="North America">North America</MenuItem>
                 <MenuItem value="Global">Global</MenuItem>
-              </Select> */}
+              </Select>
               </Grid>
 
               <Grid item xs={2}>
-              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Time Ranking *</Typography>
+              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Time *</Typography>
               </Grid>
-              <Grid item xs={3.33}>
-                <FormControl fullWidth>
-                  <InputLabel>1st Choice</InputLabel>
-                  <Select
-                    label="1st Choice"
-                    size='small'
-                    autoWidth
-                    defaultValue={"A"}
-                    onChange={(e)=>{setTime1(e.target.value)}}
-                  >
-                  {timeValues.map((time)=>
-                    <MenuItem value={time}>{time}</MenuItem>
-                  )}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={3.33}>
-                <FormControl fullWidth>
-                  <InputLabel>2nd Choice</InputLabel>
-                  <Select
-                    label="2nd Choice"
-                    size='small'
-                    autoWidth
-                    defaultValue={"B"}
-                    onChange={(e)=>{setTime2(e.target.value)}}
-                  >
-                  {timeValues.map((time)=>
-                    <MenuItem value={time}>{time}</MenuItem>
-                  )}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={3.33}>
-                <FormControl fullWidth>
-                  <InputLabel>3rd Choice</InputLabel>
-                  <Select
-                    label="3rd Choice"
-                    size='small'
-                    autoWidth
-                    defaultValue={"C"}
-                    onChange={(e)=>{setTime3(e.target.value)}}
-                  >
-                  {timeValues.map((time)=>
-                    <MenuItem value={time}>{time}</MenuItem>
-                  )}
-                  </Select>
-                </FormControl>
+              <Grid item xs={10}>
+              <Select
+                size='small'
+                autoWidth
+                defaultValue={"A"}
+                onChange={(e)=>{setTime(e.target.value)}}
+              >
+                <MenuItem value={"A"}>A</MenuItem> <MenuItem value={"B"}>B</MenuItem> <MenuItem value={"C"}>C</MenuItem>
+                <MenuItem value={"D"}>D</MenuItem> <MenuItem value={"E"}>E</MenuItem> <MenuItem value={"F"}>F</MenuItem>
+                <MenuItem value={"G"}>G</MenuItem> <MenuItem value={"H"}>H</MenuItem> <MenuItem value={"I"}>I</MenuItem>
+                <MenuItem value={"J"}>J</MenuItem> <MenuItem value={"K"}>K</MenuItem> <MenuItem value={"L"}>L</MenuItem>
+                <MenuItem value={"M"}>M</MenuItem> <MenuItem value={"N"}>N</MenuItem> <MenuItem value={"O"}>O</MenuItem>
+                <MenuItem value={"P"}>P</MenuItem> <MenuItem value={"Q"}>Q</MenuItem> <MenuItem value={"T"}>T</MenuItem>
+              </Select>
               </Grid>
 
               <Grid item xs={2}>
@@ -343,21 +253,21 @@ function CourseProposal() {
                 variant="contained" 
                 sx={{textTransform:"none", backgroundColor:"#992525", mx:1}}
                 onClick={() => {
-                  if (courseNumber === "" || courseTitle === "" || description==="" || year===0 ){
+                  if (courseNumber === "" || courseTitle === "" || description==="" || year===0 || year===NaN){
                     alert("Please fill all required fields")
                   } else if (isNaN(parseInt(courseNumber))){ 
                     alert("Course Number has to be a numerical value")
                   } else if (isNaN(year)){ 
                     alert("Year has to be a numerical value")
-                  } else if (time1===time2 || time2 === time3 || time1===time3){
-                    alert("Please enter differnt times for Time Ranking")
                   } else {
                     var undergrad = isUndergrad === 1
                     var course = {
+                      user: user,
                       course_number: `HIST ${courseNumber}`,
+                      // crn: crn,
                       course_title: courseTitle,
                       description: description,
-                      professors: professors,
+                      professors: [user],
                       is_undergrad: undergrad,
                       is_DIAP: diap,
                       is_WRIT: writ,
@@ -370,11 +280,12 @@ function CourseProposal() {
                       is_remote: remote,
                       semester: semester,
                       year: year,
-                      time_ranking: [time1, time2, time3],
-                      geography: geography,
+                      final_time: time,
+                      geography: [geography],
+                      proposal_status: "under review by director",
+                      course_status: "new"
                   };
-                  
-                    submitCourse(setSuccess, setError, course)
+                    // submitCourse(setSuccess, setError, course)
                   }
                 }}>
                   <Typography gutterBottom variant="body1">
@@ -401,4 +312,4 @@ function CourseProposal() {
   );
 }
 
-export default CourseProposal;
+export default CoursePropInfo;
