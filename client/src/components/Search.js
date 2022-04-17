@@ -419,7 +419,7 @@ export default function ResponsiveAppBar({professor, courses}) {
                     defaultValue="All"
                     labelId="demo-simple-select-helper-label"
                     id="demo-simple-select-helper"
-                    defaultValue={""}
+                    // defaultValue={""}
                     value={geography}
                     label="Geography"
                     onChange={selectGeography}

@@ -27,11 +27,11 @@ function MyCourses() {
     useEffect(() => {
       var params = {}; 
         async function getCourses() {
-            params = {professors: user?._id ,proposal_status: "accepted by CCC",  };
-            await fetchCourses(setApprovedCourses, setError, params);
+            params = {professors: user?._id   };
+            await fetchCourses(setApprovedCourses, setError, params, true);
             // params = {professors: user?._id ,proposal_status: {$ne:"accepted by CCC"},  }
-            params = {professors: user?._id ,proposal_status: {$ne:"accepted by CCC"},  }
-            await fetchCourses(setPendingCourses, setError, params);
+            params = {professors: user?._id   }
+            await fetchCourses(setPendingCourses, setError, params, false);
           
         }
         getCourses(); 

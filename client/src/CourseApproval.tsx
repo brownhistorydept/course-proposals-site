@@ -27,7 +27,7 @@ function CourseApproval() {
       var params = {}; 
         async function getCourses() {
             params = {proposal_status: "under review by director"}
-            await fetchCourses(setCourses, setError, params);
+            await fetchCourses(setCourses, setError, params, false);
           
         }
         getCourses(); 
