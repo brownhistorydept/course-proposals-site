@@ -84,7 +84,7 @@ export async function fetchCourses(
         // if the user is logged in, set the user and authenticated flag
         if (res.status === 200) {
             const resJson = await res.json();
-            console.log(resJson)
+            setSuccess(true)
         } else {
             throw new Error("failed to submit user");
         }

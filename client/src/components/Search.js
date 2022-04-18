@@ -14,7 +14,7 @@ import * as React from 'react';
 
 import CourseInfo from './CourseInfo'
 
-export default function ResponsiveAppBar({professor, courses}) {
+export default function Search({professor, courses}) {
   const [searched, setSearched] = React.useState('');
 
   const [professorSelected, setProfessorSelected] = React.useState('');
@@ -386,8 +386,8 @@ export default function ResponsiveAppBar({professor, courses}) {
                     sx = {{height:30, padding: 0, border: 0 }}
                   > 
                     <MenuItem value="All">All</MenuItem>
-                    {professor.map((prof) => (
-                      <MenuItem value={prof}>
+                    {professor?.map((prof) => (
+                      <MenuItem value={prof} key={prof}>
                         {prof.displayName}
                       </MenuItem>
                     ))}

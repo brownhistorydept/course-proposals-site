@@ -347,7 +347,7 @@ function CourseProposal() {
                   })
       
 
-                  if (courseNumber === "" || courseTitle === "" || description==="" || year===0 ){
+                  if (courseNumber === "" || courseTitle === "" || description==="" || year===0 || professors.length == 0){
                     alert("Please fill all required fields")
                   } else if (isNaN(parseInt(courseNumber))){ 
                     alert("Course Number has to be a numerical value")
@@ -385,6 +385,11 @@ function CourseProposal() {
                   };
                   
                     submitCourse(setSuccess, setError, course);
+                    if (success){
+                      alert("Course successfully submitted!")
+                    }else{
+                      alert("Error submitting course")
+                    }
                   }
                 }}>
                   <Typography gutterBottom variant="body1">
