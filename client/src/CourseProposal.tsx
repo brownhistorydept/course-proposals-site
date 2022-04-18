@@ -340,7 +340,7 @@ function CourseProposal() {
               <Button 
                 variant="contained" 
                 sx={{textTransform:"none", backgroundColor:"#992525", mx:1}}
-                onClick={() => {
+                onClick={async () => {
                   let profMap = new Map<string, string>();
                   professorValues?.map((prof)=>{
                     profMap.set(prof.displayName!,prof._id!)
@@ -384,7 +384,7 @@ function CourseProposal() {
                     }
                   };
                   
-                    submitCourse(setSuccess, setError, course);
+                    const success = await submitCourse(setSuccess, setError, course);
                     if (success){
                       alert("Course successfully submitted!")
                     }else{

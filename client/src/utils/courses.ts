@@ -80,15 +80,20 @@ export async function fetchCourses(
                 body: JSON.stringify(course_info),   
             }
         );
+        console.log(res.status);
 
         // if the user is logged in, set the user and authenticated flag
         if (res.status === 200) {
+            console.log("i succeeded!")
             const resJson = await res.json();
-            setSuccess(true)
+            // setSuccess(true)
+            return true;
         } else {
+            console.log("I failed :(")
             throw new Error("failed to submit user");
         }
     } catch (error) {
-        setError("Failed to authenticate user");
+        // setError("Failed to authenticate user");
+        return false;
     }
   } 
