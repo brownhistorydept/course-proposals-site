@@ -16,6 +16,10 @@ import { submitCourse } from './utils/courses';
 import { ICourse } from '../../server/src/models/Course';
 import {useLocation} from 'react-router'
 import { json } from 'stream/consumers';
+import FormControl from '@mui/material/FormControl';
+import ListItemText from '@mui/material/ListItemText';
+import { fetchProfessors } from "./utils/professors";
+import InputLabel from '@mui/material/InputLabel';
 
 
 function CoursePropInfo() {
@@ -28,6 +32,16 @@ function CoursePropInfo() {
             await fetchUser(setUser, setError);
         }
         getUser();
+        
+    }, []);
+
+    const [professorValues, setProfessorsValues] = useState<IUser[]>();
+    // called once when components on page have rendered
+    useEffect(() => {
+        async function getProfessors() {
+            await fetchProfessors(setProfessorsValues, setError);
+        }
+        getProfessors();
         
     }, []);
 
@@ -44,6 +58,8 @@ function CoursePropInfo() {
     const course = myState.course;
     const approve = myState.approve;
     const edit = myState.edit;
+
+    const [professors, setProfessors] = useState<string[]>([]);
     
     console.log(course)
 
@@ -54,6 +70,19 @@ function CoursePropInfo() {
     const courseSemester = course["semester"]
     var courseLevel = ""
     const courseGeography = course["geography"][0]
+
+    const courseProfessors = course["professors"]
+    console.log(courseProfessors)
+
+    var profList = []
+
+    for (let i = 0; i < courseProfessors.length; i++) {
+      profList.push(courseProfessors[i].displayName) 
+    }
+
+    var profString = profList.join(", ")
+
+    console.log(profString)
 
     if (course["is_undergrad"]) {
         courseLevel = "Undergraduate"
@@ -83,22 +112,6 @@ function CoursePropInfo() {
     // }
 
   // const [crn, setCrn] = useState(0);
-  const [isUndergrad, setIsUndergrad] = useState(1);
-  const [geography, setGeography] = useState('');
-  const [description, setDescription] = useState('');
-  const [capstone, setCapstone] = useState(false);
-  const [fys, setFys] = useState(false);
-  const [sys, setSys] = useState(false);
-  const [intro, setIntro] = useState(false);
-  const [lecture, setLecture] = useState(false);
-  const [writ, setWrit] = useState(false);
-  const [diap, setDiap] = useState(false);
-  const [remote, setRemote] = useState(false);
-  const [premodern, setPremodern] = useState(false);
-  const [semester, setSemester] = useState('Fall');
-  const [year, setYear] = useState(0);
-  const [time, setTime] = useState('A');
-  const [success, setSuccess] = useState(false);
 
   return (
     <div className="CourseProposal">
@@ -116,7 +129,7 @@ function CoursePropInfo() {
             paddingLeft: 2,
           }}> 
             <Typography variant="h3" paddingBottom={5}>
-                Course Proposal
+                Course Information
             </Typography>
      
           </Box> 
@@ -154,11 +167,41 @@ function CoursePropInfo() {
               </Grid>
               
               <Grid item xs={2}>
-              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Professor</Typography>
+              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Professor(s)</Typography>
               </Grid>
+              {/* <FormControl fullWidth> */}
               <Grid item xs={10}>
-              <Typography variant="body1" my="auto">{user?.displayName}</Typography>
+                <TextField
+                  fullWidth
+                  size='small'
+                  value = {profString}
+                  InputProps={{
+                      readOnly: true,
+                    }}
+                />
+                {/* <Select
+                  size='small'
+                  multiple
+                  value={professors}
+                  onChange={(event)=>{
+                    const {
+                      target: { value },
+                    } = event;
+                    setProfessors(
+                      typeof value === 'string' ? value.split(',') : value,
+                    );
+                  }}
+                  renderValue={(selected) => selected.join(', ')}
+                >
+                  {professorValues?.map((prof) => (
+                    <MenuItem key={prof.displayName} value={prof.displayName}>
+                      <Checkbox checked={professors.indexOf(prof.displayName) > -1} />
+                      <ListItemText primary={prof.displayName} />
+                    </MenuItem>
+                  ))}
+                </Select> */}
               </Grid>
+              {/* </FormControl> */}
 
               {/* <Grid item xs={2}>
               <Typography variant="body1" fontWeight="bold" my="auto" align='right'>CRN</Typography>
@@ -237,7 +280,25 @@ function CoursePropInfo() {
                 InputProps={{
                     readOnly: true,
                   }}
-                value = {course.final_time}
+                value = {course.time_ranking[0]}
+                sx={{marginRight: 1}}
+              >
+              </TextField>
+              <TextField
+                size='small'
+                InputProps={{
+                    readOnly: true,
+                  }}
+                value = {course.time_ranking[1]}
+                sx={{marginRight: 1}}
+              >
+              </TextField>
+              <TextField
+                size='small'
+                InputProps={{
+                    readOnly: true,
+                  }}
+                value = {course.time_ranking[2]}
               >
               </TextField>
               </Grid>
