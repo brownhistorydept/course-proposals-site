@@ -362,27 +362,29 @@ function CourseProposal() {
                     })
                     var undergrad = isUndergrad === 1
                     var course = {
-                      course_number: `HIST ${courseNumber}`,
-                      course_title: courseTitle,
-                      description: description,
-                      professors: profId,
-                      is_undergrad: undergrad,
-                      is_DIAP: diap,
-                      is_WRIT: writ,
-                      is_Premodern: premodern,
-                      is_FYS: fys,
-                      is_SYS: sys,
-                      is_capstone: capstone,
-                      is_lecture: lecture,
-                      is_intro: intro,
-                      is_remote: remote,
-                      semester: semester,
-                      year: year,
-                      time_ranking: [time1, time2, time3],
-                      geography: geography,
+                      proposed: {
+                        course_number: `HIST ${courseNumber}`,
+                        course_title: courseTitle,
+                        description: description,
+                        professors: profId,
+                        is_undergrad: undergrad,
+                        is_DIAP: diap,
+                        is_WRIT: writ,
+                        is_Premodern: premodern,
+                        is_FYS: fys,
+                        is_SYS: sys,
+                        is_capstone: capstone,
+                        is_lecture: lecture,
+                        is_intro: intro,
+                        is_remote: remote,
+                        semester: semester,
+                        year: year,
+                        time_ranking: [time1, time2, time3],
+                        geography: geography,
+                    }
                   };
                   
-                    submitCourse(setSuccess, setError, course)
+                    submitCourse(setSuccess, setError, course);
                   }
                 }}>
                   <Typography gutterBottom variant="body1">

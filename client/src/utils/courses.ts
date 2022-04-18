@@ -1,3 +1,4 @@
+import { cp } from 'fs';
 import { ICourse } from '../../../server/src/models/Course';
 // import { IUser } from '../../../server/src/models/User';
 
@@ -67,21 +68,21 @@ export async function fetchCourses(
     setError: (error: string) => void,
     course_info: any,
   ) {
+      console.log("LALALLALAALLAL");
+      console.log(course_info);
     try {
-        console.log(course_info)
         const res = await fetch(
             `${process.env.REACT_APP_SERVER_URL}/courses/submit`,
             {
                 method: "POST",
                 credentials: "include",
-                // headers: {
-                //     Accept: "application/json",
-                //     "Content-Type": "application/json",
-                //     "Access-Control-Allow-Credentials": "true",
-                // },
-                body: course_info,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(course_info),   
             }
         );
+
         // if the user is logged in, set the user and authenticated flag
         if (res.status === 200) {
             const resJson = await res.json();
