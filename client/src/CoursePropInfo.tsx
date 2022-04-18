@@ -15,6 +15,7 @@ import Button from '@mui/material/Button';
 import { submitCourse } from './utils/courses';
 import { ICourse } from '../../server/src/models/Course';
 import {useLocation} from 'react-router'
+import { json } from 'stream/consumers';
 
 
 function CoursePropInfo() {
@@ -30,11 +31,49 @@ function CoursePropInfo() {
         
     }, []);
 
-    console.log("Hi")
-    // let data = useLocation();
-    let course = useLocation().state
+    interface CustomizedState {
+        course: any,
+        approve: boolean,
+        edit: boolean,
+      }
+      
+    const location = useLocation();
+    const state = location.state as CustomizedState; // Type Casting, then you can get the params passed via router
+    const myState = state;
+
+    const course = myState.course;
+    const approve = myState.approve;
+    const edit = myState.edit;
+    
     console.log(course)
-    console.log()
+
+    const courseNumber = course["course_number"].split(" ")[1];
+    const courseTitle = course["course_title"]
+    const courseYear = course["year"]
+    const courseDescription = course["description"]
+    const courseSemester = course["semester"]
+    var courseLevel = ""
+    const courseGeography = course["geography"][0]
+
+    if (course["is_undergrad"]) {
+        courseLevel = "Undergraduate"
+    } else {
+        courseLevel = "Graduate"
+    }
+
+
+    // console.log(state);
+    // console.log(state.edit);
+
+    // if (state !== undefined && state !== null && state.constructor == Object) {
+
+    // }
+
+    // if (state instanceof json) {
+    //     console.log(state)
+    // }
+    
+
     // console.log(props.location)
     // let id = props.location.state?.id;
     // console.log(id);
@@ -43,8 +82,6 @@ function CoursePropInfo() {
     //     console.log(props.location.state.course);
     // }
 
-  const [courseNumber, setCourseNumber] = useState('');
-  const [courseTitle, setCourseTitle] = useState('');
   // const [crn, setCrn] = useState(0);
   const [isUndergrad, setIsUndergrad] = useState(1);
   const [geography, setGeography] = useState('');
@@ -95,8 +132,10 @@ function CoursePropInfo() {
               <Grid item xs={9.5}>
               <TextField
                 size='small'
-                required
-                onChange={(e)=>setCourseNumber(e.target.value)}
+                value = {courseNumber}
+                InputProps={{
+                    readOnly: true,
+                  }}
               />
               </Grid>
 
@@ -107,8 +146,10 @@ function CoursePropInfo() {
               <TextField
                 size='small'
                 fullWidth
-                required
-                onChange={(e)=>setCourseTitle(e.target.value)}
+                value = {courseTitle}
+                InputProps={{
+                    readOnly: true,
+                  }}
               />
               </Grid>
               
@@ -133,23 +174,25 @@ function CoursePropInfo() {
               <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Semester *</Typography>
               </Grid>
               <Grid item xs={10}>
-              <Select
+              <TextField
                 size='small'
-                autoWidth
-                defaultValue={"Fall"}
-                onChange={(e)=>{
-                  setSemester(e.target.value)
-                }}
+                value = {courseSemester}
+                InputProps={{
+                    readOnly: true,
+                  }}
                 sx={{marginRight: 1}}
               >
                 <MenuItem value={"Fall"}>Fall</MenuItem>
                 <MenuItem value={"Winter"}>Winter</MenuItem>
                 <MenuItem value={"Spring"}>Spring</MenuItem>
                 <MenuItem value={"Summer"}>Summer</MenuItem>
-              </Select>
+              </TextField>
               <TextField
+                InputProps={{
+                    readOnly: true,
+                  }}
                 size='small'
-                onChange={(e)=>{setYear(parseInt(e.target.value))}}
+                value = {courseYear}
                 label="Year"
               />
               </Grid>
@@ -158,60 +201,45 @@ function CoursePropInfo() {
               <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Level *</Typography>
               </Grid>
               <Grid item xs={10}>
-              <Select
+              <TextField
                 size='small'
-                autoWidth
-                defaultValue={1}
-                onChange={(e)=>{
-                  let val = e.target.value as number
-                  setIsUndergrad(val)
-                }
-                  }
+                InputProps={{
+                    readOnly: true,
+                  }}
+                value = {courseLevel}
               >
                 <MenuItem value={1}>Undergraduate</MenuItem>
                 <MenuItem value={0}>Graduate</MenuItem>
-              </Select>
+              </TextField>
               </Grid>
 
               <Grid item xs={2}>
               <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Geography</Typography>
               </Grid>
               <Grid item xs={10}>
-              <Select
+              <TextField
                 size='small'
-                autoWidth
-                defaultValue = ""
-                onChange={(e)=>setGeography(e.target.value)}
+                InputProps={{
+                    readOnly: true,
+                  }}
+                value = {courseGeography}
                 
               >
-                <MenuItem value=""><em>N/A</em></MenuItem>
-                <MenuItem value="Africa">Africa</MenuItem>
-                <MenuItem value="East Asia">East Asia</MenuItem>
-                <MenuItem value="Europe">Europe</MenuItem>
-                <MenuItem value="Latin America">Latin America</MenuItem>
-                <MenuItem value="MESA">MESA</MenuItem>
-                <MenuItem value="North America">North America</MenuItem>
-                <MenuItem value="Global">Global</MenuItem>
-              </Select>
+              </TextField>
               </Grid>
 
               <Grid item xs={2}>
               <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Time *</Typography>
               </Grid>
               <Grid item xs={10}>
-              <Select
+              <TextField
                 size='small'
-                autoWidth
-                defaultValue={"A"}
-                onChange={(e)=>{setTime(e.target.value)}}
+                InputProps={{
+                    readOnly: true,
+                  }}
+                value = {course.final_time}
               >
-                <MenuItem value={"A"}>A</MenuItem> <MenuItem value={"B"}>B</MenuItem> <MenuItem value={"C"}>C</MenuItem>
-                <MenuItem value={"D"}>D</MenuItem> <MenuItem value={"E"}>E</MenuItem> <MenuItem value={"F"}>F</MenuItem>
-                <MenuItem value={"G"}>G</MenuItem> <MenuItem value={"H"}>H</MenuItem> <MenuItem value={"I"}>I</MenuItem>
-                <MenuItem value={"J"}>J</MenuItem> <MenuItem value={"K"}>K</MenuItem> <MenuItem value={"L"}>L</MenuItem>
-                <MenuItem value={"M"}>M</MenuItem> <MenuItem value={"N"}>N</MenuItem> <MenuItem value={"O"}>O</MenuItem>
-                <MenuItem value={"P"}>P</MenuItem> <MenuItem value={"Q"}>Q</MenuItem> <MenuItem value={"T"}>T</MenuItem>
-              </Select>
+              </TextField>
               </Grid>
 
               <Grid item xs={2}>
@@ -219,10 +247,13 @@ function CoursePropInfo() {
               </Grid>
               <Grid item xs={10}>
               <TextField
+              InputProps={{
+                readOnly: true,
+              }}
               fullWidth
                 multiline={true}
                 rows={5}
-                onChange={(e)=>setDescription(e.target.value)}
+                value = {courseDescription}
               />
               <Typography variant="body2" mx="auto">* required fields </Typography>
               </Grid>
@@ -230,66 +261,30 @@ function CoursePropInfo() {
               <Grid item xs={3}></Grid>
               <Grid item xs={3}>
                 <FormGroup>
-                  <FormControlLabel control={<Checkbox onClick={(e)=>{setCapstone((e.target as HTMLInputElement).checked)}}/>} label="Capstone" />
-                  <FormControlLabel control={<Checkbox onClick={(e)=>{setFys((e.target as HTMLInputElement).checked)}}/>} label="First-Year Seminar" />
-                  <FormControlLabel control={<Checkbox onClick={(e)=>{setSys((e.target as HTMLInputElement).checked)}}/>} label="Sophomore Seminar" />
-                  <FormControlLabel control={<Checkbox onClick={(e)=>{setIntro((e.target as HTMLInputElement).checked)}}/>} label="Intro" />
-                  <FormControlLabel control={<Checkbox onClick={(e)=>{setLecture((e.target as HTMLInputElement).checked)}}/>} label="Lecture" />
+                  <FormControlLabel control={<Checkbox disabled checked={course.is_capstone}/>} label="Capstone" />
+                  <FormControlLabel control={<Checkbox disabled checked={course.is_FYS}/>} label="First-Year Seminar" />
+                  <FormControlLabel control={<Checkbox disabled checked={course.is_SYS}/>} label="Sophomore Seminar" />
+                  <FormControlLabel control={<Checkbox disabled checked={course.is_intro}/>} label="Intro" />
+                  <FormControlLabel control={<Checkbox disabled checked={course.is_lecture}/>} label="Lecture" />
                 </FormGroup>
               </Grid>
               <Grid item xs={3}>
                 <FormGroup>
-                    <FormControlLabel control={<Checkbox onClick={(e)=>{setWrit((e.target as HTMLInputElement).checked)}}/>} label="WRIT" />
-                    <FormControlLabel control={<Checkbox onClick={(e)=>{setDiap((e.target as HTMLInputElement).checked)}}/>} label="DIAP" />
-                    <FormControlLabel control={<Checkbox onClick={(e)=>{setRemote((e.target as HTMLInputElement).checked)}}/>} label="Remote" />
-                    <FormControlLabel control={<Checkbox onClick={(e)=>{setPremodern((e.target as HTMLInputElement).checked)}}/>} label="Premodern" />
+                    <FormControlLabel control={<Checkbox disabled checked={course.is_WRIT}/>} label="WRIT" />
+                    <FormControlLabel control={<Checkbox disabled checked={course.is_DIAP}/>} label="DIAP" />
+                    <FormControlLabel control={<Checkbox disabled checked={course.is_remote}/>} label="Remote" />
+                    <FormControlLabel control={<Checkbox disabled checked={course.is_FYS}/>} label="Premodern" />
                 </FormGroup>
               </Grid>
               <Grid item xs={3}></Grid>
               
-              
-            <Grid item marginX="auto" >
+            {approve&&<Grid item marginX="auto" >
               <Button 
                 variant="contained" 
                 sx={{textTransform:"none", backgroundColor:"#992525", mx:1}}
-                onClick={() => {
-                  if (courseNumber === "" || courseTitle === "" || description==="" || year===0 || year===NaN){
-                    alert("Please fill all required fields")
-                  } else if (isNaN(parseInt(courseNumber))){ 
-                    alert("Course Number has to be a numerical value")
-                  } else if (isNaN(year)){ 
-                    alert("Year has to be a numerical value")
-                  } else {
-                    var undergrad = isUndergrad === 1
-                    var course = {
-                      user: user,
-                      course_number: `HIST ${courseNumber}`,
-                      // crn: crn,
-                      course_title: courseTitle,
-                      description: description,
-                      professors: [user],
-                      is_undergrad: undergrad,
-                      is_DIAP: diap,
-                      is_WRIT: writ,
-                      is_Premodern: premodern,
-                      is_FYS: fys,
-                      is_SYS: sys,
-                      is_capstone: capstone,
-                      is_lecture: lecture,
-                      is_intro: intro,
-                      is_remote: remote,
-                      semester: semester,
-                      year: year,
-                      final_time: time,
-                      geography: [geography],
-                      proposal_status: "under review by director",
-                      course_status: "new"
-                  };
-                    // submitCourse(setSuccess, setError, course)
-                  }
-                }}>
+            >
                   <Typography gutterBottom variant="body1">
-                    Submit
+                    Accept
                   </Typography>
               </Button>
               <Button 
@@ -299,10 +294,21 @@ function CoursePropInfo() {
                   window.location.reload();
                 }}>
                   <Typography gutterBottom variant="body1">
-                    Clear
+                    Reject
                   </Typography>
               </Button>
-            </Grid>
+            </Grid>}
+
+            {edit&&<Grid item marginX="auto" >
+              <Button 
+                variant="contained" 
+                sx={{textTransform:"none", backgroundColor:"#992525", mx:1}}
+            >
+                  <Typography gutterBottom variant="body1">
+                    Edit
+                  </Typography>
+              </Button>
+            </Grid>}
 
           </Grid>
 
