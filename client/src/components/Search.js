@@ -359,15 +359,16 @@ export default function Search({professor, courses}) {
               <div>
                 <TextField
                   label="Search by Course Name"
+                  fullWidth
                   id="outlined-size-small"
                   onChange={selectSearched}
                   size="small"
-                  style = {{width: 900}}
+                  style = {{width: 1010}}
                 />
                 <br/>
               </div>
             </Box>
-            <Button style={{maxHeight: '40px', marginTop: 32}} variant="outlined">Search</Button>
+            {/* <Button style={{maxHeight: '40px', marginTop: 32}} variant="outlined">Search</Button> */}
           </Box>
         </Box>
         <Box sx={{ display: 'flex', width: 1, marginTop: 3, marginLeft:1, p: 0, border: '0px solid', marginBottom: 2}}>
