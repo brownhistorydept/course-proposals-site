@@ -68,8 +68,6 @@ export async function fetchCourses(
     setError: (error: string) => void,
     course_info: any,
   ) {
-      console.log("LALALLALAALLAL");
-      console.log(course_info);
     try {
         const res = await fetch(
             `${process.env.REACT_APP_SERVER_URL}/courses/submit`,
