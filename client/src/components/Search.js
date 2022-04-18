@@ -196,7 +196,7 @@ export default function Search({professor, courses}) {
       var toSort = allCourses
 
       if (consider['professor']) {
-        toSort = sortByProf(toSort, "Tharit Ngamprasertsith")
+        toSort = sortByProf(toSort, professorSelected)
         // professorSelected
       }
       
