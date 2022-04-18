@@ -116,20 +116,26 @@ courseRouter.post("/submit", async (req: IGetUserAuthInfoRequest, res: Response)
     const proposalRequest = req.body as ICourseProposalRequest;
     const status = getCourseStatus(proposalRequest.proposed, proposalRequest.original);
 
-    if (Course.find(proposalRequest.proposed)) { // duplicate course
+    if ((await Course.find(proposalRequest.proposed)).length > 0) { // duplicate course
         res.status(401).json({
             message: "cannot submit a duplicate course",
         });
-    } else if (permissions.can_submit_courses) {
+        return;
+    }
+    
+    if (permissions.can_submit_courses) {
         const newCourse = await Course.create({
             ...proposalRequest.proposed, 
             proposal_status: PROPOSAL_STATUS.DIRECTOR_REVIEW, 
             course_status: status
         });
         res.status(200).json({newCourse});
+        console.log("returning success");
+        console.log(newCourse);
 
         // TODO: notify relevant parties via email
     } else {
+        console.log("returning failure");
         res.status(401).json({
             message: "submission failed",
         });
