@@ -320,7 +320,7 @@ export default function Search({professor, courses}) {
       console.log(stringArr);
 
       for (var j = 0, len2 = lowerArr.length; j < len2; j++) {
-          if (stringArr.includes(lowerArr[j])) {
+          if (stringArr.includes(lowerArr[j]) && !sortedList.includes(l)) {
             sortedList.push(l);
           }
       }
