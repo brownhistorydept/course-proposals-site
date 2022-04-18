@@ -22,7 +22,7 @@ import { fetchProfessors } from "./utils/professors";
 import InputLabel from '@mui/material/InputLabel';
 
 
-function CoursePropInfo() {
+function CoursePropInfoView() {
 
   const [user, setUser] = useState<IUser>();
   const [, setError] = useState("");
@@ -90,6 +90,9 @@ function CoursePropInfo() {
         courseLevel = "Graduate"
     }
 
+    console.log(Math.floor(courseDescription.split(" ").length / 12))
+    console.log(courseDescription.split(" "))
+
 
     // console.log(state);
     // console.log(state.edit);
@@ -144,11 +147,14 @@ function CoursePropInfo() {
               </Grid>
               <Grid item xs={9.5}>
               <TextField
+                variant="standard"
+                InputProps={{
+                       disableUnderline: true,
+                       readOnly: true,
+                     }}
                 size='small'
                 value = {courseNumber}
-                InputProps={{
-                    readOnly: true,
-                  }}
+                sx = {{border: 0}}
               />
               </Grid>
 
@@ -160,9 +166,12 @@ function CoursePropInfo() {
                 size='small'
                 fullWidth
                 value = {courseTitle}
+                variant="standard"
                 InputProps={{
-                    readOnly: true,
-                  }}
+                  disableUnderline: true,
+                  readOnly: true,
+                }}
+                sx = {{border: 0}}
               />
               </Grid>
               
@@ -175,9 +184,11 @@ function CoursePropInfo() {
                   fullWidth
                   size='small'
                   value = {profString}
+                  variant="standard"
                   InputProps={{
-                      readOnly: true,
-                    }}
+                    disableUnderline: true,
+                    readOnly: true,
+                  }}
                 />
                 {/* <Select
                   size='small'
@@ -219,25 +230,15 @@ function CoursePropInfo() {
               <Grid item xs={10}>
               <TextField
                 size='small'
-                value = {courseSemester}
+                value = {courseSemester + " " + courseYear}
+                variant="standard"
                 InputProps={{
-                    readOnly: true,
-                  }}
+                  disableUnderline: true,
+                  readOnly: true,
+                }}
                 sx={{marginRight: 1}}
               >
-                <MenuItem value={"Fall"}>Fall</MenuItem>
-                <MenuItem value={"Winter"}>Winter</MenuItem>
-                <MenuItem value={"Spring"}>Spring</MenuItem>
-                <MenuItem value={"Summer"}>Summer</MenuItem>
               </TextField>
-              <TextField
-                InputProps={{
-                    readOnly: true,
-                  }}
-                size='small'
-                value = {courseYear}
-                label="Year"
-              />
               </Grid>
 
               <Grid item xs={2}>
@@ -246,9 +247,11 @@ function CoursePropInfo() {
               <Grid item xs={10}>
               <TextField
                 size='small'
+                variant="standard"
                 InputProps={{
-                    readOnly: true,
-                  }}
+                  disableUnderline: true,
+                  readOnly: true,
+                }}
                 value = {courseLevel}
               >
                 <MenuItem value={1}>Undergraduate</MenuItem>
@@ -262,9 +265,11 @@ function CoursePropInfo() {
               <Grid item xs={10}>
               <TextField
                 size='small'
+                variant="standard"
                 InputProps={{
-                    readOnly: true,
-                  }}
+                  disableUnderline: true,
+                  readOnly: true,
+                }}
                 value = {courseGeography}
                 
               >
@@ -277,14 +282,16 @@ function CoursePropInfo() {
               <Grid item xs={10}>
               <TextField
                 size='small'
+                variant="standard"
                 InputProps={{
+                    disableUnderline: true,
                     readOnly: true,
                   }}
-                value = {course.time_ranking[0]}
+                value = {course.time_ranking.join(", ")}
                 sx={{marginRight: 1}}
               >
               </TextField>
-              <TextField
+              {/* <TextField
                 size='small'
                 InputProps={{
                     readOnly: true,
@@ -300,7 +307,7 @@ function CoursePropInfo() {
                   }}
                 value = {course.time_ranking[2]}
               >
-              </TextField>
+              </TextField> */}
               </Grid>
 
               <Grid item xs={2}>
@@ -308,15 +315,16 @@ function CoursePropInfo() {
               </Grid>
               <Grid item xs={10}>
               <TextField
+              variant="standard"
               InputProps={{
-                readOnly: true,
-              }}
+                  disableUnderline: true,
+                  readOnly: true,
+                }}
               fullWidth
                 multiline={true}
-                rows={5}
+                rows={Math.floor(courseDescription.split(" ").length / 13)}
                 value = {courseDescription}
               />
-              <Typography variant="body2" mx="auto">* required fields </Typography>
               </Grid>
 
               <Grid item xs={3}></Grid>
@@ -379,4 +387,5 @@ function CoursePropInfo() {
   );
 }
 
-export default CoursePropInfo;
+export default CoursePropInfoView;
+
