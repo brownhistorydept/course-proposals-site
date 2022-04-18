@@ -2,6 +2,7 @@ import { Request, Response, Router } from "express";
 import Course, { ICourse, PROPOSAL_STATUS, COURSE_STATUS } from "../models/Course"
 import { IGetUserAuthInfoRequest } from "../middleware/auth";
 import { getPermissions, ROLES } from "../models/Permissions";
+import { Mongoose } from "mongoose";
 
 const courseRouter = Router();
 
@@ -115,7 +116,11 @@ courseRouter.post("/submit", async (req: IGetUserAuthInfoRequest, res: Response)
     const proposalRequest = req.body as ICourseProposalRequest;
     const status = getCourseStatus(proposalRequest.proposed, proposalRequest.original);
 
-    if (permissions.can_submit_courses) {
+    if (Course.find(proposalRequest.proposed)) { // duplicate course
+        res.status(401).json({
+            message: "cannot submit a duplicate course",
+        });
+    } else if (permissions.can_submit_courses) {
         const newCourse = await Course.create({
             ...proposalRequest.proposed, 
             proposal_status: PROPOSAL_STATUS.DIRECTOR_REVIEW, 
