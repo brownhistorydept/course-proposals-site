@@ -18,10 +18,11 @@ import ListItemText from '@mui/material/ListItemText';
 import { fetchProfessors } from "./utils/professors";
 import InputLabel from '@mui/material/InputLabel';
 // import { ICourse } from '../../server/src/models/Course';
-
+import { useNavigate } from 'react-router-dom';
 
 function CourseProposal() {
 
+  const navigate = useNavigate();
   const [user, setUser] = useState<IUser>();
   const [, setError] = useState("");
     // called once when components on page have rendered
@@ -387,6 +388,7 @@ function CourseProposal() {
                     const success = await submitCourse(setSuccess, setError, course);
                     if (success){
                       alert("Course successfully submitted!")
+                      navigate('/my_courses');
                     }else{
                       alert("Error submitting course")
                     }
