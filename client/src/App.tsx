@@ -44,7 +44,7 @@ function App() {
       }, []);
  
   return(
-  user?
+    (user && courses && professors) ?
     <div className="CoursePage">
       <NavBar user={user} />
       {typeof professors !=='undefined' && <Search professor={professors} courses={courses}/>}
