@@ -70,9 +70,9 @@ export default function ComplexGrid({course, status, edit, approve}) {
                 {/* <Typography gutterBottom variant="body1">{course.professors[0].displayName}</Typography> */}
                 {course.professors.map((name,index)=>{
                   if (index==course.professors.length-1) {
-                    return <Typography gutterBottom variant="body1">{name.displayName}</Typography>
+                    return <Typography gutterBottom variant="body1" key={name.displayName}>{name.displayName}</Typography>
                   } else {
-                    return <Typography gutterBottom variant="body1">{name.displayName},&nbsp;</Typography>
+                    return <Typography gutterBottom variant="body1" key= {name.displayName}>{name.displayName},&nbsp;</Typography>
                   }
                     
                    
@@ -94,32 +94,32 @@ export default function ComplexGrid({course, status, edit, approve}) {
             <Grid item xs container >
               <Grid item xs container >
                 <FormGroup row>
-                  {course.is_DIAP && <FormControlLabel disabled checked control={<Checkbox />} label="DIAP" />}
-                  {!course.is_DIAP && <FormControlLabel disabled control={<Checkbox />} label="DIAP" />}
+                  {course.is_DIAP && <FormControlLabel disabled checked control={<Checkbox />} label="DIAP" key="DIAP"/>}
+                  {!course.is_DIAP && <FormControlLabel disabled control={<Checkbox />} label="DIAP" key="DIAP1"/>}
 
-                  {course.is_WRIT && <FormControlLabel disabled checked control={<Checkbox />} label="WRIT" />}
-                  {!course.is_WRIT && <FormControlLabel disabled control={<Checkbox />} label="WRIT" />}
+                  {course.is_WRIT && <FormControlLabel disabled checked control={<Checkbox />} label="WRIT" key="WRIT"/>}
+                  {!course.is_WRIT && <FormControlLabel disabled control={<Checkbox />} label="WRIT" key="WRIT1" />}
 
-                  {course.is_remote && <FormControlLabel disabled checked control={<Checkbox />} label="REM" />}
-                  {!course.is_remote && <FormControlLabel disabled control={<Checkbox />} label="REM" />}
+                  {course.is_remote && <FormControlLabel disabled checked control={<Checkbox />} label="REM" key="REM"/>}
+                  {!course.is_remote && <FormControlLabel disabled control={<Checkbox />} label="REM" key="REM1"/>}
 
-                  {course.is_Premodern && <FormControlLabel disabled checked control={<Checkbox />} label="P" />}
-                  {!course.is_Premodern && <FormControlLabel disabled control={<Checkbox />} label="P" />}
+                  {course.is_Premodern && <FormControlLabel disabled checked control={<Checkbox />} label="P" key="P"/>}
+                  {!course.is_Premodern && <FormControlLabel disabled control={<Checkbox />} label="P" key="P1"/>}
 
-                  {course.is_intro && <FormControlLabel disabled checked control={<Checkbox />} label="Intro" />}
-                  {!course.is_intro && <FormControlLabel disabled control={<Checkbox />} label="Intro" />}
+                  {course.is_intro && <FormControlLabel disabled checked control={<Checkbox />} label="Intro" key="Intro"/>}
+                  {!course.is_intro && <FormControlLabel disabled control={<Checkbox />} label="Intro" key="Intro1"/>}
 
-                  {course.is_FYS && <FormControlLabel disabled checked control={<Checkbox />} label="FYS" />}
-                  {!course.is_FYS && <FormControlLabel disabled control={<Checkbox />} label="FYS" />}
+                  {course.is_FYS && <FormControlLabel disabled checked control={<Checkbox />} label="FYS" key="FYS"/>}
+                  {!course.is_FYS && <FormControlLabel disabled control={<Checkbox />} label="FYS" key="FYS1" />}
 
-                  {course.is_SYS && <FormControlLabel disabled checked control={<Checkbox />} label="SYS" />}
-                  {!course.is_SYS && <FormControlLabel disabled control={<Checkbox />} label="SYS" />}
+                  {course.is_SYS && <FormControlLabel disabled checked control={<Checkbox />} label="SYS" key="SYS"/>}
+                  {!course.is_SYS && <FormControlLabel disabled control={<Checkbox />} label="SYS" key="SYS1"/>}
 
-                  {course.is_capstone && <FormControlLabel disabled checked control={<Checkbox />} label="Capstone" />}
-                  {!course.is_capstone && <FormControlLabel disabled control={<Checkbox />} label="Capstone" />}
+                  {course.is_capstone && <FormControlLabel disabled checked control={<Checkbox />} label="Capstone" key="Capstone"/>}
+                  {!course.is_capstone && <FormControlLabel disabled control={<Checkbox />} label="Capstone"  key="Capstone1"/>}
 
-                  {course.is_lecture && <FormControlLabel disabled checked control={<Checkbox />} label="Lecture" />}
-                  {!course.is_lecture && <FormControlLabel disabled control={<Checkbox />} label="Lecture" />}
+                  {course.is_lecture && <FormControlLabel disabled checked control={<Checkbox />} label="Lecture" key="Lecture"/>}
+                  {!course.is_lecture && <FormControlLabel disabled control={<Checkbox />} label="Lecture" key="Lecture1"/>}
                   
                 </FormGroup>
               </Grid>  

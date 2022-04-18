@@ -47,7 +47,7 @@ function App() {
   user?
     <div className="CoursePage">
       <NavBar user={user} />
-      <Search professor={professors} courses={courses}/>
+      {typeof professors !=='undefined' && <Search professor={professors} courses={courses}/>}
       {/* {console.log(courses)} */}
       {/* {console.log(user)} */}
       {/* {console.log("Professors:" + professors)}

@@ -385,6 +385,11 @@ function CourseProposal() {
                   };
                   
                     submitCourse(setSuccess, setError, course);
+                    if (success){
+                      alert("Course successfully submitted!")
+                    }else{
+                      alert("Error submitting course")
+                    }
                   }
                 }}>
                   <Typography gutterBottom variant="body1">
