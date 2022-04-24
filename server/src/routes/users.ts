@@ -1,12 +1,11 @@
 import { Request, Response, Router } from "express";
-import { IGetUserAuthInfoRequest } from "../middleware/auth";
-import User from "../models/User";
-import { ROLES } from "../models/Permissions"
+import { IGetUserAuthInfoRequest, authCheck } from "../middleware/auth";
+import User, { ROLES } from "../models/User";
 
 const userRouter = Router();
 
 // get all users
-userRouter.get("/all", async (req: Request, res: Response) => {
+userRouter.get("/all", authCheck, async (req: Request, res: Response) => {
     try {
         const results = await User.find({});
         res.status(200).json({results});
@@ -20,7 +19,7 @@ userRouter.get("/all", async (req: Request, res: Response) => {
 });
 
 // get all professors
-userRouter.get("/professors", async (req: Request, res: Response) => {
+userRouter.get("/professors", authCheck, async (req: Request, res: Response) => {
     try {
         const results = await User.find({$or: 
             [{role: ROLES.PROFESSOR}, {role: ROLES.CURRIC_COORD}, {role: ROLES.UG_DIRECTOR}, {role: ROLES.GRAD_DIRECTOR}]});
@@ -35,42 +34,48 @@ userRouter.get("/professors", async (req: Request, res: Response) => {
 }
 );
 
+interface RoleBody {
+    role: string,
+}
+
 // change user's role; this should only be used by managers
-// id is the string form of the _id of the user whose role is being changed, role is their new role as a string
-userRouter.post("/change-role/:id/:role", async (req: IGetUserAuthInfoRequest, res: Response) => {
+// id is the string form of the _id of the user whose role is being changed, role is their new role as a string in req.body
+userRouter.post("/change-role/:id", authCheck, async (req: IGetUserAuthInfoRequest, res: Response) => {
+    const role_body = req.body as RoleBody;
+    
     if (typeof req.params.id === 'undefined') {
-        res.status(401).json({
+        res.status(400).json({
             message: "specify the user whose role is to be changed",
         });
         return;
     }
 
-    if (typeof req.params.role === 'undefined') {
-        res.status(401).json({
+    if (typeof role_body.role === 'undefined') {
+        res.status(400).json({
             message: "specify the new role",
         });
         return;
     }
 
-    if (!Object.values(ROLES).includes(req.params.role)) {
-        res.status(401).json({
+    if (!Object.values(ROLES).includes(role_body.role)) {
+        res.status(400).json({
             message: `role must be one of ${Object.values(ROLES)}`,
         });
         return;
     }
     
     if (req.user.role !== ROLES.MANAGER) {
-        res.status(401).json({
+        res.status(403).json({
             message: "only managers can change roles",
         });
         return;
     }
 
-    const user = req.params.id;
+    const user_id = req.params.id;
     
     try {
-        await User.updateOne({_id: user}, {
-            role: req.params.role
+        await User.updateOne({_id: user_id}, {
+            role: role_body.role
         });
         
         res.status(200).json({
@@ -79,7 +84,7 @@ userRouter.post("/change-role/:id/:role", async (req: IGetUserAuthInfoRequest, r
 
     } catch (err) {
         console.log(err);
-        res.status(401).json({
+        res.status(400).json({
             message: "updating role failed",
         });
     }

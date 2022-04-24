@@ -1,8 +1,16 @@
 import mongoose from 'mongoose';
-import { ROLES } from "./Permissions";
 const { model, Schema } = mongoose;
 
 // Mongoose schemas are separate from TypeScript interfaces, so you need to define both a document interface and a schema.
+export const ROLES = Object.freeze({
+    DEFAULT: "default user",
+    PROFESSOR: "professor",
+    CURRIC_COORD: "curriculum coordinator",
+    UG_DIRECTOR: "undergraduate director",
+    GRAD_DIRECTOR: "graduate director",
+    MANAGER: "manager",
+});
+
 
 export interface IUser {
     _id?: string,

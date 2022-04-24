@@ -1,7 +1,7 @@
 import { Response, Router } from "express";
 import Course, { ICourse, PROPOSAL_STATUS, COURSE_STATUS } from "../models/Course"
 import { IGetUserAuthInfoRequest, authCheck } from "../middleware/auth";
-import { getPermissions, ROLES } from "../models/Permissions";
+import { ROLES } from "../models/User";
 
 const courseRouter = Router();
 
@@ -27,7 +27,7 @@ courseRouter.get("/search/:finalized", authCheck, async (req: IGetUserAuthInfoRe
         restrictions = {is_undergrad: true};
     } else if (req.user.role == ROLES.PROFESSOR) {
         restrictions = {professor: req.user._id};
-    } else if (req.user.role == ROLES.STUDENT) {
+    } else if (req.user.role == ROLES.DEFAULT) {
         restrictions = {proposal_status: PROPOSAL_STATUS.CCC_ACCEPTED};
     }
 
@@ -105,13 +105,12 @@ function getCourseStatus(proposed_course, original_course) {
 };
 
 interface ICourseProposalRequest {
-    original?: ICourse, // this is the course upon which the proposed course is based. Should pass back the full ICourse Object, including the populated professor IUser objects
-    proposed: ICourse, // this will have professors as an array of strings, where each string is the professor's Object ID
+    original?: ICourse, 
+    proposed: ICourse, 
 }
 
 // submit a course
 courseRouter.post("/submit", authCheck, async (req: IGetUserAuthInfoRequest, res: Response) => {
-    const permissions = getPermissions(req.user.role);
     const proposalRequest = req.body as ICourseProposalRequest;
     const status = getCourseStatus(proposalRequest.proposed, proposalRequest.original);
 
@@ -122,7 +121,7 @@ courseRouter.post("/submit", authCheck, async (req: IGetUserAuthInfoRequest, res
         return;
     }
     
-    if (permissions.can_submit_courses) {
+    if (req.user.role !== ROLES.DEFAULT) {
         const newCourse = await Course.create({
             ...proposalRequest.proposed, 
             proposal_status: PROPOSAL_STATUS.DIRECTOR_REVIEW, 
@@ -142,27 +141,29 @@ courseRouter.post("/submit", authCheck, async (req: IGetUserAuthInfoRequest, res
 });
 
 // edit a course
-// the field(s) to change should be passed back in req.query, and the course to edit in req.body
 courseRouter.post("/edit", authCheck, async (req: IGetUserAuthInfoRequest, res: Response) => {
-    const permissions = getPermissions(req.user.role);
     const course = req.body as ICourse;
 
-    if (course.proposal_status === PROPOSAL_STATUS.DIRECTOR_REVIEW && !permissions.can_edit_submission_while_under_review) {
-        res.status(403).json({
-            message: "do not have permission to edit courses that are under review"
-        });
-        return;
-    }
-
-    if (!permissions.can_edit_submission_while_not_under_review) {
-        res.status(403).json({
-            message: "do not have permission to edit courses"
-        });
-        return;
+    if (req.user.role !== ROLES.MANAGER) {
+        // if you don't own the course
+        if (!course.professors.includes(req.user._id)) { 
+            res.status(403).json({
+                message: "Do not have permission to edit another professor's course"
+            });
+            return;
+        } else if (
+            course.proposal_status != PROPOSAL_STATUS.CCC_REJECTED && 
+            course.proposal_status != PROPOSAL_STATUS.DIRECTOR_REJECTED && 
+            course.proposal_status != PROPOSAL_STATUS.DIRECTOR_REVIEW) {
+                res.status(403).json({
+                    message: "Cannot edit a course unless proposal status is under review by a director, rejected by director, or rejected by CCC"
+                });
+                return;
+        }
     }
 
     try {
-        await Course.updateOne({_id: course._id}, req.query);
+        await Course.updateOne({_id: course._id}, course);
         
         res.status(200).json({
             message: "editing course succeeded"
@@ -187,8 +188,8 @@ courseRouter.post("/submit-dev-only", async (req: IGetUserAuthInfoRequest, res: 
 });
 
 courseRouter.post("/accept", authCheck, async (req: IGetUserAuthInfoRequest, res: Response) => {
-    const permissions = getPermissions(req.user.role);
-    if (permissions.can_accept_reject_courses) {
+
+    if (req.user.role === ROLES.MANAGER || req.user.role === ROLES.GRAD_DIRECTOR || req.user.role === ROLES.UG_DIRECTOR ) {
         const course = req.body as ICourse;
         let new_status;
         if (req.user.role == ROLES.UG_DIRECTOR && course.is_undergrad) {
@@ -226,8 +227,8 @@ courseRouter.post("/accept", authCheck, async (req: IGetUserAuthInfoRequest, res
 });
 
 courseRouter.post("/reject", authCheck, async (req: IGetUserAuthInfoRequest, res: Response) => {
-    const permissions = getPermissions(req.user.role);
-    if (permissions.can_accept_reject_courses) {
+    
+    if (req.user.role === ROLES.MANAGER || req.user.role === ROLES.GRAD_DIRECTOR || req.user.role === ROLES.UG_DIRECTOR ) {
         let new_status;
         const course = req.body as ICourse;
         if (req.user.role == ROLES.UG_DIRECTOR && course.is_undergrad) {

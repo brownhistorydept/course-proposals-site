@@ -29,11 +29,15 @@ export const COURSE_STATUS = Object.freeze({
 export interface ICourse {
     _id?: string, 
     created_at?: Date,
+    // non-course related
+    on_leave_fall: boolean,
+    on_leave_spring: boolean,
+    is_regular_prof: boolean,
     // core attributes
-    course_number?: string,
     course_title: string,
     description: string,
-    professors: IUser[] | string[],
+    professors: string[], // professors is an array of strings, where each string is the professor's Object ID
+    syllabus_link?: string,
     // boolean designations
     is_undergrad: boolean, // if false, then grad
     is_RPP?: boolean,
@@ -49,21 +53,30 @@ export interface ICourse {
     // enumerated designations
     semester: string,
     year: number,
-    final_time?: string, // string of A,B,C or another string for a time outside of these (manager enters this once time is finalized)
     time_ranking: string[], // array of strings, e.g. [A, C, E]
     geography?: string[], // has to be from geo_regions list -- this is optional b/c we're not sure if graduate courses use these
     // these are optional so that frontend can pass back proposed courses w/o them, but we always set them in submit
     proposal_status?: string,
     course_status?: string, // new, revised, or existing --> these are existing hist. dept. standards that we're replicating here
+    // manager sets this after course is finalized
+    final_time?: string, // string of A,B,C or another string for a time outside of these (manager enters this once time is finalized)
+    course_number?: string,
+    // further notes
+    further_notes?: string;
 }
 
 const courseSchema = new Schema<ICourse>({
     created_at: { type: Date, default: Date.now },
+
+    // non-course related
+    on_leave_fall: { type: Boolean, required: true},
+    on_leave_spring: { type: Boolean, required: true},
+    is_regular_prof: { type: Boolean, required: true},
     // core attributes
-    course_number: { type: String, required: false},
     course_title: { type: String, required: true},
     description: { type: String, required: true},
     professors: [{type: Schema.Types.ObjectId, ref: 'User'}],
+    syllabus_link: {type: String, required: false},
     // boolean designations
     is_undergrad: {type: Boolean, required: true},
     is_RPP: { type: Boolean, required: false},
@@ -79,11 +92,16 @@ const courseSchema = new Schema<ICourse>({
     // enumerated designations
     semester: {type: String, enum: SEMESTERS, required: true},
     year: {type: Number, required: true},
-    // final_time: { type: String, enum: TIMES, required: true}, // A,B... hour, so a string of this character
     time_ranking: {type: [String], enum: TIMES, required: true}, // array of strings, e.g. [A, C, E]
     geography: {type: [String], enum: GEO_REGIONS, required: false}, // has to be from geo_regions list
+    // we set these in backend
     proposal_status: {type: String, enum: Object.values(PROPOSAL_STATUS), required: false},
     course_status: {type: String, enum: Object.values(COURSE_STATUS), required: false},
+    // manager adds later
+    course_number: { type: String, required: false},
+    final_time: { type: String, required: false},
+    // further notes
+    further_notes: {type: String, required: false},
 });
 
 const Course = model<ICourse>("Course", courseSchema);
