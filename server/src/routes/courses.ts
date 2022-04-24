@@ -1,8 +1,7 @@
-import { Request, Response, Router } from "express";
+import { Response, Router } from "express";
 import Course, { ICourse, PROPOSAL_STATUS, COURSE_STATUS } from "../models/Course"
-import { IGetUserAuthInfoRequest } from "../middleware/auth";
+import { IGetUserAuthInfoRequest, authCheck } from "../middleware/auth";
 import { getPermissions, ROLES } from "../models/Permissions";
-import { Mongoose } from "mongoose";
 
 const courseRouter = Router();
 
@@ -17,14 +16,14 @@ function strToBool(str: string): boolean {
 }
 
 // search courses
-courseRouter.get("/search/:finalized", async (req: IGetUserAuthInfoRequest, res: Response) => {
+courseRouter.get("/search/:finalized", authCheck, async (req: IGetUserAuthInfoRequest, res: Response) => {
     
     // restrict searches based on role
     let restrictions;
 
     if (req.user.role == ROLES.GRAD_DIRECTOR) {
         restrictions = {is_undergrad: false};
-    } else if (req.user.role == ROLES.UG_DIRECTOR || req.user.role == ROLES.UG_REVIEWER) {
+    } else if (req.user.role == ROLES.UG_DIRECTOR) {
         restrictions = {is_undergrad: true};
     } else if (req.user.role == ROLES.PROFESSOR) {
         restrictions = {professor: req.user._id};
@@ -46,7 +45,7 @@ courseRouter.get("/search/:finalized", async (req: IGetUserAuthInfoRequest, res:
     try {
         const result = await search({...search_term, ...finalized_term, ...restrictions}); 
         if (result.length == 0) {
-            res.status(401).json({
+            res.status(400).json({
                 message: "No results found.",
             });
         } else {
@@ -54,7 +53,7 @@ courseRouter.get("/search/:finalized", async (req: IGetUserAuthInfoRequest, res:
         }
     } catch (err) {
         console.log(err);
-        res.status(401).json({
+        res.status(400).json({
             message: "at least one of the fields in the search term has the wrong type; see ICourse in models/Courses.ts for correct types",
         });
     }  
@@ -76,7 +75,7 @@ courseRouter.get("/search-dev-only/:finalized", async (req: IGetUserAuthInfoRequ
     try {
         const result = await search({...search_term, ...finalized_term}); 
         if (result.length == 0) {
-            res.status(401).json({
+            res.status(400).json({
                 message: "No results found.",
             });
         } else {
@@ -84,7 +83,7 @@ courseRouter.get("/search-dev-only/:finalized", async (req: IGetUserAuthInfoRequ
         }
     } catch (err) {
         console.log(err);
-        res.status(401).json({
+        res.status(400).json({
             message: "at least one of the fields in the search term has the wrong type; see ICourse in models/Courses.ts for correct types",
         });
     }  
@@ -111,13 +110,13 @@ interface ICourseProposalRequest {
 }
 
 // submit a course
-courseRouter.post("/submit", async (req: IGetUserAuthInfoRequest, res: Response) => {
+courseRouter.post("/submit", authCheck, async (req: IGetUserAuthInfoRequest, res: Response) => {
     const permissions = getPermissions(req.user.role);
     const proposalRequest = req.body as ICourseProposalRequest;
     const status = getCourseStatus(proposalRequest.proposed, proposalRequest.original);
 
     if ((await Course.find(proposalRequest.proposed)).length > 0) { // duplicate course
-        res.status(401).json({
+        res.status(400).json({
             message: "cannot submit a duplicate course",
         });
         return;
@@ -136,36 +135,34 @@ courseRouter.post("/submit", async (req: IGetUserAuthInfoRequest, res: Response)
         // TODO: notify relevant parties via email
     } else {
         console.log("returning failure");
-        res.status(401).json({
+        res.status(400).json({
             message: "submission failed",
         });
     }
 });
 
 // edit a course
-// course_id should be the _id of the course as a string, and the field to change should be passed back in req.query
-courseRouter.post("/edit/:course_id", async (req: IGetUserAuthInfoRequest, res: Response) => {
+// the field(s) to change should be passed back in req.query, and the course to edit in req.body
+courseRouter.post("/edit", authCheck, async (req: IGetUserAuthInfoRequest, res: Response) => {
     const permissions = getPermissions(req.user.role);
-    const fields_changed = req.query;
-    const course_id = req.params.course_id;
-    const found_course = await Course.findOne({_id: course_id}) as ICourse;
+    const course = req.body as ICourse;
 
-    if (found_course.proposal_status === PROPOSAL_STATUS.DIRECTOR_REVIEW && !permissions.can_edit_submission_while_under_review) {
-        res.status(401).json({
+    if (course.proposal_status === PROPOSAL_STATUS.DIRECTOR_REVIEW && !permissions.can_edit_submission_while_under_review) {
+        res.status(403).json({
             message: "do not have permission to edit courses that are under review"
         });
         return;
     }
 
     if (!permissions.can_edit_submission_while_not_under_review) {
-        res.status(401).json({
+        res.status(403).json({
             message: "do not have permission to edit courses"
         });
         return;
     }
 
     try {
-        await Course.updateOne({_id: course_id}, fields_changed);
+        await Course.updateOne({_id: course._id}, req.query);
         
         res.status(200).json({
             message: "editing course succeeded"
@@ -173,7 +170,7 @@ courseRouter.post("/edit/:course_id", async (req: IGetUserAuthInfoRequest, res: 
 
     } catch (err) {
         console.log(err);
-        res.status(401).json({
+        res.status(400).json({
             message: "editing course failed",
         });
     }
@@ -189,46 +186,79 @@ courseRouter.post("/submit-dev-only", async (req: IGetUserAuthInfoRequest, res: 
     res.status(200).json({newCourse});
 });
 
-courseRouter.post("/accept", async (req: IGetUserAuthInfoRequest, res: Response) => {
+courseRouter.post("/accept", authCheck, async (req: IGetUserAuthInfoRequest, res: Response) => {
     const permissions = getPermissions(req.user.role);
     if (permissions.can_accept_reject_courses) {
         const course = req.body as ICourse;
+        let new_status;
         if (req.user.role == ROLES.UG_DIRECTOR && course.is_undergrad) {
-            course.proposal_status = PROPOSAL_STATUS.DIRECTOR_ACCEPTED;
+            new_status = PROPOSAL_STATUS.DIRECTOR_ACCEPTED;;
         } else if (req.user.role == ROLES.GRAD_DIRECTOR && !course.is_undergrad) {
-            course.proposal_status = PROPOSAL_STATUS.DIRECTOR_ACCEPTED;
+            new_status = PROPOSAL_STATUS.DIRECTOR_ACCEPTED;
         } else if (req.user.role == ROLES.MANAGER) {
-            course.proposal_status = PROPOSAL_STATUS.CCC_ACCEPTED;
+            new_status = PROPOSAL_STATUS.CCC_ACCEPTED;
         } else {
-            res.status(401).json({
+            res.status(403).json({
                 message: "do not have permission to accept this specific course",
             });
         }
+
+        try {
+            await Course.updateOne({_id: course._id}, {proposal_status: new_status});
+            
+            res.status(200).json({
+                message: "accepting course succeeded"
+            });
+    
+        } catch (err) {
+            console.log(err);
+            res.status(400).json({
+                message: "accepting course failed",
+            });
+        }
+
     } else {
-        res.status(401).json({
+        res.status(403).json({
             message: "do not have permission to accept courses"
 
         });
     }
 });
 
-courseRouter.post("/reject", async (req: IGetUserAuthInfoRequest, res: Response) => {
+courseRouter.post("/reject", authCheck, async (req: IGetUserAuthInfoRequest, res: Response) => {
     const permissions = getPermissions(req.user.role);
     if (permissions.can_accept_reject_courses) {
+        let new_status;
         const course = req.body as ICourse;
         if (req.user.role == ROLES.UG_DIRECTOR && course.is_undergrad) {
-            course.proposal_status = PROPOSAL_STATUS.DIRECTOR_REJECTED;
+            new_status = PROPOSAL_STATUS.DIRECTOR_REJECTED;
         } else if (req.user.role == ROLES.GRAD_DIRECTOR && !course.is_undergrad) {
-            course.proposal_status = PROPOSAL_STATUS.DIRECTOR_REJECTED;
+            new_status = PROPOSAL_STATUS.DIRECTOR_REJECTED;
         } else if (req.user.role == ROLES.MANAGER) {
-            course.proposal_status = PROPOSAL_STATUS.CCC_REJECTED;
+            new_status = PROPOSAL_STATUS.CCC_REJECTED;
         } else {
-            res.status(401).json({
+            res.status(403).json({
                 message: "do not have permission to reject this specific course",
             });
         }
+
+        try {
+            await Course.updateOne({_id: course._id}, {proposal_status: new_status});
+            
+            res.status(200).json({
+                message: "accepting course succeeded"
+            });
+    
+        } catch (err) {
+            console.log(err);
+            res.status(400).json({
+                message: "accepting course failed",
+            });
+        }
+
+
     } else {
-        res.status(401).json({
+        res.status(403).json({
             message: "do not have permission to reject courses"
 
         });
