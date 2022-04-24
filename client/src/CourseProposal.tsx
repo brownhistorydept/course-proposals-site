@@ -66,7 +66,12 @@ function CourseProposal() {
     existing = myState.existing;
   }
  
-  
+    const [isRegular, setRegular] = useState(1);
+    const [leaveSpring, setleaveSpring] = useState(false);
+    const [leaveFall, setleaveFall] = useState(false);
+    const [notes, setNotes] = useState('');
+    const [syllabusLink, setSyllabusLink] =  useState('');
+
     const [courseNumber, setCourseNumber] = useState('');
     const [courseTitle, setCourseTitle] = useState('');
     const [professors, setProfessors] = useState<string[]>([]);
@@ -88,6 +93,7 @@ function CourseProposal() {
     const [time2, setTime2] = useState('B');
     const [time3, setTime3] = useState('C');
     const [success, setSuccess] = useState(false);
+
     useEffect(() => {
       if (myState != null){
         setCourseNumber(course.course_number.split(" ")[1])
@@ -123,7 +129,7 @@ function CourseProposal() {
     }, []);
 
   const geographyValues = [
-    'Africa',"East Asia","Latin America", "MESA", "North America","Global"
+    'Africa',"East Asia", "Europe", "Latin America", "Middle East - South Asia (MESA)", "North America","Global"
   ]
   const timeValues = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "T"]
   
@@ -151,7 +157,41 @@ function CourseProposal() {
 
       <Grid container spacing={2} maxWidth={1000} mx="auto">
               <Grid item xs={2}>
-                <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Number *</Typography>
+                <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Regular Professor? *</Typography>
+              </Grid>
+              <Grid item xs={9.5}>
+              <Select
+                size='small'
+                autoWidth
+                value={isRegular}
+                onChange={(e)=>{
+                  let val = e.target.value as number
+                  setRegular(val)
+                }
+                  } 
+              >
+                <MenuItem value={1}>Regular</MenuItem>
+                <MenuItem value={0}>Non Regular</MenuItem>
+              </Select>
+              </Grid>
+
+              <Grid item xs={2}>
+                <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Planning to take leave in fall?</Typography>
+              </Grid>
+              <Grid item xs={9.5}>
+                <FormControlLabel control={<Checkbox checked={leaveFall} onClick={(e)=>{setleaveFall((e.target as HTMLInputElement).checked)}}/>} label="" />
+              </Grid>
+
+              <Grid item xs={2}>
+                <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Planning to take leave in spring?</Typography>
+              </Grid>
+              <Grid item xs={9.5}>
+                <FormControlLabel control={<Checkbox checked={leaveSpring} onClick={(e)=>{setleaveSpring((e.target as HTMLInputElement).checked)}}/>} label="" />
+              </Grid>
+
+
+              <Grid item xs={2}>
+                <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Number</Typography>
               </Grid>
               <Grid item xs={0.5}>
               <Typography variant="body1" width="2">HIST</Typography>
@@ -269,10 +309,10 @@ function CourseProposal() {
               </Select>
               </Grid>
 
-              <Grid item xs={2}>
+              {isUndergrad == 1 &&<Grid item xs={2}>
               <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Geography</Typography>
-              </Grid>
-              <Grid item xs={10}>
+              </Grid>}
+              {isUndergrad == 1 &&<Grid item xs={10}>
               <FormControl fullWidth>
                 <Select
                   size='small'
@@ -312,7 +352,7 @@ function CourseProposal() {
                 <MenuItem value="North America">North America</MenuItem>
                 <MenuItem value="Global">Global</MenuItem>
               </Select> */}
-              </Grid>
+              </Grid>}
 
               <Grid item xs={2}>
               <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Time Ranking *</Typography>
@@ -377,29 +417,55 @@ function CourseProposal() {
                 rows={5}
                 onChange={(e)=>setDescription(e.target.value)}
               />
-              <Typography variant="body2" mx="auto">* required fields </Typography>
               </Grid>
-
-              <Grid item xs={3}></Grid>
-              <Grid item xs={3}>
+              
+              {isUndergrad == 1 &&<Grid item xs={3}></Grid>}
+              {isUndergrad == 1 &&<Grid item xs={3}>
                 <FormGroup>
                   <FormControlLabel control={<Checkbox checked={capstone} onClick={(e)=>{setCapstone((e.target as HTMLInputElement).checked)}}/>} label="Capstone" />
                   <FormControlLabel control={<Checkbox checked={fys} onClick={(e)=>{setFys((e.target as HTMLInputElement).checked)}}/>} label="First-Year Seminar" />
-                  <FormControlLabel control={<Checkbox checked={sys} onClick={(e)=>{setSys((e.target as HTMLInputElement).checked)}}/>} label="Sophomore Seminar" />
+                  <FormControlLabel control={<Checkbox checked={sys} onClick={(e)=>{setSys((e.target as HTMLInputElement).checked)}}/>} label="Second-Year Seminar" />
                   <FormControlLabel control={<Checkbox checked={intro} onClick={(e)=>{setIntro((e.target as HTMLInputElement).checked)}}/>} label="Intro" />
                   <FormControlLabel control={<Checkbox checked={lecture} onClick={(e)=>{setLecture((e.target as HTMLInputElement).checked)}}/>} label="Lecture" />
                 </FormGroup>
-              </Grid>
-              <Grid item xs={3}>
+              </Grid>}
+
+              {isUndergrad == 1 &&<Grid item xs={3}>
                 <FormGroup>
                     <FormControlLabel control={<Checkbox checked={writ} onClick={(e)=>{setWrit((e.target as HTMLInputElement).checked)}}/>} label="WRIT" />
                     <FormControlLabel control={<Checkbox checked={diap} onClick={(e)=>{setDiap((e.target as HTMLInputElement).checked)}}/>} label="DIAP" />
                     <FormControlLabel control={<Checkbox checked={remote} onClick={(e)=>{setRemote((e.target as HTMLInputElement).checked)}}/>} label="Remote" />
                     <FormControlLabel control={<Checkbox checked={premodern} onClick={(e)=>{setPremodern((e.target as HTMLInputElement).checked)}}/>} label="Premodern" />
                 </FormGroup>
-              </Grid>
-              <Grid item xs={3}></Grid>
-              
+              </Grid>}
+              {isUndergrad == 1 &&<Grid item xs={3}></Grid>}
+
+              <Grid item xs={2}>
+                <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Further Notes </Typography>
+                </Grid>
+                <Grid item xs={10}>
+                <TextField
+                fullWidth
+                value={notes}
+                  multiline={true}
+                  rows={3}
+                  onChange={(e)=>setNotes(e.target.value)}
+                />
+              </Grid> 
+
+              <Grid item xs={2}>
+                <Typography variant="body1" fontWeight="bold" my="auto" align='right'> Syllabus Link </Typography>
+                </Grid>
+                <Grid item xs={10}>
+                <TextField
+                size='small'
+                fullWidth
+                value={syllabusLink}
+                  onChange={(e)=>setSyllabusLink(e.target.value)}
+                />
+                <Typography variant="body2" mx="auto"> If you are regular faculty teaching for the first time, please add a syllabus link. </Typography>
+                <Typography variant="body2" mx="auto">* are required fields </Typography>
+              </Grid> 
               
             <Grid item marginX="auto" marginBottom={2}>
               <Button 
@@ -417,51 +483,86 @@ function CourseProposal() {
                   } else if (isNaN(year)){ 
                     alert("Year has to be a numerical value")
                   } else if (time1===time2 || time2 === time3 || time1===time3){
-                    alert("Please enter differnt times for Time Ranking")
+                    alert("Please enter different times for Time Ranking")
                   } else {
-                    var profId: string[] = []
-                    professors.map((prof)=>{
-                      profId.push(profMap.get(prof)!)
-                    })
-                    var undergrad = isUndergrad === 1
-                    var course = {
-                      proposed: {
-                        course_number: `HIST ${courseNumber}`,
-                        course_title: courseTitle,
-                        description: description,
-                        professors: profId,
-                        is_undergrad: undergrad,
-                        is_DIAP: diap,
-                        is_WRIT: writ,
-                        is_Premodern: premodern,
-                        is_FYS: fys,
-                        is_SYS: sys,
-                        is_capstone: capstone,
-                        is_lecture: lecture,
-                        is_intro: intro,
-                        is_remote: remote,
-                        semester: semester,
-                        year: year,
-                        time_ranking: [time1, time2, time3],
-                        geography: geography,
+                    if (isUndergrad == 1) {
+                      var profId: string[] = []
+                      professors.map((prof)=>{
+                        profId.push(profMap.get(prof)!)
+                      })
+                      var undergrad = isUndergrad === 1
+                      var course1 = {
+                        proposed: {
+                          course_number: `HIST ${courseNumber}`,
+                          course_title: courseTitle,
+                          description: description,
+                          professors: profId,
+                          is_undergrad: undergrad,
+                          is_DIAP: diap,
+                          is_WRIT: writ,
+                          is_Premodern: premodern,
+                          is_FYS: fys,
+                          is_SYS: sys,
+                          is_capstone: capstone,
+                          is_lecture: lecture,
+                          is_intro: intro,
+                          is_remote: remote,
+                          semester: semester,
+                          year: year,
+                          time_ranking: [time1, time2, time3],
+                          geography: geography,
+                        }
+                      };
+                      if (myState===null){
+                        console.log(course1)
+                        const success = await submitCourse(setSuccess, setError, course1);
+                        if (success){
+                          alert("Course successfully submitted!")
+                          navigate('/my_courses');
+                        }else{
+                          alert("Error submitting course")
+                        }
+                    } else if (edit){
+                      alert("edit course")
+                    } else if (existing){
+                      alert("existing course")
                     }
-                  };
-                  if (myState===null){
-                      console.log(course)
-                      const success = await submitCourse(setSuccess, setError, course);
-                      if (success){
-                        alert("Course successfully submitted!")
-                        navigate('/my_courses');
-                      }else{
-                        alert("Error submitting course")
+
+                    } else {
+                      var profId: string[] = []
+                      professors.map((prof)=>{
+                        profId.push(profMap.get(prof)!)
+                      })
+                      var undergrad = isUndergrad === 0
+                      var course2 = {
+                        proposed: {
+                          course_number: `HIST ${courseNumber}`,
+                          course_title: courseTitle,
+                          description: description,
+                          professors: profId,
+                          is_undergrad: undergrad,
+                          semester: semester,
+                          year: year,
+                          time_ranking: [time1, time2, time3],
+                        }
+                      };
+
+                        if (myState===null){
+                          console.log(course2)
+                          const success = await submitCourse(setSuccess, setError, course2);
+                          if (success){
+                            alert("Course successfully submitted!")
+                            navigate('/my_courses');
+                          }else{
+                            alert("Error submitting course")
+                          }
+                      } else if (edit){
+                        alert("edit course")
+                      } else if (existing){
+                        alert("existing course")
                       }
-                  } else if (edit){
-                    alert("edit course")
-                  } else if (existing){
-                    alert("existing course")
-                  }
-                  
-                  }
+                    }
+                  }  
                 }}>
                   <Typography gutterBottom variant="body1">
                     Submit
