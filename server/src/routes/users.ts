@@ -23,7 +23,7 @@ userRouter.get("/all", async (req: Request, res: Response) => {
 userRouter.get("/professors", async (req: Request, res: Response) => {
     try {
         const results = await User.find({$or: 
-            [{role: ROLES.PROFESSOR}, {role: ROLES.UG_REVIEWER}, {role: ROLES.UG_DIRECTOR}, {role: ROLES.GRAD_DIRECTOR}]});
+            [{role: ROLES.PROFESSOR}, {role: ROLES.CURRIC_COORD}, {role: ROLES.UG_DIRECTOR}, {role: ROLES.GRAD_DIRECTOR}]});
         res.status(200).json({results});  
         console.log(results);
     } catch (err) {
