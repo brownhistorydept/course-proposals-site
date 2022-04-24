@@ -1,6 +1,4 @@
-import { cp } from 'fs';
 import { ICourse } from '../../../server/src/models/Course';
-// import { IUser } from '../../../server/src/models/User';
 
 // fetches the user if the user is logged in on the backend
 
@@ -34,7 +32,7 @@ export async function fetchCourses(
         } else{
             var url = new URL(`${process.env.REACT_APP_SERVER_URL}/courses/search/${finalized}`)
             Object.keys(params).forEach(key => url.searchParams.append(key, params[key]))
-            console.log(url)
+            // console.log(url)
             const res = await fetch(url.toString(), 
                 {
                     method: "GET",
@@ -48,7 +46,7 @@ export async function fetchCourses(
             );
             if (res.status === 200) {
                 const resJson = await res.json();
-                console.log(res)
+                // console.log(res)
                 setCourses(resJson.result);
             } else {
                 throw new Error("Failed to fetch courses");

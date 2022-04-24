@@ -9,6 +9,7 @@ import { fetchCourses } from "./utils/courses";
 import CourseInfo from './components/CourseInfo';
 
 
+
 function MyCourses() {
 
   const [user, setUser] = useState<IUser>();
@@ -59,7 +60,7 @@ function MyCourses() {
             {typeof(approvedCourses)=="undefined" && <Typography variant="body1"> No courses found </Typography>} 
             </Box>
             {approvedCourses?.map((course, index) => (
-              <CourseInfo course={course} status={false} edit={true} approve={false}/> 
+              <CourseInfo course={course} status={false} edit={false} approve={false}/> 
             ))}
 
 

@@ -17,8 +17,10 @@ import FormControl from '@mui/material/FormControl';
 import ListItemText from '@mui/material/ListItemText';
 import { fetchProfessors } from "./utils/professors";
 import InputLabel from '@mui/material/InputLabel';
-// import { ICourse } from '../../server/src/models/Course';
 import { useNavigate } from 'react-router-dom';
+import {useLocation} from 'react-router'
+import { ICourse } from "../../server/src/models/Course";
+
 
 function CourseProposal() {
 
@@ -44,29 +46,81 @@ function CourseProposal() {
         
     }, []);
 
+  interface CustomizedState {
+    course: any,
+    edit: boolean,
+    existing: boolean
+  }
+    
+  const location = useLocation();
+  const state = location.state as CustomizedState; // Type Casting, then you can get the params passed via router
+  window.history.replaceState(null, "")
+  const myState = state;
 
-  const [courseNumber, setCourseNumber] = useState('');
-  const [courseTitle, setCourseTitle] = useState('');
-  const [professors, setProfessors] = useState<string[]>([]);
-  // const [crn, setCrn] = useState(0);
-  const [isUndergrad, setIsUndergrad] = useState(1);
-  const [geography, setGeography] = useState<string[]>([]);
-  const [description, setDescription] = useState('');
-  const [capstone, setCapstone] = useState(false);
-  const [fys, setFys] = useState(false);
-  const [sys, setSys] = useState(false);
-  const [intro, setIntro] = useState(false);
-  const [lecture, setLecture] = useState(false);
-  const [writ, setWrit] = useState(false);
-  const [diap, setDiap] = useState(false);
-  const [remote, setRemote] = useState(false);
-  const [premodern, setPremodern] = useState(false);
-  const [semester, setSemester] = useState('Fall');
-  const [year, setYear] = useState(0);
-  const [time1, setTime1] = useState('A');
-  const [time2, setTime2] = useState('B');
-  const [time3, setTime3] = useState('C');
-  const [success, setSuccess] = useState(false);
+  var course = {} as ICourse;
+  var edit = false;
+  var existing = false;
+  if (myState !== null){
+    course = myState.course;
+    edit = myState.edit;
+    existing = myState.existing;
+  }
+ 
+  
+    const [courseNumber, setCourseNumber] = useState('');
+    const [courseTitle, setCourseTitle] = useState('');
+    const [professors, setProfessors] = useState<string[]>([]);
+    const [isUndergrad, setIsUndergrad] = useState(1);
+    const [geography, setGeography] = useState<string[]>([]);
+    const [description, setDescription] = useState('');
+    const [capstone, setCapstone] = useState(false);
+    const [fys, setFys] = useState(false);
+    const [sys, setSys] = useState(false);
+    const [intro, setIntro] = useState(false);
+    const [lecture, setLecture] = useState(false);
+    const [writ, setWrit] = useState(false);
+    const [diap, setDiap] = useState(false);
+    const [remote, setRemote] = useState(false);
+    const [premodern, setPremodern] = useState(false);
+    const [semester, setSemester] = useState('Fall');
+    const [year, setYear] = useState(2022);
+    const [time1, setTime1] = useState('A');
+    const [time2, setTime2] = useState('B');
+    const [time3, setTime3] = useState('C');
+    const [success, setSuccess] = useState(false);
+    useEffect(() => {
+      if (myState != null){
+        setCourseNumber(course.course_number.split(" ")[1])
+        setCourseTitle(course.course_title)
+        var profList = []
+        for (let i = 0; i < course.professors.length; i++) {
+          const name = course.professors[i] as unknown as IUser
+          profList.push(name.displayName) 
+        }
+        setProfessors(profList)
+        setIsUndergrad(course.is_undergrad?1:0)
+        if(typeof course.geography !== "undefined"){
+          setGeography(course.geography)
+        }
+        
+        setDescription(course.description)
+        setCapstone(course.is_capstone)
+        setFys(course.is_FYS)
+        setSys(course.is_SYS)
+        setIntro(course.is_intro)
+        setLecture(course.is_lecture)
+        setWrit(course.is_WRIT)
+        setDiap(course.is_DIAP)
+        setRemote(course.is_remote)
+        setPremodern(course.is_Premodern)
+        setSemester(course.semester)
+        setYear(course.year)
+        setTime1(course.time_ranking[0])
+        setTime2(course.time_ranking[1])
+        setTime3(course.time_ranking[2])
+      }
+
+    }, []);
 
   const geographyValues = [
     'Africa',"East Asia","Latin America", "MESA", "North America","Global"
@@ -106,6 +160,7 @@ function CourseProposal() {
               <TextField
                 size='small'
                 required
+                value={courseNumber}
                 onChange={(e)=>setCourseNumber(e.target.value)}
               />
               </Grid>
@@ -114,16 +169,23 @@ function CourseProposal() {
               <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Title *</Typography>
               </Grid>
               <Grid item xs={10}>
-              <TextField
+              {myState === null&&<TextField
                 size='small'
                 fullWidth
                 required
                 onChange={(e)=>setCourseTitle(e.target.value)}
-              />
+              />}
+               {myState !== null&&<TextField
+                size='small'
+                fullWidth
+                required
+                value={courseTitle}
+                onChange={(e)=>setCourseTitle(e.target.value)}
+              />}
               </Grid>
               
               <Grid item xs={2}>
-              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Professors *</Typography>
+              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Professor(s) *</Typography>
               </Grid>
               <Grid item xs={10}>
               <FormControl fullWidth>
@@ -168,7 +230,7 @@ function CourseProposal() {
               <Select
                 size='small'
                 autoWidth
-                defaultValue={"Fall"}
+                value={semester}
                 onChange={(e)=>{
                   setSemester(e.target.value)
                 }}
@@ -183,6 +245,7 @@ function CourseProposal() {
                 size='small'
                 onChange={(e)=>{setYear(parseInt(e.target.value))}}
                 label="Year"
+                value={year.toString()}
               />
               </Grid>
 
@@ -194,7 +257,7 @@ function CourseProposal() {
               <Select
                 size='small'
                 autoWidth
-                defaultValue={1}
+                value={isUndergrad}
                 onChange={(e)=>{
                   let val = e.target.value as number
                   setIsUndergrad(val)
@@ -261,7 +324,7 @@ function CourseProposal() {
                     label="1st Choice"
                     size='small'
                     autoWidth
-                    defaultValue={"A"}
+                    value={time1}
                     onChange={(e)=>{setTime1(e.target.value)}}
                   >
                   {timeValues.map((time)=>
@@ -277,7 +340,7 @@ function CourseProposal() {
                     label="2nd Choice"
                     size='small'
                     autoWidth
-                    defaultValue={"B"}
+                    value={time2}
                     onChange={(e)=>{setTime2(e.target.value)}}
                   >
                   {timeValues.map((time)=>
@@ -293,7 +356,7 @@ function CourseProposal() {
                     label="3rd Choice"
                     size='small'
                     autoWidth
-                    defaultValue={"C"}
+                    value={time3}
                     onChange={(e)=>{setTime3(e.target.value)}}
                   >
                   {timeValues.map((time)=>
@@ -309,6 +372,7 @@ function CourseProposal() {
               <Grid item xs={10}>
               <TextField
               fullWidth
+               value={description}
                 multiline={true}
                 rows={5}
                 onChange={(e)=>setDescription(e.target.value)}
@@ -319,25 +383,25 @@ function CourseProposal() {
               <Grid item xs={3}></Grid>
               <Grid item xs={3}>
                 <FormGroup>
-                  <FormControlLabel control={<Checkbox onClick={(e)=>{setCapstone((e.target as HTMLInputElement).checked)}}/>} label="Capstone" />
-                  <FormControlLabel control={<Checkbox onClick={(e)=>{setFys((e.target as HTMLInputElement).checked)}}/>} label="First-Year Seminar" />
-                  <FormControlLabel control={<Checkbox onClick={(e)=>{setSys((e.target as HTMLInputElement).checked)}}/>} label="Sophomore Seminar" />
-                  <FormControlLabel control={<Checkbox onClick={(e)=>{setIntro((e.target as HTMLInputElement).checked)}}/>} label="Intro" />
-                  <FormControlLabel control={<Checkbox onClick={(e)=>{setLecture((e.target as HTMLInputElement).checked)}}/>} label="Lecture" />
+                  <FormControlLabel control={<Checkbox checked={capstone} onClick={(e)=>{setCapstone((e.target as HTMLInputElement).checked)}}/>} label="Capstone" />
+                  <FormControlLabel control={<Checkbox checked={fys} onClick={(e)=>{setFys((e.target as HTMLInputElement).checked)}}/>} label="First-Year Seminar" />
+                  <FormControlLabel control={<Checkbox checked={sys} onClick={(e)=>{setSys((e.target as HTMLInputElement).checked)}}/>} label="Sophomore Seminar" />
+                  <FormControlLabel control={<Checkbox checked={intro} onClick={(e)=>{setIntro((e.target as HTMLInputElement).checked)}}/>} label="Intro" />
+                  <FormControlLabel control={<Checkbox checked={lecture} onClick={(e)=>{setLecture((e.target as HTMLInputElement).checked)}}/>} label="Lecture" />
                 </FormGroup>
               </Grid>
               <Grid item xs={3}>
                 <FormGroup>
-                    <FormControlLabel control={<Checkbox onClick={(e)=>{setWrit((e.target as HTMLInputElement).checked)}}/>} label="WRIT" />
-                    <FormControlLabel control={<Checkbox onClick={(e)=>{setDiap((e.target as HTMLInputElement).checked)}}/>} label="DIAP" />
-                    <FormControlLabel control={<Checkbox onClick={(e)=>{setRemote((e.target as HTMLInputElement).checked)}}/>} label="Remote" />
-                    <FormControlLabel control={<Checkbox onClick={(e)=>{setPremodern((e.target as HTMLInputElement).checked)}}/>} label="Premodern" />
+                    <FormControlLabel control={<Checkbox checked={writ} onClick={(e)=>{setWrit((e.target as HTMLInputElement).checked)}}/>} label="WRIT" />
+                    <FormControlLabel control={<Checkbox checked={diap} onClick={(e)=>{setDiap((e.target as HTMLInputElement).checked)}}/>} label="DIAP" />
+                    <FormControlLabel control={<Checkbox checked={remote} onClick={(e)=>{setRemote((e.target as HTMLInputElement).checked)}}/>} label="Remote" />
+                    <FormControlLabel control={<Checkbox checked={premodern} onClick={(e)=>{setPremodern((e.target as HTMLInputElement).checked)}}/>} label="Premodern" />
                 </FormGroup>
               </Grid>
               <Grid item xs={3}></Grid>
               
               
-            <Grid item marginX="auto" >
+            <Grid item marginX="auto" marginBottom={2}>
               <Button 
                 variant="contained" 
                 sx={{textTransform:"none", backgroundColor:"#992525", mx:1}}
@@ -350,8 +414,6 @@ function CourseProposal() {
 
                   if (courseNumber === "" || courseTitle === "" || description==="" || year===0 || professors.length == 0){
                     alert("Please fill all required fields")
-                  } else if (isNaN(parseInt(courseNumber))){ 
-                    alert("Course Number has to be a numerical value")
                   } else if (isNaN(year)){ 
                     alert("Year has to be a numerical value")
                   } else if (time1===time2 || time2 === time3 || time1===time3){
@@ -384,14 +446,21 @@ function CourseProposal() {
                         geography: geography,
                     }
                   };
+                  if (myState===null){
+                      console.log(course)
+                      const success = await submitCourse(setSuccess, setError, course);
+                      if (success){
+                        alert("Course successfully submitted!")
+                        navigate('/my_courses');
+                      }else{
+                        alert("Error submitting course")
+                      }
+                  } else if (edit){
+                    alert("edit course")
+                  } else if (existing){
+                    alert("existing course")
+                  }
                   
-                    const success = await submitCourse(setSuccess, setError, course);
-                    if (success){
-                      alert("Course successfully submitted!")
-                      navigate('/my_courses');
-                    }else{
-                      alert("Error submitting course")
-                    }
                   }
                 }}>
                   <Typography gutterBottom variant="body1">

@@ -1,15 +1,12 @@
-import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import ButtonBase from '@mui/material/ButtonBase';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import {Link} from 'react-router-dom';
-import { createMuiTheme } from '@material-ui/core/styles'
 
 const Img = styled('img')({
   margin: 'auto',
@@ -19,23 +16,7 @@ const Img = styled('img')({
 });
 
 export default function ComplexGrid({course, status, edit, approve}) {
-  const [professor, setProfessor] = React.useState('');
 
-  const [level, setLevel] = React.useState('');
-
-  const [geography, setGeography] = React.useState('');
-
-  const [filters, setFilters] = React.useState({
-    diap: false,
-    writ: false,
-    rem: false,
-    p: false,
-    intro: false, 
-    fys: false, 
-    sys: false, 
-    capstone: false, 
-    lecture: false, 
-  })
 
   return (
     <Paper
@@ -134,7 +115,7 @@ export default function ComplexGrid({course, status, edit, approve}) {
         </Grid>
 
         <Grid item align="center" justify="center" my="auto" mr={2}>
-          <Link to={"/view_course"} state = {{course:course, edit:edit, approve:approve}}>
+          <Link style={{ textDecoration: 'none' }}to={"/view_course"} state = {{course:course, edit:edit, approve:approve}}>
           {/* <Link to={{pathname: "/view_course", state: {id: 123}}}> */}
             <Button variant="contained" sx={{textTransform:"none", backgroundColor:"#992525"}}>
                 <Typography 
