@@ -93,9 +93,8 @@ export default function NavBar(props: {
               >
                 Course Proposal
               </Button>
-
-              {props.user.role==="manager" && <Button
-                key='Approve Courses'
+              {(props.user.role==="manager" || props.user.role==="curriculum coordinator" || props.user.role=== "undergraduate director"|| props.user.role==="graduate director") && <Button
+                key='Courses'
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block', marginRight:3, textTransform :'none' }}
                 href="/approve_courses"

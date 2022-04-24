@@ -44,6 +44,7 @@ function CoursePropInfoView() {
         course: any,
         approve: boolean,
         edit: boolean,
+        new_proposal: boolean
       }
       
     const location = useLocation();
@@ -53,6 +54,7 @@ function CoursePropInfoView() {
     const course = myState.course;
     const approve = myState.approve;
     const edit = myState.edit;
+    const new_proposal = myState.new_proposal;
 
     const [professors, setProfessors] = useState<string[]>([]);
     
@@ -376,7 +378,7 @@ function CoursePropInfoView() {
               </Link>
             </Grid>}
 
-            {!edit&&!approve&&<Grid item marginX="auto" >
+            {new_proposal&&<Grid item marginX="auto" >
             <Link style={{ textDecoration: 'none' }}to={"/course_proposal"} state = {{course:course, edit:false, existing:true}}>
               <Button 
                 variant="contained" 
