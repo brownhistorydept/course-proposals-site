@@ -26,7 +26,16 @@ function CourseApproval() {
     useEffect(() => {
       var params = {}; 
         async function getCourses() {
-            params = {proposal_status: "under review by director"}
+            if (user?.role==="undergraduate director"){
+              params = {proposal_status: "under review by director", is_undergrad: true}
+            } else if (user?.role==="graduate director"){
+              params = {proposal_status: "under review by director", is_undergrad: false}
+            } else if (user?.role==="curriculum coordinator"){
+              params = {proposal_status: "under review by director"}
+            } else if (user?.role==="manager"){
+              params = {proposal_status: "approved by director"}
+            }
+            
             await fetchCourses(setCourses, setError, params, false);
           
         }
@@ -55,7 +64,7 @@ function CourseApproval() {
             {typeof(courses)=="undefined" && <Typography variant="body1"> No courses found </Typography>} 
             </Box>
             {courses?.map((course, index) => (
-              <CourseInfo course={course} status={true} edit={false} approve={true}/> 
+              <CourseInfo course={course} status={true} edit={false} approve={user?.role !== "curriculum coordinator"} new_proposal={false}/> 
             ))}
 
          

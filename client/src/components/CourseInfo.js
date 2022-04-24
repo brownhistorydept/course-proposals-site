@@ -15,7 +15,7 @@ const Img = styled('img')({
   maxHeight: '100%',
 });
 
-export default function ComplexGrid({course, status, edit, approve}) {
+export default function ComplexGrid({course, status, edit, approve, new_proposal}) {
 
 
   return (
@@ -115,7 +115,7 @@ export default function ComplexGrid({course, status, edit, approve}) {
         </Grid>
 
         <Grid item align="center" justify="center" my="auto" mr={2}>
-          <Link style={{ textDecoration: 'none' }}to={"/view_course"} state = {{course:course, edit:edit, approve:approve}}>
+          <Link style={{ textDecoration: 'none' }}to={"/view_course"} state = {{course:course, edit:edit, approve:approve, new_proposal:new_proposal}}>
           {/* <Link to={{pathname: "/view_course", state: {id: 123}}}> */}
             <Button variant="contained" sx={{textTransform:"none", backgroundColor:"#992525"}}>
                 <Typography 
