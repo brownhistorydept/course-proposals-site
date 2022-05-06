@@ -6,15 +6,20 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
+import { submitCourse } from './utils/courses';
+import { ICourse } from '../../server/src/models/Course';
 import {useLocation} from 'react-router'
+import { json } from 'stream/consumers';
+import FormControl from '@mui/material/FormControl';
+import ListItemText from '@mui/material/ListItemText';
 import { fetchProfessors } from "./utils/professors";
-import {Link} from 'react-router-dom';
-
+import InputLabel from '@mui/material/InputLabel';
 
 
 function CoursePropInfoView() {
@@ -44,7 +49,6 @@ function CoursePropInfoView() {
         course: any,
         approve: boolean,
         edit: boolean,
-        new_proposal: boolean
       }
       
     const location = useLocation();
@@ -54,11 +58,10 @@ function CoursePropInfoView() {
     const course = myState.course;
     const approve = myState.approve;
     const edit = myState.edit;
-    const new_proposal = myState.new_proposal;
 
     const [professors, setProfessors] = useState<string[]>([]);
     
-    // console.log(course)
+    console.log(course)
 
     const courseNumber = course["course_number"].split(" ")[1];
     const courseTitle = course["course_title"]
@@ -69,7 +72,7 @@ function CoursePropInfoView() {
     const courseGeography = course["geography"][0]
 
     const courseProfessors = course["professors"]
-    // console.log(courseProfessors)
+    console.log(courseProfessors)
 
     var profList = []
 
@@ -79,7 +82,7 @@ function CoursePropInfoView() {
 
     var profString = profList.join(", ")
 
-    // console.log(profString)
+    console.log(profString)
 
     if (course["is_undergrad"]) {
         courseLevel = "Undergraduate"
@@ -87,8 +90,8 @@ function CoursePropInfoView() {
         courseLevel = "Graduate"
     }
 
-    // console.log(Math.floor(courseDescription.split(" ").length / 12))
-    // console.log(courseDescription.split(" "))
+    console.log(Math.floor(courseDescription.split(" ").length / 12))
+    console.log(courseDescription.split(" "))
 
 
     // console.log(state);
@@ -274,7 +277,7 @@ function CoursePropInfoView() {
               </Grid>
 
               <Grid item xs={2}>
-              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Time Ranking*</Typography>
+              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Time *</Typography>
               </Grid>
               <Grid item xs={10}>
               <TextField
@@ -329,7 +332,7 @@ function CoursePropInfoView() {
                 <FormGroup>
                   <FormControlLabel control={<Checkbox disabled checked={course.is_capstone}/>} label="Capstone" />
                   <FormControlLabel control={<Checkbox disabled checked={course.is_FYS}/>} label="First-Year Seminar" />
-                  <FormControlLabel control={<Checkbox disabled checked={course.is_SYS}/>} label="Second-Year Seminar" />
+                  <FormControlLabel control={<Checkbox disabled checked={course.is_SYS}/>} label="Sophomore Seminar" />
                   <FormControlLabel control={<Checkbox disabled checked={course.is_intro}/>} label="Intro" />
                   <FormControlLabel control={<Checkbox disabled checked={course.is_lecture}/>} label="Lecture" />
                 </FormGroup>
@@ -366,7 +369,6 @@ function CoursePropInfoView() {
             </Grid>}
 
             {edit&&<Grid item marginX="auto" >
-            <Link style={{ textDecoration: 'none' }}to={"/course_proposal"} state = {{course:course, edit:true, existing:false}}>
               <Button 
                 variant="contained" 
                 sx={{textTransform:"none", backgroundColor:"#992525", mx:1}}
@@ -375,20 +377,6 @@ function CoursePropInfoView() {
                     Edit
                   </Typography>
               </Button>
-              </Link>
-            </Grid>}
-
-            {new_proposal&&<Grid item marginX="auto" >
-            <Link style={{ textDecoration: 'none' }}to={"/course_proposal"} state = {{course:course, edit:false, existing:true}}>
-              <Button 
-                variant="contained" 
-                sx={{textTransform:"none", backgroundColor:"#992525", mx:1}}
-            >
-                  <Typography gutterBottom variant="body1">
-                    New Proposal
-                  </Typography>
-              </Button>
-              </Link>
             </Grid>}
 
           </Grid>
