@@ -84,7 +84,7 @@ function CourseProposal() {
     const [intro, setIntro] = useState(false);
     const [lecture, setLecture] = useState(false);
     const [writ, setWrit] = useState(false);
-    const [diap, setDiap] = useState(false);
+    const [diap, setRPP] = useState(false);
     const [remote, setRemote] = useState(false);
     const [premodern, setPremodern] = useState(false);
     const [semester, setSemester] = useState('Fall');
@@ -96,7 +96,9 @@ function CourseProposal() {
 
     useEffect(() => {
       if (myState != null){
-        setCourseNumber(course.course_number.split(" ")[1])
+        if (typeof course.course_number != "undefined") {
+          setCourseNumber(course.course_number.split(" ")[1])
+        }
         setCourseTitle(course.course_title)
         var profList = []
         for (let i = 0; i < course.professors.length; i++) {
@@ -110,15 +112,34 @@ function CourseProposal() {
         }
         
         setDescription(course.description)
-        setCapstone(course.is_capstone)
-        setFys(course.is_FYS)
-        setSys(course.is_SYS)
-        setIntro(course.is_intro)
-        setLecture(course.is_lecture)
-        setWrit(course.is_WRIT)
-        setDiap(course.is_DIAP)
-        setRemote(course.is_remote)
-        setPremodern(course.is_Premodern)
+        if (typeof course.is_capstone != "undefined") {
+          setCapstone(course.is_capstone)
+        }
+        if (typeof course.is_FYS != "undefined") {
+          setSys(course.is_FYS)
+        }
+        if (typeof course.is_SYS != "undefined") {
+          setSys(course.is_SYS)
+        }
+        if (typeof course.is_intro != "undefined") {
+          setIntro(course.is_intro)
+        }
+        if (typeof course.is_lecture != "undefined") {
+          setLecture(course.is_lecture)
+        }
+        if (typeof course.is_WRIT != "undefined") {
+          setWrit(course.is_WRIT)
+        }
+        if (typeof course.is_RPP != "undefined") {
+          setRPP(course.is_RPP)
+        }
+        if (typeof course.is_remote != "undefined") {
+          setRemote(course.is_remote)
+        }
+        if (typeof course.is_Premodern != "undefined") {
+          setPremodern(course.is_Premodern)
+        }
+      
         setSemester(course.semester)
         setYear(course.year)
         setTime1(course.time_ranking[0])
@@ -340,22 +361,7 @@ function CourseProposal() {
                   ))}
                 </Select>
               </FormControl>
-              {/* <Select
-                size='small'
-                autoWidth
-                multiple
-                value={geography}
-                renderValue={(selected) => selected.join(', ')}
-                onChange={(e)=>console.log(e.target.value)}
-              >
-                <MenuItem value="Africa">Africa</MenuItem>
-                <MenuItem value="East Asia">East Asia</MenuItem>
-                <MenuItem value="Europe">Europe</MenuItem>
-                <MenuItem value="Latin America">Latin America</MenuItem>
-                <MenuItem value="MESA">MESA</MenuItem>
-                <MenuItem value="North America">North America</MenuItem>
-                <MenuItem value="Global">Global</MenuItem>
-              </Select> */}
+              
               </Grid>}
 
               <Grid item xs={2}>
@@ -437,7 +443,7 @@ function CourseProposal() {
               {isUndergrad == 1 &&<Grid item xs={3}>
                 <FormGroup>
                     <FormControlLabel control={<Checkbox checked={writ} onClick={(e)=>{setWrit((e.target as HTMLInputElement).checked)}}/>} label="WRIT" />
-                    <FormControlLabel control={<Checkbox checked={diap} onClick={(e)=>{setDiap((e.target as HTMLInputElement).checked)}}/>} label="DIAP" />
+                    <FormControlLabel control={<Checkbox checked={diap} onClick={(e)=>{setRPP((e.target as HTMLInputElement).checked)}}/>} label="DIAP" />
                     <FormControlLabel control={<Checkbox checked={remote} onClick={(e)=>{setRemote((e.target as HTMLInputElement).checked)}}/>} label="Remote" />
                     <FormControlLabel control={<Checkbox checked={premodern} onClick={(e)=>{setPremodern((e.target as HTMLInputElement).checked)}}/>} label="Premodern" />
                 </FormGroup>

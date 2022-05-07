@@ -6,20 +6,13 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
-import { submitCourse } from './utils/courses';
-import { ICourse } from '../../server/src/models/Course';
 import {useLocation} from 'react-router'
-import { json } from 'stream/consumers';
-import FormControl from '@mui/material/FormControl';
-import ListItemText from '@mui/material/ListItemText';
 import { fetchProfessors } from "./utils/professors";
-import InputLabel from '@mui/material/InputLabel';
 
 
 function CoursePropInfoView() {
@@ -93,28 +86,6 @@ function CoursePropInfoView() {
     console.log(Math.floor(courseDescription.split(" ").length / 12))
     console.log(courseDescription.split(" "))
 
-
-    // console.log(state);
-    // console.log(state.edit);
-
-    // if (state !== undefined && state !== null && state.constructor == Object) {
-
-    // }
-
-    // if (state instanceof json) {
-    //     console.log(state)
-    // }
-    
-
-    // console.log(props.location)
-    // let id = props.location.state?.id;
-    // console.log(id);
-
-    // if (props.location.state.courseinfo) {
-    //     console.log(props.location.state.course);
-    // }
-
-  // const [crn, setCrn] = useState(0);
 
   return (
     <div className="CourseProposal">
@@ -190,39 +161,9 @@ function CoursePropInfoView() {
                     readOnly: true,
                   }}
                 />
-                {/* <Select
-                  size='small'
-                  multiple
-                  value={professors}
-                  onChange={(event)=>{
-                    const {
-                      target: { value },
-                    } = event;
-                    setProfessors(
-                      typeof value === 'string' ? value.split(',') : value,
-                    );
-                  }}
-                  renderValue={(selected) => selected.join(', ')}
-                >
-                  {professorValues?.map((prof) => (
-                    <MenuItem key={prof.displayName} value={prof.displayName}>
-                      <Checkbox checked={professors.indexOf(prof.displayName) > -1} />
-                      <ListItemText primary={prof.displayName} />
-                    </MenuItem>
-                  ))}
-                </Select> */}
+                
               </Grid>
-              {/* </FormControl> */}
 
-              {/* <Grid item xs={2}>
-              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>CRN</Typography>
-              </Grid>
-              <Grid item xs={10}>
-              <TextField
-                size='small'
-                onChange={(e)=>setCrn(parseInt(e.target.value))}
-              />
-              </Grid> */}
 
               <Grid item xs={2}>
               <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Semester *</Typography>
@@ -291,23 +232,7 @@ function CoursePropInfoView() {
                 sx={{marginRight: 1}}
               >
               </TextField>
-              {/* <TextField
-                size='small'
-                InputProps={{
-                    readOnly: true,
-                  }}
-                value = {course.time_ranking[1]}
-                sx={{marginRight: 1}}
-              >
-              </TextField>
-              <TextField
-                size='small'
-                InputProps={{
-                    readOnly: true,
-                  }}
-                value = {course.time_ranking[2]}
-              >
-              </TextField> */}
+              
               </Grid>
 
               <Grid item xs={2}>
@@ -340,7 +265,7 @@ function CoursePropInfoView() {
               <Grid item xs={3}>
                 <FormGroup>
                     <FormControlLabel control={<Checkbox disabled checked={course.is_WRIT}/>} label="WRIT" />
-                    <FormControlLabel control={<Checkbox disabled checked={course.is_DIAP}/>} label="DIAP" />
+                    <FormControlLabel control={<Checkbox disabled checked={course.is_RPP}/>} label="RPP" />
                     <FormControlLabel control={<Checkbox disabled checked={course.is_remote}/>} label="Remote" />
                     <FormControlLabel control={<Checkbox disabled checked={course.is_FYS}/>} label="Premodern" />
                 </FormGroup>

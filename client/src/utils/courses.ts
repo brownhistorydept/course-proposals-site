@@ -82,16 +82,47 @@ export async function fetchCourses(
 
         // if the user is logged in, set the user and authenticated flag
         if (res.status === 200) {
-            console.log("i succeeded!")
-            const resJson = await res.json();
+            console.log("submitting course succeeded")
+            // const resJson = await res.json();
             // setSuccess(true)
             return true;
         } else {
-            console.log("I failed :(")
-            throw new Error("failed to submit user");
+            throw new Error("failed to submit course");
         }
     } catch (error) {
         // setError("Failed to authenticate user");
         return false;
     }
-  } 
+  }
+  
+    export async function acceptRejectCourse(
+        course_info: any,
+        is_accept: boolean,
+    ) {
+    try {
+        const url = new URL(`${process.env.REACT_APP_SERVER_URL}/courses/accept-reject/${is_accept}`)
+        const res = await fetch(url.toString(), {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(course_info),   
+        }
+        );
+            console.log(res.status);
+
+            // if the user is logged in, set the user and authenticated flag
+            if (res.status === 200) {
+                console.log("accepting/rejected succeeded!")
+                // const resJson = await res.json();
+                // setSuccess(true)
+                return true;
+            } else {
+                throw new Error("failed to accept/reject course");
+            }
+        } catch (error) {
+        // setError("Failed to authenticate user");
+        return false;
+        }
+  }

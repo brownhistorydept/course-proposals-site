@@ -14,12 +14,16 @@ import Button from '@mui/material/Button';
 import {useLocation} from 'react-router'
 import { fetchProfessors } from "./utils/professors";
 import {Link} from 'react-router-dom';
+import { acceptRejectCourse } from './utils/courses';
+import { useNavigate } from 'react-router-dom';
 
 
 
 function CoursePropInfoView() {
 
   const [user, setUser] = useState<IUser>();
+  const [reason, setReason] = useState('');
+  const navigate = useNavigate();
   const [, setError] = useState("");
     // called once when components on page have rendered
     useEffect(() => {
@@ -187,39 +191,8 @@ function CoursePropInfoView() {
                     readOnly: true,
                   }}
                 />
-                {/* <Select
-                  size='small'
-                  multiple
-                  value={professors}
-                  onChange={(event)=>{
-                    const {
-                      target: { value },
-                    } = event;
-                    setProfessors(
-                      typeof value === 'string' ? value.split(',') : value,
-                    );
-                  }}
-                  renderValue={(selected) => selected.join(', ')}
-                >
-                  {professorValues?.map((prof) => (
-                    <MenuItem key={prof.displayName} value={prof.displayName}>
-                      <Checkbox checked={professors.indexOf(prof.displayName) > -1} />
-                      <ListItemText primary={prof.displayName} />
-                    </MenuItem>
-                  ))}
-                </Select> */}
+          
               </Grid>
-              {/* </FormControl> */}
-
-              {/* <Grid item xs={2}>
-              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>CRN</Typography>
-              </Grid>
-              <Grid item xs={10}>
-              <TextField
-                size='small'
-                onChange={(e)=>setCrn(parseInt(e.target.value))}
-              />
-              </Grid> */}
 
               <Grid item xs={2}>
               <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Semester *</Typography>
@@ -288,23 +261,7 @@ function CoursePropInfoView() {
                 sx={{marginRight: 1}}
               >
               </TextField>
-              {/* <TextField
-                size='small'
-                InputProps={{
-                    readOnly: true,
-                  }}
-                value = {course.time_ranking[1]}
-                sx={{marginRight: 1}}
-              >
-              </TextField>
-              <TextField
-                size='small'
-                InputProps={{
-                    readOnly: true,
-                  }}
-                value = {course.time_ranking[2]}
-              >
-              </TextField> */}
+             
               </Grid>
 
               <Grid item xs={2}>
@@ -324,7 +281,7 @@ function CoursePropInfoView() {
               />
               </Grid>
 
-              <Grid item xs={3}></Grid>
+              <Grid item xs={4}></Grid>
               <Grid item xs={3}>
                 <FormGroup>
                   <FormControlLabel control={<Checkbox disabled checked={course.is_capstone}/>} label="Capstone" />
@@ -337,33 +294,64 @@ function CoursePropInfoView() {
               <Grid item xs={3}>
                 <FormGroup>
                     <FormControlLabel control={<Checkbox disabled checked={course.is_WRIT}/>} label="WRIT" />
-                    <FormControlLabel control={<Checkbox disabled checked={course.is_DIAP}/>} label="DIAP" />
+                    <FormControlLabel control={<Checkbox disabled checked={course.is_RPP}/>} label="RPP" />
                     <FormControlLabel control={<Checkbox disabled checked={course.is_remote}/>} label="Remote" />
                     <FormControlLabel control={<Checkbox disabled checked={course.is_FYS}/>} label="Premodern" />
                 </FormGroup>
               </Grid>
-              <Grid item xs={3}></Grid>
+              <Grid item xs={2}></Grid>
               
-            {approve&&<Grid item marginX="auto" >
-              <Button 
-                variant="contained" 
-                sx={{textTransform:"none", backgroundColor:"#992525", mx:1}}
-            >
-                  <Typography gutterBottom variant="body1">
-                    Accept
-                  </Typography>
-              </Button>
-              <Button 
-                variant="contained" 
-                sx={{textTransform:"none", backgroundColor:"#992525", mx:1}}
-                onClick={() => {
-                  window.location.reload();
-                }}>
-                  <Typography gutterBottom variant="body1">
-                    Reject
-                  </Typography>
-              </Button>
-            </Grid>}
+            {approve&&<>
+              
+                <Grid item xs={2}>
+                <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Comments for Professor</Typography>
+                </Grid>
+                <Grid item xs={10}>
+                <TextField
+                    fullWidth
+                    value={reason}
+                      multiline={true}
+                      rows={5}
+                      onChange={(e)=>setReason(e.target.value)}
+                    />
+                </Grid>
+              
+                <Grid marginX="auto" marginY="20px">
+                <Button 
+                  variant="contained" 
+                  sx={{textTransform:"none", backgroundColor:"#992525", mx:1}}
+                  onClick={async () => {
+                    const success = await acceptRejectCourse(course, true);
+                    if (success){
+                      alert("Course successfully accepted.")
+                      navigate('/review_courses');
+                    }else{
+                      alert("Error accepting course")
+                    }
+                    }}>
+                    <Typography gutterBottom variant="body1">
+                      Accept
+                    </Typography>
+                  </Button>
+                  <Button 
+                    variant="contained" 
+                    sx={{textTransform:"none", backgroundColor:"#992525", mx:1}}
+                    onClick={async () => {
+                      const success = await acceptRejectCourse(course, false);
+                      if (success){
+                        alert("Course successfully rejected.")
+                        navigate('/review_courses');
+                      }else{
+                        alert("Error rejecting course")
+                      }
+                    }}>
+                      <Typography gutterBottom variant="body1">
+                        Reject
+                      </Typography>
+                    </Button>
+                  </Grid>
+                {/* </Grid> */}
+           </> }
 
             {edit&&<Grid item marginX="auto" >
             <Link style={{ textDecoration: 'none' }}to={"/course_proposal"} state = {{course:course, edit:true, existing:false}}>

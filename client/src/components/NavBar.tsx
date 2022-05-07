@@ -97,9 +97,9 @@ export default function NavBar(props: {
                 key='Courses'
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block', marginRight:3, textTransform :'none' }}
-                href="/approve_courses"
+                href="/review_courses"
               >
-                Approve Courses
+                Review Courses
               </Button>}
 
             <Profile user={props.user}/>
