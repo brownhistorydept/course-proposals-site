@@ -54,13 +54,9 @@ function CourseApproval() {
         <br/>
         <Box sx={{width: 500,  margin: 0, paddingLeft: 2,}}> 
             <Typography variant="h3" paddingBottom={5}>
-                Approve Courses
+                Review Courses
             </Typography>
 
-
-            {/* <Typography variant="h5" color="#992525" fontWeight={500} marginBottom={3}>
-                Approved
-            </Typography> */}
             {typeof(courses)=="undefined" && <Typography variant="body1"> No courses found </Typography>} 
             </Box>
             {courses?.map((course, index) => (

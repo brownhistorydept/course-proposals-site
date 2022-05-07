@@ -10,11 +10,11 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import * as React from 'react';
-// import { LocalLaundryService } from '@mui/icons-material';
+import { LocalLaundryService } from '@mui/icons-material';
 
 import CourseInfo from './CourseInfo'
 
-export default function Search({professor, courses}) {
+export default function CoursePropInfo({course}) {
   const [searched, setSearched] = React.useState('');
 
   const [professorSelected, setProfessorSelected] = React.useState('');
@@ -23,7 +23,7 @@ export default function Search({professor, courses}) {
 
   const [geography, setGeography] = React.useState('');
 
-  // const [initialState, setInitialState] = React.useState(true);
+  const [initialState, setInitialState] = React.useState(true);
 
   const [filters, setFilters] = React.useState({
     diap: false,
@@ -45,6 +45,51 @@ export default function Search({professor, courses}) {
     search: false,
   })
 
+  
+  // const courses = [
+//   {course_number: "HIST 0250", 
+//       course_title: "American Exceptionalism: The History of an Idea", 
+//       professors: [{displayName: "Michael Vorenberg"}],
+//       crn: 24823,
+//       semester: "Spring",
+//       year: 2021,
+//       is_DIAP: true,
+//       is_WRIT: true,
+//       is_Premodern: true,
+//       geography: "North America",
+//       is_remote: true,
+//       is_undergrad: true,
+//       is_intro: true,
+//   },
+//   {course_number: "HIST 0150D", 
+//       course_title: "Refugees: A Twentieth-Century History",
+//       professors: [{displayName: "Vazira F-Y Zamindar"}],
+//       crn: 12312,
+//       semester: "Fall",
+//       year: 2022,
+//       is_DIAP: false,
+//       is_WRIT: true,
+//       is_Premodern: false,
+//       geography: "Europe",
+//       is_remote: true,
+//       is_undergrad: false,
+//       is_intro: true,
+//   },
+//   {course_number: "HIST 0150G", 
+//       course_title: "History of Law: Great Trials", 
+//       professors: [{displayName: "Holly A Case"}],
+//       crn: 32321,
+//       semester: "Spring",
+//       year: 2022,
+//       is_DIAP: false,
+//       is_WRIT: false,
+//       is_Premodern: false,
+//       geography: "MESA",
+//       is_remote: true,
+//       is_undergrad: true,
+//       is_intro: true,
+//   }
+// ]
 
   const allCourses = courses;
   
@@ -59,277 +104,7 @@ export default function Search({professor, courses}) {
     "capstone": "is_capstone",
     "lecture": "is_lecture",
   }
-
-  const sortByProf = (courses, prof) => {
-    const sortedList = [];
-    for (var i = 0, len = courses.length; i < len; i++) {
-      var l = courses[i];
-      if (l.professors[0]['displayName'] === prof) {
-        sortedList.push(l);
-      } 
-    }
-    return sortedList
-  }
-
-  const sortByLevel = (courses, lev) => {
-    const sortedList = [];
-    for (var i = 0, len = courses.length; i < len; i++) {
-      var l = courses[i];
-      console.log(l);
-      if (l.is_undergrad === lev) {
-        sortedList.push(l);
-      } 
-    }
-    return sortedList
-  }
-
-  const sortByGeo = (courses, geo) => {
-    const sortedList = [];
-    for (var i = 0, len = courses.length; i < len; i++) {
-      var l = courses[i];
-      console.log(l);
-      if (l.geography === geo) {
-        sortedList.push(l);
-      } 
-    }
-    return sortedList
-  }
-
-  const trueFilters = () => {
-    var trueFilt = []
-    for (const [key, value] of Object.entries(filters)) {
-      if (value) {
-        trueFilt.push(key)
-      }
-    }
-    return trueFilt
-  }
-
-  const sortByFilters = (courses, filtersDict) => {
-    const sortedList = [];
-    var filtersList = trueFilters();
-
-    var mappedList = filtersList.map(x => filtersMap[x])
-    console.log(mappedList);
-    console.log(courses);
-
-    for (var i = 0, len = courses.length; i < len; i++) {
-      var l = courses[i];
-      console.log(l);
-      var add = true; 
-
-      for (var j = 0, len2 = mappedList.length; j < len2; j++) {
-        console.log(l[mappedList[j]]);
-        if (l[mappedList[j]] !== true) {
-          add = false;
-        }
-      }
-      
-      if (add) {
-        sortedList.push(l);
-      }
-    }
-    return sortedList
-  }
-
-  // React.useEffect(() => {
-  //   myFunction();
-  //   return () => {
-  //     setInitialState({}); // This worked for me
-  //   };
-  // }, []);
-
-  // const myFunction = () => {
-  //     setInitialState(false)
-  // }
-
-
-  // useEffect(() => {
-  //   let isMounted = true;
-  //   fetchValue().then(() => {
-  //         if(isMounted ){
-  //           setInitialState(false); // no more error
-  //         } 
-  //       });
-  //      return () => {
-  //       isMounted = false;
-  //       };
-  //   }, []);
-
-  const considerNone = () => {
-    for (const [, value] of Object.entries(consider)) {
-      if (value) {
-        return false
-      }
-    }
-    return true
-  }
-
-  // const filtersSelected = () => {
-  //   for (const [key, value] of Object.entries(filters)) {
-  //     if (value) {
-  //       return true
-  //     }
-  //   }
-  //   return false
-  // }
-
-  const sort = () => {
-    if (considerNone()) {
-      // this.initialState = false;
-      // setInitialState(false);
-      return allCourses
-    } else {
-      // const sortedList = [];
-      // for (var i = 0, len = allCourses.length; i < len; i++) {
-      //     var l = allCourses[i];
-      //     if (l.professors == professorSelected && l.geography == geography) {
-      //       if ((l.is_undergrad && level == "Undergraduate") || (!l.is_undergrad && level == "Graduate")) {
-      //           console.log(l);
-      //           if (l.is_DIAP == filters.diap && l.is_WRIT == filters.writ && l.is_remote == filters.rem 
-      //             && l.is_Premodern == filters.p && l.is_intro == filters.intro) {
-      //               sortedList.push(l);
-      //             } 
-      //       }
-      //     }
-      // }
-      var toSort = allCourses
-
-      if (consider['professor']) {
-        toSort = sortByProf(toSort, professorSelected)
-        // professorSelected
-      }
-      
-      if (consider['level']) {
-        toSort = sortByLevel(toSort, level)
-      }
-
-      if (consider['geography']) {
-        toSort = sortByGeo(toSort, geography)
-      }
-
-      if (consider['filters']) {
-        toSort = sortByFilters(toSort, filters)
-      }
-
-      console.log(toSort);
-      if (consider['search']) {
-        toSort = sortBySearched(toSort, searched)
-      }
-
-      return toSort;
-    }  
-  }
-
-  const selectProfessor = (event) => {
-    if (event.target.value === "All") {
-      setProfessorSelected(event.target.value);
-      setConsider({
-        ...consider,
-        ['professor']: false,
-      });
-    } else {
-      setProfessorSelected(event.target.value);
-      setConsider({
-        ...consider,
-        ['professor']: true,
-      });
-    }
-  };
-
-  const selectLevel = (event) => {
-    if (event.target.value === "Undergraduate") {
-      setLevel(true);
-      setConsider({
-        ...consider,
-        ['level']: true,
-      });
-    }
-    else if (event.target.value === "Graduate") {
-      setLevel(false);
-      setConsider({
-        ...consider,
-        ['level']: true,
-      });
-    }
-    else if (event.target.value === "All") {
-      setConsider({
-        ...consider,
-        ['level']: false,
-      });
-    }
-  };
-
-  const selectGeography = (event) => {
-    if (event.target.value === "All") {
-      setGeography(event.target.value);
-      setConsider({
-        ...consider,
-        ['geography']: false,
-      });
-    } else {
-      setGeography(event.target.value);
-      setConsider({
-        ...consider,
-        ['geography']: true,
-      });
-    }
-  };
-
-  const selectFilters = (event) => {
-    setFilters({
-      ...filters,
-      [event.target.name]: event.target.checked,
-    });
-    setConsider({
-      ...consider,
-      ['filters']: true,
-      })
-  };
-
-  const selectSearched = (event) => {
-    if (event.target.value === "") {
-      setSearched(event.target.value)
-      setConsider({
-        ...consider,
-        ['search']: false,
-        })
-    } else {
-      setSearched(event.target.value)
-      setConsider({
-        ...consider,
-        ['search']: true,
-        })
-    }
-    console.log(searched);
-  };
-
-  const sortBySearched = (courses, searchString) => {
-    var lowerArr = searchString.split(" ").map(element => element.toLowerCase());
-    console.log(lowerArr);
-    const sortedList = [];
-
-    for (var i = 0, len = courses.length; i < len; i++) {
-      var l = courses[i];
-      console.log(l);
-      var courseString = l['course_title'];
-      var noPunc = courseString.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
-      var finalString = noPunc.replace(/\s{2,}/g," ");
-      console.log(finalString);
-      var stringArr = finalString.split(" ").map(element => element.toLowerCase())
-      console.log(stringArr);
-
-      for (var j = 0, len2 = lowerArr.length; j < len2; j++) {
-          if (stringArr.includes(lowerArr[j]) && !sortedList.includes(l)) {
-            sortedList.push(l);
-          }
-      }
-    }
-    //make hashset
-    return sortedList
-  }
-
-  const {diap, writ, rem, p, intro, fys, sys, capstone, lecture} = filters;
+  
 
   return (
     <div align='left'> 
@@ -359,16 +134,15 @@ export default function Search({professor, courses}) {
               <div>
                 <TextField
                   label="Search by Course Name"
-                  fullWidth
                   id="outlined-size-small"
                   onChange={selectSearched}
                   size="small"
-                  style = {{width: 1010}}
+                  style = {{width: 900}}
                 />
                 <br/>
               </div>
             </Box>
-            {/* <Button style={{maxHeight: '40px', marginTop: 32}} variant="outlined">Search</Button> */}
+            <Button style={{maxHeight: '40px', marginTop: 32}} variant="outlined">Search</Button>
           </Box>
         </Box>
         <Box sx={{ display: 'flex', width: 1, marginTop: 3, marginLeft:1, p: 0, border: '0px solid', marginBottom: 2}}>
@@ -387,8 +161,8 @@ export default function Search({professor, courses}) {
                     sx = {{height:30, padding: 0, border: 0 }}
                   > 
                     <MenuItem value="All">All</MenuItem>
-                    {professor?.map((prof) => (
-                      <MenuItem value={prof} key={prof}>
+                    {professor.map((prof) => (
+                      <MenuItem value={prof}>
                         {prof.displayName}
                       </MenuItem>
                     ))}
@@ -420,7 +194,7 @@ export default function Search({professor, courses}) {
                     defaultValue="All"
                     labelId="demo-simple-select-helper-label"
                     id="demo-simple-select-helper"
-                    // defaultValue={""}
+                    defaultValue={""}
                     value={geography}
                     label="Geography"
                     onChange={selectGeography}
@@ -431,7 +205,7 @@ export default function Search({professor, courses}) {
                     <MenuItem value="East Asia">East Asia</MenuItem>
                     <MenuItem value="Europe">Europe</MenuItem>
                     <MenuItem value="Latin America">Latin America</MenuItem>
-                    <MenuItem value="MESA">Middle East - South Asia</MenuItem>
+                    <MenuItem value="MESA">MESA</MenuItem>
                     <MenuItem value="North America">North America</MenuItem>
                     <MenuItem value="Global">Global</MenuItem>
                   </Select>
@@ -514,7 +288,7 @@ export default function Search({professor, courses}) {
         </Box>
       </Box>
       {sort().map((course, index) => (
-            <CourseInfo course={course} status={false} edit={false} approve={false}/>
+            <CourseInfo course={course} status={false}/>
         ))
         }
     </div>

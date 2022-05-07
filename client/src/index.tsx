@@ -13,7 +13,7 @@ ReactDOM.render(
       <Route path="/" element={<App />} />
       <Route path="/my_courses" element={<MyCourses />} />
       <Route path="/course_proposal" element={<CourseProposal />} />
-      <Route path="/approve_courses" element={<CourseApproval />} />
+      <Route path="/review_courses" element={<CourseApproval />} />
       <Route path="/view_course" element={<CoursePropInfo/>} />
       
     </Routes>

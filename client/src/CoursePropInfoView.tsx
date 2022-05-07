@@ -13,17 +13,11 @@ import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
 import {useLocation} from 'react-router'
 import { fetchProfessors } from "./utils/professors";
-import {Link} from 'react-router-dom';
-import { acceptRejectCourse } from './utils/courses';
-import { useNavigate } from 'react-router-dom';
-
 
 
 function CoursePropInfoView() {
 
   const [user, setUser] = useState<IUser>();
-  const [reason, setReason] = useState('');
-  const navigate = useNavigate();
   const [, setError] = useState("");
     // called once when components on page have rendered
     useEffect(() => {
@@ -48,7 +42,6 @@ function CoursePropInfoView() {
         course: any,
         approve: boolean,
         edit: boolean,
-        new_proposal: boolean
       }
       
     const location = useLocation();
@@ -58,11 +51,10 @@ function CoursePropInfoView() {
     const course = myState.course;
     const approve = myState.approve;
     const edit = myState.edit;
-    const new_proposal = myState.new_proposal;
 
     const [professors, setProfessors] = useState<string[]>([]);
     
-    // console.log(course)
+    console.log(course)
 
     const courseNumber = course["course_number"].split(" ")[1];
     const courseTitle = course["course_title"]
@@ -73,7 +65,7 @@ function CoursePropInfoView() {
     const courseGeography = course["geography"][0]
 
     const courseProfessors = course["professors"]
-    // console.log(courseProfessors)
+    console.log(courseProfessors)
 
     var profList = []
 
@@ -83,7 +75,7 @@ function CoursePropInfoView() {
 
     var profString = profList.join(", ")
 
-    // console.log(profString)
+    console.log(profString)
 
     if (course["is_undergrad"]) {
         courseLevel = "Undergraduate"
@@ -91,31 +83,9 @@ function CoursePropInfoView() {
         courseLevel = "Graduate"
     }
 
-    // console.log(Math.floor(courseDescription.split(" ").length / 12))
-    // console.log(courseDescription.split(" "))
+    console.log(Math.floor(courseDescription.split(" ").length / 12))
+    console.log(courseDescription.split(" "))
 
-
-    // console.log(state);
-    // console.log(state.edit);
-
-    // if (state !== undefined && state !== null && state.constructor == Object) {
-
-    // }
-
-    // if (state instanceof json) {
-    //     console.log(state)
-    // }
-    
-
-    // console.log(props.location)
-    // let id = props.location.state?.id;
-    // console.log(id);
-
-    // if (props.location.state.courseinfo) {
-    //     console.log(props.location.state.course);
-    // }
-
-  // const [crn, setCrn] = useState(0);
 
   return (
     <div className="CourseProposal">
@@ -191,8 +161,9 @@ function CoursePropInfoView() {
                     readOnly: true,
                   }}
                 />
-          
+                
               </Grid>
+
 
               <Grid item xs={2}>
               <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Semester *</Typography>
@@ -247,7 +218,7 @@ function CoursePropInfoView() {
               </Grid>
 
               <Grid item xs={2}>
-              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Time Ranking*</Typography>
+              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Time *</Typography>
               </Grid>
               <Grid item xs={10}>
               <TextField
@@ -261,7 +232,7 @@ function CoursePropInfoView() {
                 sx={{marginRight: 1}}
               >
               </TextField>
-             
+              
               </Grid>
 
               <Grid item xs={2}>
@@ -281,12 +252,12 @@ function CoursePropInfoView() {
               />
               </Grid>
 
-              <Grid item xs={4}></Grid>
+              <Grid item xs={3}></Grid>
               <Grid item xs={3}>
                 <FormGroup>
                   <FormControlLabel control={<Checkbox disabled checked={course.is_capstone}/>} label="Capstone" />
                   <FormControlLabel control={<Checkbox disabled checked={course.is_FYS}/>} label="First-Year Seminar" />
-                  <FormControlLabel control={<Checkbox disabled checked={course.is_SYS}/>} label="Second-Year Seminar" />
+                  <FormControlLabel control={<Checkbox disabled checked={course.is_SYS}/>} label="Sophomore Seminar" />
                   <FormControlLabel control={<Checkbox disabled checked={course.is_intro}/>} label="Intro" />
                   <FormControlLabel control={<Checkbox disabled checked={course.is_lecture}/>} label="Lecture" />
                 </FormGroup>
@@ -299,62 +270,30 @@ function CoursePropInfoView() {
                     <FormControlLabel control={<Checkbox disabled checked={course.is_FYS}/>} label="Premodern" />
                 </FormGroup>
               </Grid>
-              <Grid item xs={2}></Grid>
+              <Grid item xs={3}></Grid>
               
-            {approve&&<>
-              
-                <Grid item xs={2}>
-                <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Comments for Professor</Typography>
-                </Grid>
-                <Grid item xs={10}>
-                <TextField
-                    fullWidth
-                    value={reason}
-                      multiline={true}
-                      rows={5}
-                      onChange={(e)=>setReason(e.target.value)}
-                    />
-                </Grid>
-              
-                <Grid marginX="auto" marginY="20px">
-                <Button 
-                  variant="contained" 
-                  sx={{textTransform:"none", backgroundColor:"#992525", mx:1}}
-                  onClick={async () => {
-                    const success = await acceptRejectCourse(course, true);
-                    if (success){
-                      alert("Course successfully accepted.")
-                      navigate('/review_courses');
-                    }else{
-                      alert("Error accepting course")
-                    }
-                    }}>
-                    <Typography gutterBottom variant="body1">
-                      Accept
-                    </Typography>
-                  </Button>
-                  <Button 
-                    variant="contained" 
-                    sx={{textTransform:"none", backgroundColor:"#992525", mx:1}}
-                    onClick={async () => {
-                      const success = await acceptRejectCourse(course, false);
-                      if (success){
-                        alert("Course successfully rejected.")
-                        navigate('/review_courses');
-                      }else{
-                        alert("Error rejecting course")
-                      }
-                    }}>
-                      <Typography gutterBottom variant="body1">
-                        Reject
-                      </Typography>
-                    </Button>
-                  </Grid>
-                {/* </Grid> */}
-           </> }
+            {approve&&<Grid item marginX="auto" >
+              <Button 
+                variant="contained" 
+                sx={{textTransform:"none", backgroundColor:"#992525", mx:1}}
+            >
+                  <Typography gutterBottom variant="body1">
+                    Accept
+                  </Typography>
+              </Button>
+              <Button 
+                variant="contained" 
+                sx={{textTransform:"none", backgroundColor:"#992525", mx:1}}
+                onClick={() => {
+                  window.location.reload();
+                }}>
+                  <Typography gutterBottom variant="body1">
+                    Reject
+                  </Typography>
+              </Button>
+            </Grid>}
 
             {edit&&<Grid item marginX="auto" >
-            <Link style={{ textDecoration: 'none' }}to={"/course_proposal"} state = {{course:course, edit:true, existing:false}}>
               <Button 
                 variant="contained" 
                 sx={{textTransform:"none", backgroundColor:"#992525", mx:1}}
@@ -363,20 +302,6 @@ function CoursePropInfoView() {
                     Edit
                   </Typography>
               </Button>
-              </Link>
-            </Grid>}
-
-            {new_proposal&&<Grid item marginX="auto" >
-            <Link style={{ textDecoration: 'none' }}to={"/course_proposal"} state = {{course:course, edit:false, existing:true}}>
-              <Button 
-                variant="contained" 
-                sx={{textTransform:"none", backgroundColor:"#992525", mx:1}}
-            >
-                  <Typography gutterBottom variant="body1">
-                    New Proposal
-                  </Typography>
-              </Button>
-              </Link>
             </Grid>}
 
           </Grid>

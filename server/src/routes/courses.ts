@@ -187,20 +187,34 @@ courseRouter.post("/submit-dev-only", async (req: IGetUserAuthInfoRequest, res: 
     res.status(200).json({newCourse});
 });
 
-courseRouter.post("/accept", authCheck, async (req: IGetUserAuthInfoRequest, res: Response) => {
+courseRouter.post("/accept-reject/:is_accept", authCheck, async (req: IGetUserAuthInfoRequest, res: Response) => {
 
+    const is_accept = typeof req.params.is_accept !== 'undefined' && strToBool(req.params.is_accept);
+    
     if (req.user.role === ROLES.MANAGER || req.user.role === ROLES.GRAD_DIRECTOR || req.user.role === ROLES.UG_DIRECTOR ) {
         const course = req.body as ICourse;
         let new_status;
         if (req.user.role == ROLES.UG_DIRECTOR && course.is_undergrad) {
-            new_status = PROPOSAL_STATUS.DIRECTOR_ACCEPTED;;
+            if (is_accept) {
+                new_status = PROPOSAL_STATUS.DIRECTOR_ACCEPTED;;
+            } else {
+                new_status = PROPOSAL_STATUS.DIRECTOR_REJECTED;
+            }
         } else if (req.user.role == ROLES.GRAD_DIRECTOR && !course.is_undergrad) {
-            new_status = PROPOSAL_STATUS.DIRECTOR_ACCEPTED;
+            if (is_accept) {
+                new_status = PROPOSAL_STATUS.DIRECTOR_ACCEPTED;
+            } else {
+                new_status = PROPOSAL_STATUS.DIRECTOR_REJECTED;
+            }
         } else if (req.user.role == ROLES.MANAGER) {
-            new_status = PROPOSAL_STATUS.CCC_ACCEPTED;
+            if (is_accept) {
+                new_status = PROPOSAL_STATUS.CCC_ACCEPTED;
+            } else {
+                new_status = PROPOSAL_STATUS.CCC_REJECTED;
+            }
         } else {
             res.status(403).json({
-                message: "do not have permission to accept this specific course",
+                message: "do not have permission to accept/reject this specific course",
             });
         }
 
@@ -208,59 +222,19 @@ courseRouter.post("/accept", authCheck, async (req: IGetUserAuthInfoRequest, res
             await Course.updateOne({_id: course._id}, {proposal_status: new_status});
             
             res.status(200).json({
-                message: "accepting course succeeded"
+                message: "accepting/rejected course succeeded"
             });
     
         } catch (err) {
             console.log(err);
             res.status(400).json({
-                message: "accepting course failed",
+                message: "accepting/rejecting course failed",
             });
         }
 
     } else {
         res.status(403).json({
-            message: "do not have permission to accept courses"
-
-        });
-    }
-});
-
-courseRouter.post("/reject", authCheck, async (req: IGetUserAuthInfoRequest, res: Response) => {
-    
-    if (req.user.role === ROLES.MANAGER || req.user.role === ROLES.GRAD_DIRECTOR || req.user.role === ROLES.UG_DIRECTOR ) {
-        let new_status;
-        const course = req.body as ICourse;
-        if (req.user.role == ROLES.UG_DIRECTOR && course.is_undergrad) {
-            new_status = PROPOSAL_STATUS.DIRECTOR_REJECTED;
-        } else if (req.user.role == ROLES.GRAD_DIRECTOR && !course.is_undergrad) {
-            new_status = PROPOSAL_STATUS.DIRECTOR_REJECTED;
-        } else if (req.user.role == ROLES.MANAGER) {
-            new_status = PROPOSAL_STATUS.CCC_REJECTED;
-        } else {
-            res.status(403).json({
-                message: "do not have permission to reject this specific course",
-            });
-        }
-
-        try {
-            await Course.updateOne({_id: course._id}, {proposal_status: new_status});
-            
-            res.status(200).json({
-                message: "accepting course succeeded"
-            });
-    
-        } catch (err) {
-            console.log(err);
-            res.status(400).json({
-                message: "accepting course failed",
-            });
-        }
-
-
-    } else {
-        res.status(403).json({
-            message: "do not have permission to reject courses"
+            message: "do not have permission to accept/reject courses"
 
         });
     }
