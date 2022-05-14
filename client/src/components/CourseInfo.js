@@ -48,7 +48,6 @@ export default function ComplexGrid({course, status, edit, approve, new_proposal
             {/* Second row */}
              <Grid item xs container >
               <Grid item xs={5} container >
-                {/* <Typography gutterBottom variant="body1">{course.professors[0].displayName}</Typography> */}
                 {course.professors.map((name,index)=>{
                   if (index==course.professors.length-1) {
                     return <Typography gutterBottom variant="body1" key={name.displayName}>{name.displayName}</Typography>
@@ -75,8 +74,8 @@ export default function ComplexGrid({course, status, edit, approve, new_proposal
             <Grid item xs container >
               <Grid item xs container >
                 <FormGroup row>
-                  {course.is_DIAP && <FormControlLabel disabled checked control={<Checkbox />} label="DIAP" key="DIAP"/>}
-                  {!course.is_DIAP && <FormControlLabel disabled control={<Checkbox />} label="DIAP" key="DIAP1"/>}
+                  {course.is_RPP && <FormControlLabel disabled checked control={<Checkbox />} label="RPP" key="RPP"/>}
+                  {!course.is_RPP && <FormControlLabel disabled control={<Checkbox />} label="RPP" key="RPP1"/>}
 
                   {course.is_WRIT && <FormControlLabel disabled checked control={<Checkbox />} label="WRIT" key="WRIT"/>}
                   {!course.is_WRIT && <FormControlLabel disabled control={<Checkbox />} label="WRIT" key="WRIT1" />}
@@ -107,8 +106,15 @@ export default function ComplexGrid({course, status, edit, approve, new_proposal
             </Grid>
 
             <Grid item xs container >
-              {status && <Typography variant="body1" fontWeight="bold" gutterBottom>Status: &nbsp;</Typography>} 
-              {status && <Typography variant="body1" gutterBottom>{course.proposal_status} </Typography>} 
+              <Grid item xs={5} container >
+                {status && <Typography variant="body1" fontWeight="bold" gutterBottom>Proposal Status: &nbsp;</Typography>} 
+                {status && <Typography variant="body1" gutterBottom>{course.proposal_status} </Typography>} 
+              </Grid>
+              
+              <Grid item xs={5} container >
+                {status && <Typography variant="body1" fontWeight="bold" gutterBottom>Course Status: &nbsp;</Typography>} 
+                {status && <Typography variant="body1" gutterBottom>{course.course_status} </Typography>} 
+              </Grid>
             </Grid>
 
           </Grid>

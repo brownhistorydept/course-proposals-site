@@ -14,7 +14,7 @@ import { LocalLaundryService } from '@mui/icons-material';
 
 import CourseInfo from './CourseInfo'
 
-export default function CoursePropInfo({course}) {
+export default function CourseView({course}) {
   const [searched, setSearched] = React.useState('');
 
   const [professorSelected, setProfessorSelected] = React.useState('');
@@ -26,7 +26,7 @@ export default function CoursePropInfo({course}) {
   const [initialState, setInitialState] = React.useState(true);
 
   const [filters, setFilters] = React.useState({
-    diap: false,
+    rpp: false,
     writ: false,
     rem: false,
     p: false,
@@ -53,7 +53,7 @@ export default function CoursePropInfo({course}) {
 //       crn: 24823,
 //       semester: "Spring",
 //       year: 2021,
-//       is_DIAP: true,
+//       is_RPP: true,
 //       is_WRIT: true,
 //       is_Premodern: true,
 //       geography: "North America",
@@ -67,7 +67,7 @@ export default function CoursePropInfo({course}) {
 //       crn: 12312,
 //       semester: "Fall",
 //       year: 2022,
-//       is_DIAP: false,
+//       is_RPP: false,
 //       is_WRIT: true,
 //       is_Premodern: false,
 //       geography: "Europe",
@@ -81,7 +81,7 @@ export default function CoursePropInfo({course}) {
 //       crn: 32321,
 //       semester: "Spring",
 //       year: 2022,
-//       is_DIAP: false,
+//       is_RPP: false,
 //       is_WRIT: false,
 //       is_Premodern: false,
 //       geography: "MESA",
@@ -94,7 +94,7 @@ export default function CoursePropInfo({course}) {
   const allCourses = courses;
   
   const filtersMap = {
-    "diap": "is_DIAP",
+    "rpp": "is_RPP",
     "writ": "is_WRIT",
     "rem": "is_remote",
     "p": "is_Premodern",
@@ -218,9 +218,9 @@ export default function CoursePropInfo({course}) {
                 <FormGroup row={true}>
                   <FormControlLabel
                     control={
-                      <Checkbox checked={diap} onChange={selectFilters} name="diap" />
+                      <Checkbox checked={rpp} onChange={selectFilters} name="rpp" />
                     }
-                    label="DIAP"
+                    label="RPP"
                   />
                   <FormControlLabel
                     control={

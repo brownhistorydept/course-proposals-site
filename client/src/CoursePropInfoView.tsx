@@ -15,7 +15,7 @@ import {useLocation} from 'react-router'
 import { fetchProfessors } from "./utils/professors";
 
 
-function CoursePropInfoView() {
+function CourseViewView() {
 
   const [user, setUser] = useState<IUser>();
   const [, setError] = useState("");
@@ -312,5 +312,5 @@ function CoursePropInfoView() {
   );
 }
 
-export default CoursePropInfoView;
+export default CourseViewView;
 

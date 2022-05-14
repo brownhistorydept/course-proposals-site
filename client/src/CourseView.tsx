@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 
-function CoursePropInfoView() {
+function CourseViewView() {
 
   const [user, setUser] = useState<IUser>();
   const [reason, setReason] = useState('');
@@ -387,5 +387,5 @@ function CoursePropInfoView() {
   );
 }
 
-export default CoursePropInfoView;
+export default CourseViewView;
 

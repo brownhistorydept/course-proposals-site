@@ -21,7 +21,7 @@ export default function CheckboxesGroup() {
     });
   };
 
-  const {diap, writ, p, fys, sys, capstone, lecture, intro, rem} = state;
+  const {rpp, writ, p, fys, sys, capstone, lecture, intro, rem} = state;
 
   return (
     <Box sx={{ display: 'flex', height: 50, }}>
@@ -29,9 +29,9 @@ export default function CheckboxesGroup() {
         <FormGroup row={true}>
           <FormControlLabel
             control={
-              <Checkbox checked={diap} onChange={handleChange} name="diap" />
+              <Checkbox checked={rpp} onChange={handleChange} name="rpp" />
             }
-            label="DIAP"
+            label="RPP"
           />
           <FormControlLabel
             control={

@@ -84,7 +84,7 @@ function CourseProposal() {
     const [intro, setIntro] = useState(false);
     const [lecture, setLecture] = useState(false);
     const [writ, setWrit] = useState(false);
-    const [diap, setRPP] = useState(false);
+    const [rpp, setRPP] = useState(false);
     const [remote, setRemote] = useState(false);
     const [premodern, setPremodern] = useState(false);
     const [semester, setSemester] = useState('Fall');
@@ -443,7 +443,7 @@ function CourseProposal() {
               {isUndergrad == 1 &&<Grid item xs={3}>
                 <FormGroup>
                     <FormControlLabel control={<Checkbox checked={writ} onClick={(e)=>{setWrit((e.target as HTMLInputElement).checked)}}/>} label="WRIT" />
-                    <FormControlLabel control={<Checkbox checked={diap} onClick={(e)=>{setRPP((e.target as HTMLInputElement).checked)}}/>} label="DIAP" />
+                    <FormControlLabel control={<Checkbox checked={rpp} onClick={(e)=>{setRPP((e.target as HTMLInputElement).checked)}}/>} label="RPP" />
                     <FormControlLabel control={<Checkbox checked={remote} onClick={(e)=>{setRemote((e.target as HTMLInputElement).checked)}}/>} label="Remote" />
                     <FormControlLabel control={<Checkbox checked={premodern} onClick={(e)=>{setPremodern((e.target as HTMLInputElement).checked)}}/>} label="Premodern" />
                 </FormGroup>
@@ -508,7 +508,7 @@ function CourseProposal() {
                           description: description,
                           professors: profId,
                           is_undergrad: undergrad,
-                          is_DIAP: diap,
+                          is_RPP: rpp,
                           is_WRIT: writ,
                           is_Premodern: premodern,
                           is_FYS: fys,

@@ -95,7 +95,7 @@ function getCourseStatus(proposed_course, original_course) {
     }
     if (original_course.course_title === proposed_course.course_title && 
         original_course.description === proposed_course.description &&  
-        original_course.is_DIAP === proposed_course.is_DIAP &&  
+        original_course.is_RPP === proposed_course.is_RPP &&  
         original_course.is_remote === proposed_course.is_remote &&  
         original_course.is_WRIT === proposed_course.is_WRIT) {
         return COURSE_STATUS.EXISTING;

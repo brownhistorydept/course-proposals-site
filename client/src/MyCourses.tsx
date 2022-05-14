@@ -49,12 +49,12 @@ function MyCourses() {
           }}>
         <br/>
         <Box sx={{width: 500,  margin: 0, paddingLeft: 2,}}> 
-            <Typography variant="h3" paddingBottom={5}>
+            <Typography variant="h2" paddingBottom={5}>
                 My Courses
             </Typography>
 
 
-            <Typography variant="h5" color="#992525" fontWeight={500} marginBottom={3}>
+            <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={3}>
                 Approved
             </Typography>
             {typeof(approvedCourses)=="undefined" && <Typography variant="body1"> No courses found </Typography>} 
@@ -65,7 +65,7 @@ function MyCourses() {
 
 
           <Box sx={{width: 500, margin: 0, paddingLeft: 2,}}> 
-           <Typography variant="h5" color="#992525" fontWeight={500} marginBottom={3} marginTop={5}>
+           <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={3} marginTop={5}>
               Submitted
           </Typography>
           {typeof(pendingCourses)=="undefined" && <Typography variant="body1"> No courses found </Typography>} 

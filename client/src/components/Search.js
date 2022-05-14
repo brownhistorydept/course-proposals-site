@@ -26,7 +26,7 @@ export default function Search({professor, courses}) {
   // const [initialState, setInitialState] = React.useState(true);
 
   const [filters, setFilters] = React.useState({
-    diap: false,
+    rpp: false,
     writ: false,
     rem: false,
     p: false,
@@ -49,7 +49,7 @@ export default function Search({professor, courses}) {
   const allCourses = courses;
   
   const filtersMap = {
-    "diap": "is_DIAP",
+    "rpp": "is_RPP",
     "writ": "is_WRIT",
     "rem": "is_remote",
     "p": "is_Premodern",
@@ -186,7 +186,7 @@ export default function Search({professor, courses}) {
       //     if (l.professors == professorSelected && l.geography == geography) {
       //       if ((l.is_undergrad && level == "Undergraduate") || (!l.is_undergrad && level == "Graduate")) {
       //           console.log(l);
-      //           if (l.is_DIAP == filters.diap && l.is_WRIT == filters.writ && l.is_remote == filters.rem 
+      //           if (l.is_RPP == filters.rpp && l.is_WRIT == filters.writ && l.is_remote == filters.rem 
       //             && l.is_Premodern == filters.p && l.is_intro == filters.intro) {
       //               sortedList.push(l);
       //             } 
@@ -329,7 +329,7 @@ export default function Search({professor, courses}) {
     return sortedList
   }
 
-  const {diap, writ, rem, p, intro, fys, sys, capstone, lecture} = filters;
+  const {rpp, writ, rem, p, intro, fys, sys, capstone, lecture} = filters;
 
   return (
     <div align='left'> 
@@ -444,9 +444,9 @@ export default function Search({professor, courses}) {
                 <FormGroup row={true}>
                   <FormControlLabel
                     control={
-                      <Checkbox checked={diap} onChange={selectFilters} name="diap" />
+                      <Checkbox checked={rpp} onChange={selectFilters} name="rpp" />
                     }
-                    label="DIAP"
+                    label="RPP"
                   />
                   <FormControlLabel
                     control={
