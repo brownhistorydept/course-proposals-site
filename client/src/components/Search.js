@@ -14,147 +14,42 @@ import * as React from 'react';
 
 import CourseInfo from './CourseInfo'
 
-export default function Search({professor, courses}) {
+export default function Search({allProfessors, courses}) {
   const [searched, setSearched] = React.useState('');
 
-  const [professorSelected, setProfessorSelected] = React.useState('');
+  const [professorSelected, setProfessor] = React.useState('');
 
   const [level, setLevel] = React.useState();
 
   const [geography, setGeography] = React.useState('');
 
+  const [year, setYear] = React.useState('');
+
   // const [initialState, setInitialState] = React.useState(true);
 
-  const [filters, setFilters] = React.useState({
-    rpp: false,
-    writ: false,
-    rem: false,
-    p: false,
-    intro: false, 
-    fys: false, 
-    sys: false, 
-    capstone: false, 
-    lecture: false, 
+  const [designations, setDesignations] = React.useState({
+    is_RPP: false,
+    is_WRIT: false,
+    is_CBLR: false,
+    is_Premodern: false,
+    is_FYS: false,
+    is_SYS: false,
+    is_capstone: false,
+    is_lecture: false,
+    is_intro: false,
+    is_remote: false,
   })
 
   const [consider, setConsider] = React.useState({
+    year: false,
     professor: false,
     level: false,
     geography: false,
-    filters: false,
+    designations: false,
     search: false,
   })
 
-
   const allCourses = courses;
-  
-  const filtersMap = {
-    "rpp": "is_RPP",
-    "writ": "is_WRIT",
-    "rem": "is_remote",
-    "p": "is_Premodern",
-    "intro": "is_intro",
-    "fys": "is_FYS",
-    "sys": "is_SYS",
-    "capstone": "is_capstone",
-    "lecture": "is_lecture",
-  }
-
-  const sortByProf = (courses, prof) => {
-    const sortedList = [];
-    for (var i = 0, len = courses.length; i < len; i++) {
-      var l = courses[i];
-      if (l.professors[0]['displayName'] === prof) {
-        sortedList.push(l);
-      } 
-    }
-    return sortedList
-  }
-
-  const sortByLevel = (courses, lev) => {
-    const sortedList = [];
-    for (var i = 0, len = courses.length; i < len; i++) {
-      var l = courses[i];
-      console.log(l);
-      if (l.is_undergrad === lev) {
-        sortedList.push(l);
-      } 
-    }
-    return sortedList
-  }
-
-  const sortByGeo = (courses, geo) => {
-    const sortedList = [];
-    for (var i = 0, len = courses.length; i < len; i++) {
-      var l = courses[i];
-      console.log(l);
-      if (l.geography === geo) {
-        sortedList.push(l);
-      } 
-    }
-    return sortedList
-  }
-
-  const trueFilters = () => {
-    var trueFilt = []
-    for (const [key, value] of Object.entries(filters)) {
-      if (value) {
-        trueFilt.push(key)
-      }
-    }
-    return trueFilt
-  }
-
-  const sortByFilters = (courses, filtersDict) => {
-    const sortedList = [];
-    var filtersList = trueFilters();
-
-    var mappedList = filtersList.map(x => filtersMap[x])
-    console.log(mappedList);
-    console.log(courses);
-
-    for (var i = 0, len = courses.length; i < len; i++) {
-      var l = courses[i];
-      console.log(l);
-      var add = true; 
-
-      for (var j = 0, len2 = mappedList.length; j < len2; j++) {
-        console.log(l[mappedList[j]]);
-        if (l[mappedList[j]] !== true) {
-          add = false;
-        }
-      }
-      
-      if (add) {
-        sortedList.push(l);
-      }
-    }
-    return sortedList
-  }
-
-  // React.useEffect(() => {
-  //   myFunction();
-  //   return () => {
-  //     setInitialState({}); // This worked for me
-  //   };
-  // }, []);
-
-  // const myFunction = () => {
-  //     setInitialState(false)
-  // }
-
-
-  // useEffect(() => {
-  //   let isMounted = true;
-  //   fetchValue().then(() => {
-  //         if(isMounted ){
-  //           setInitialState(false); // no more error
-  //         } 
-  //       });
-  //      return () => {
-  //       isMounted = false;
-  //       };
-  //   }, []);
 
   const considerNone = () => {
     for (const [, value] of Object.entries(consider)) {
@@ -165,77 +60,72 @@ export default function Search({professor, courses}) {
     return true
   }
 
-  // const filtersSelected = () => {
-  //   for (const [key, value] of Object.entries(filters)) {
-  //     if (value) {
-  //       return true
-  //     }
-  //   }
-  //   return false
-  // }
-
-  const sort = () => {
+  const filter = () => {
     if (considerNone()) {
-      // this.initialState = false;
-      // setInitialState(false);
       return allCourses
     } else {
-      // const sortedList = [];
-      // for (var i = 0, len = allCourses.length; i < len; i++) {
-      //     var l = allCourses[i];
-      //     if (l.professors == professorSelected && l.geography == geography) {
-      //       if ((l.is_undergrad && level == "Undergraduate") || (!l.is_undergrad && level == "Graduate")) {
-      //           console.log(l);
-      //           if (l.is_RPP == filters.rpp && l.is_WRIT == filters.writ && l.is_remote == filters.rem 
-      //             && l.is_Premodern == filters.p && l.is_intro == filters.intro) {
-      //               sortedList.push(l);
-      //             } 
-      //       }
-      //     }
-      // }
-      var toSort = allCourses
+      var toFilter = allCourses
+
+      if (consider['year']) {
+        toFilter = toFilter.filter(course => course.year === year);
+      }
 
       if (consider['professor']) {
-        toSort = sortByProf(toSort, professorSelected)
-        // professorSelected
+        toFilter = toFilter.filter(course => course.professors[0]['displayName'] === professorSelected);
       }
       
       if (consider['level']) {
-        toSort = sortByLevel(toSort, level)
+        toFilter = toFilter.filter(course => course.is_undergrad === level);
       }
 
       if (consider['geography']) {
-        toSort = sortByGeo(toSort, geography)
+        toFilter = toFilter.filter(course => course.geography === geography);
       }
 
-      if (consider['filters']) {
-        toSort = sortByFilters(toSort, filters)
+      if (consider['designations']) {
+        const trueDesignations = Object.entries(designations).filter(([key, value]) => value);
+        toFilter = toFilter.filter(course => trueDesignations.every(designation => course[designation]));
       }
 
-      console.log(toSort);
       if (consider['search']) {
-        toSort = sortBySearched(toSort, searched)
+        toFilter = filterBySearched(toFilter, searched)
       }
 
-      return toSort;
+      return toFilter;
     }  
   }
 
   const selectProfessor = (event) => {
     if (event.target.value === "All") {
-      setProfessorSelected(event.target.value);
+      setProfessor(event.target.value);
       setConsider({
         ...consider,
         ['professor']: false,
       });
     } else {
-      setProfessorSelected(event.target.value);
+      setProfessor(event.target.value);
       setConsider({
         ...consider,
         ['professor']: true,
       });
     }
   };
+
+  const selectYear = (event) => {
+    if (event.target.value === "") {
+      setYear(event.target.value);
+      setConsider({
+        ...consider,
+        ['year']: false,
+      });
+    } else {
+      setYear(event.target.value);
+      setConsider({
+        ...consider,
+        ['year']: true,
+      });
+    }
+  }
 
   const selectLevel = (event) => {
     if (event.target.value === "Undergraduate") {
@@ -277,13 +167,13 @@ export default function Search({professor, courses}) {
   };
 
   const selectFilters = (event) => {
-    setFilters({
-      ...filters,
+    setDesignations({
+      ...designations,
       [event.target.name]: event.target.checked,
     });
     setConsider({
       ...consider,
-      ['filters']: true,
+      ['designations']: true,
       })
   };
 
@@ -301,35 +191,30 @@ export default function Search({professor, courses}) {
         ['search']: true,
         })
     }
-    console.log(searched);
   };
 
-  const sortBySearched = (courses, searchString) => {
+  const filterBySearched = (courses, searchString) => {
     var lowerArr = searchString.split(" ").map(element => element.toLowerCase());
-    console.log(lowerArr);
-    const sortedList = [];
+    const filteredList = [];
 
     for (var i = 0, len = courses.length; i < len; i++) {
       var l = courses[i];
-      console.log(l);
       var courseString = l['course_title'];
       var noPunc = courseString.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
       var finalString = noPunc.replace(/\s{2,}/g," ");
-      console.log(finalString);
       var stringArr = finalString.split(" ").map(element => element.toLowerCase())
-      console.log(stringArr);
 
       for (var j = 0, len2 = lowerArr.length; j < len2; j++) {
-          if (stringArr.includes(lowerArr[j]) && !sortedList.includes(l)) {
-            sortedList.push(l);
+          if (stringArr.includes(lowerArr[j]) && !filteredList.includes(l)) {
+            filteredList.push(l);
           }
       }
     }
     //make hashset
-    return sortedList
+    return filteredList
   }
 
-  const {rpp, writ, rem, p, intro, fys, sys, capstone, lecture} = filters;
+  const {is_RPP, is_WRIT, is_CBLR, is_Premodern, is_FYS, is_SYS, is_capstone, is_lecture, is_intro, is_remote} = designations;
 
   return (
     <div align='left'> 
@@ -368,11 +253,10 @@ export default function Search({professor, courses}) {
                 <br/>
               </div>
             </Box>
-            {/* <Button style={{maxHeight: '40px', marginTop: 32}} variant="outlined">Search</Button> */}
           </Box>
         </Box>
         <Box sx={{ display: 'flex', width: 1, marginTop: 3, marginLeft:1, p: 0, border: '0px solid', marginBottom: 2}}>
-          <Box sx={{display: 'grid', paddingLeft: 1, width: 0.3, border: '0px solid', flexGrow: 1, gridTemplateColumns: 'repeat(10, 1fr)'}}>
+          <Box sx={{display: 'grid', paddingLeft: 1, width: 0.3, border: '0px solid', flexGrow: 1, gridTemplateColumns: 'repeat(10, 1fr)' }}>
               
               <div>
                 <FormControl sx={{ m: 1, width: 120, height:20}} size="small">
@@ -387,7 +271,7 @@ export default function Search({professor, courses}) {
                     sx = {{height:30, padding: 0, border: 0 }}
                   > 
                     <MenuItem value="All">All</MenuItem>
-                    {professor?.map((prof) => (
+                    {allProfessors?.map((prof) => (
                       <MenuItem value={prof} key={prof}>
                         {prof.displayName}
                       </MenuItem>
@@ -420,7 +304,6 @@ export default function Search({professor, courses}) {
                     defaultValue="All"
                     labelId="demo-simple-select-helper-label"
                     id="demo-simple-select-helper"
-                    // defaultValue={""}
                     value={geography}
                     label="Geography"
                     onChange={selectGeography}
@@ -437,70 +320,85 @@ export default function Search({professor, courses}) {
                   </Select>
                 </FormControl>
               </div>
+              <div>
+                <TextField
+                  label="Year"
+                  id="outlined-size-small"
+                  onChange={selectSearched}
+                  size="small"
+                  style = {{width:120}}
+                />
+              </div>
+            </Box>
           </Box>
-          <Box sx={{ display: 'flex', paddingLeft: 10, marginLeft:12, width: 1, gap: 0, border: '0px solid', flexGrow: 1, gridTemplateColumns: 'repeat(10, 1fr)' }}>
+          <Box sx={{ display: 'flex', paddingLeft: 3, width: 1, gap: 0, border: '0px solid', flexGrow: 1, gridTemplateColumns: 'repeat(10, 1fr)' }}>
             <Box sx={{ display: 'flex', height: 50, }}>
               <FormControl sx={{ m: 0}} component="fieldset" variant="standard">
                 <FormGroup row={true}>
                   <FormControlLabel
                     control={
-                      <Checkbox checked={rpp} onChange={selectFilters} name="rpp" />
+                      <Checkbox checked={is_RPP} onChange={selectFilters} name="is_RPP" />
                     }
                     label="RPP"
                   />
                   <FormControlLabel
                     control={
-                      <Checkbox checked={writ} onChange={selectFilters} name="writ" />
+                      <Checkbox checked={is_WRIT} onChange={selectFilters} name="is_WRIT" />
                     }
                     label="WRIT"
                   />
                   <FormControlLabel
                     control={
-                      <Checkbox checked={rem} onChange={selectFilters} name="rem" />
+                      <Checkbox checked={is_CBLR} onChange={selectFilters} name="is_CBLR" />
                     }
-                    label="REM"
+                    label="CBLR"
                   />
                   <FormControlLabel
                     control={
-                      <Checkbox checked={p} onChange={selectFilters} name="p" />
+                      <Checkbox checked={is_Premodern} onChange={selectFilters} name="is_Premodern" />
                     }
-                    label="P"
+                    label="Premodern"
                   />
                   <FormControlLabel
                     control={
-                      <Checkbox checked={intro} onChange={selectFilters} name="intro" />
-                    }
-                    label="Intro"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox checked={fys} onChange={selectFilters} name="fys" />
+                      <Checkbox checked={is_FYS} onChange={selectFilters} name="is_FYS" />
                     }
                     label="FYS"
                   />
                   <FormControlLabel
                     control={
-                      <Checkbox checked={sys} onChange={selectFilters} name="sys" />
+                      <Checkbox checked={is_SYS} onChange={selectFilters} name="is_SYS" />
                     }
                     label="SYS"
                   />
                   <FormControlLabel
                     control={
-                      <Checkbox checked={capstone} onChange={selectFilters} name="capstone" />
+                      <Checkbox checked={is_capstone} onChange={selectFilters} name="is_capstone" />
                     }
                     label="Capstone"
                   />
                   <FormControlLabel
                     control={
-                      <Checkbox checked={lecture} onChange={selectFilters} name="lecture" />
+                      <Checkbox checked={is_lecture} onChange={selectFilters} name="is_lecture" />
                     }
                     label="Lecture"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox checked={is_intro} onChange={selectFilters} name="is_intro" />
+                    }
+                    label="Intro"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox checked={is_remote} onChange={selectFilters} name="is_remote" />
+                    }
+                    label="Remote"
                   />
                 </FormGroup>
               </FormControl>
             </Box>
           </Box> 
-        </Box>  
         <Box
             sx={{
             width: 1,
@@ -513,7 +411,7 @@ export default function Search({professor, courses}) {
           </Typography>
         </Box>
       </Box>
-      {sort().map((course, index) => (
+      {filter().map((course, index) => (
             <CourseInfo course={course} status={false} edit={false} approve={false}/>
         ))
         }

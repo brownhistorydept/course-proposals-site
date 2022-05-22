@@ -47,16 +47,7 @@ function App() {
     (user && courses && professors) ?
     <div className="CoursePage">
       <NavBar user={user} />
-      {typeof professors !=='undefined' && <Search professor={professors} courses={courses}/>}
-      {/* {console.log(courses)} */}
-      {/* {console.log(user)} */}
-      {/* {console.log("Professors:" + professors)}
-      {console.log("hi")} */}
-
-      {/* {courses?.map((course, index) => (
-            <CourseInfo course={course} status={false}/>
-        ))} */}
-
+      {typeof professors !=='undefined' && <Search allProfessors={professors} courses={courses}/>}
     </div>
     
     

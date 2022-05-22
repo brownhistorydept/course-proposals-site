@@ -42,7 +42,7 @@ export interface ICourse {
     is_undergrad: boolean, // if false, then grad
     is_RPP?: boolean,
     is_WRIT?: boolean,
-    is_CBLR?: boolean;
+    is_CBLR?: boolean,
     is_Premodern?: boolean,
     is_FYS?: boolean,
     is_SYS?: boolean,
