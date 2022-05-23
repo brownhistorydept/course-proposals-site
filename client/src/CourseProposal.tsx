@@ -184,37 +184,38 @@ function CourseProposal() {
       </Box>
 
       <Grid container spacing={2} maxWidth={1000} mx="auto">
-          
-          {user?.role == "manager" && <Grid item xs={11}>
-          <Grid item xs={4}>
-                <Typography variant="h6" fontWeight="bold" my="auto" align='left'>Manager Information</Typography>
-              </Grid>
-          </Grid>}
 
-          {user?.role == "manager" && <Grid item xs={11}>
-             
-              <Grid item xs={2}>
-                <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Number</Typography>
+          {user?.role == "manager" && 
+          <Grid item xs={11} container spacing={2}>
+              <Grid item xs={2.2}>
+                <Typography variant="body1" fontWeight="bold" align='right'>Course Number</Typography>
               </Grid>
        
-              <Grid item xs={0.5}>
+              <Grid item xs={.6}>
                 <Typography variant="body1" width="2">HIST</Typography>
               </Grid>
-              <Grid item xs={7}>
+              <Grid item xs={2}>
                 <TextField
                   size='small'
-                  required
                   value={courseNumber}
                   onChange={(e)=>setCourseNumber(e.target.value)}
                 />
               </Grid>
+            </Grid>}
 
-              <Grid marginTop={2}>
+            {user?.role == "manager" && 
+            <Grid item xs={11} container spacing={2}>
+              <Grid item xs={2.2}>
+                <Typography variant="body1" fontWeight="bold" align='right'>Final Time</Typography>
+              </Grid>
+
+              <Grid marginLeft={1.8} marginTop={2}>
                 <FormControl>
                   <InputLabel>Final Time</InputLabel>
                   <Select
                     label="Final Time"
                     size='small'
+                    fullWidth
                     value={finalTime}
                     onChange={(e)=>{setFinalTime(e.target.value)}}
                   >
@@ -224,7 +225,18 @@ function CourseProposal() {
                   </Select>
                 </FormControl>
               </Grid>
-              </Grid>}
+
+              <Grid item xs={2.75}>
+                <Typography variant="body2">If final time is not listed in the dropdown, list it here:</Typography>
+              </Grid>
+
+              <Grid marginTop={2}>
+              <TextField
+                  size='small'
+                  onChange={(e)=>setFinalTime(e.target.value)}
+                />
+              </Grid>
+            </Grid>}
 
               <Grid item xs={2}>
                 <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Regular Professor? *</Typography>

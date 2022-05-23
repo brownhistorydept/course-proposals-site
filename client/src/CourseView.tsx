@@ -91,6 +91,14 @@ function CourseViewView() {
         courseLevel = "Graduate"
     }
 
+    // course to be used for a new proposal; reset year, semester, professor
+    const proposalCourse = {
+      ...course,
+      professors: [],
+      year: new Date().getFullYear(),
+      semester: ''
+    }
+
 
   return (
     <div className="CourseProposal">
@@ -342,7 +350,7 @@ function CourseViewView() {
             </Grid>}
 
             {new_proposal&&<Grid item marginX="auto" >
-            <Link style={{ textDecoration: 'none' }}to={"/course_proposal"} state = {{course:course, edit:false, existing:true}}>
+            <Link style={{ textDecoration: 'none' }}to={"/course_proposal"} state = {{course:proposalCourse, edit:false, existing:true}}>
               <Button 
                 variant="contained" 
                 sx={{textTransform:"none", backgroundColor:"#992525", mx:1}}
