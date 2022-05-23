@@ -16,25 +16,21 @@ function MyCourses() {
   const [approvedCourses, setApprovedCourses] = useState<ICourse[]>();
   const [pendingCourses, setPendingCourses] = useState<ICourse[]>();
   // called once when components on page have rendered
-  // useEffect(() => {
-  //     async function getUser() {
-  //       await fetchUser(setUser);
-  //     }
+  useEffect(() => {
+      async function getUser() {
+        await fetchUser(setUser);
+      }
 
-  //     getUser(); 
-  // }, []);
+      getUser(); 
+  }, []);
 
   useEffect( () => {
-    // async function getUser() {
-    //   await fetchUser(setUser)
-    // }
-    // getUser();
-    
     var params = {}; 
+      if (typeof user === "undefined") {
+        return;
+      }
       async function getCourses() {
-        await fetchUser(setUser);
-        console.log(user);
-        params = {professors: user?._id   };
+        params = {professors: user?._id};
         console.log(params);
         await fetchCourses(setApprovedCourses, params, true);
         await fetchCourses(setPendingCourses, params, false);
@@ -42,7 +38,10 @@ function MyCourses() {
       }
       getCourses(); 
     
-  }, []);
+  }, [user]);
+  // I added [user] so that useEffect gets called every time user changes
+  // this means that it it'll return if user is undefined, and once user is set it'll get called once (and only once) to set the user. 
+  // https://linguinecode.com/post/why-react-setstate-usestate-does-not-update-immediately
 
   return (
     <div className="MyCourses">
@@ -64,7 +63,7 @@ function MyCourses() {
             {typeof(approvedCourses)=="undefined" && <Typography variant="body1"> No courses found </Typography>} 
             </Box>
             {approvedCourses?.map((course, index) => (
-              <CourseInfo course={course} status={false} edit={false} approve={false} new_proposal={true}/> 
+              <CourseInfo key={index} course={course} status={false} edit={false} approve={false} new_proposal={true}/> 
             ))}
 
 
@@ -75,7 +74,7 @@ function MyCourses() {
           {typeof(pendingCourses)=="undefined" && <Typography variant="body1"> No courses found </Typography>} 
           </Box>
           {pendingCourses?.map((course, index) => (
-            <CourseInfo course={course} status={true} edit={true} approve={false} new_proposal={false}/> 
+            <CourseInfo key={index} course={course} status={true} edit={true} approve={false} new_proposal={false}/> 
           ))}
          
       </Box>

@@ -23,9 +23,8 @@ export default function Search({allProfessors, courses}) {
 
   const [geography, setGeography] = React.useState('');
 
-  const [year, setYear] = React.useState('');
-
-  // const [initialState, setInitialState] = React.useState(true);
+  const [year, setYear] = React.useState(new Date().getFullYear());
+  // not sure having it default to the default year makes sense, but with '' react thinks its a string so === test fails
 
   const [designations, setDesignations] = React.useState({
     is_RPP: false,
@@ -83,7 +82,7 @@ export default function Search({allProfessors, courses}) {
       }
 
       if (consider['designations']) {
-        const trueDesignations = Object.entries(designations).filter(([key, value]) => value);
+        const trueDesignations = Object.entries(designations).filter(([_, value]) => value);
         toFilter = toFilter.filter(course => trueDesignations.every(designation => course[designation]));
       }
 
@@ -113,13 +112,13 @@ export default function Search({allProfessors, courses}) {
 
   const selectYear = (event) => {
     if (event.target.value === "") {
-      setYear(event.target.value);
+      setYear(new Date().getFullYear());
       setConsider({
         ...consider,
         ['year']: false,
       });
     } else {
-      setYear(event.target.value);
+      setYear(parseInt(event.target.value));
       setConsider({
         ...consider,
         ['year']: true,
@@ -167,6 +166,8 @@ export default function Search({allProfessors, courses}) {
   };
 
   const selectFilters = (event) => {
+   console.log(event.target.checked);
+   console.log(event.target.name);
     setDesignations({
       ...designations,
       [event.target.name]: event.target.checked,
@@ -175,6 +176,11 @@ export default function Search({allProfessors, courses}) {
       ...consider,
       ['designations']: true,
       })
+      
+    console.log(designations);
+    console.log(consider);
+    console.log("end");
+
   };
 
   const selectSearched = (event) => {
@@ -259,8 +265,8 @@ export default function Search({allProfessors, courses}) {
           <Box sx={{display: 'grid', paddingLeft: 1, width: 0.3, border: '0px solid', flexGrow: 1, gridTemplateColumns: 'repeat(10, 1fr)' }}>
               
               <div>
-                <FormControl sx={{ m: 1, width: 120, height:20}} size="small">
-                <InputLabel sx={{ m: 0, margin: 0, height:1, border:0, padding:0, fontSize: 14}} id="demo-simple-select-helper-label">Professor</InputLabel>
+                <FormControl sx={{ m: 1, minWidth: 120}} size="small">
+                <InputLabel sx={{ m: 0, margin: 0, border:0, padding:0, fontSize: 14}} id="demo-simple-select-helper-label">Professor</InputLabel>
                   <Select
                     labelId="demo-simple-select-helper-label"
                     id="demo-simple-select-helper"
@@ -280,7 +286,7 @@ export default function Search({allProfessors, courses}) {
                 </FormControl>
               </div>
               <div>
-                <FormControl sx={{ m: 1, width: 120, height:20}} size="small">
+                <FormControl sx={{ m: 1, minWidth: 120}} size="small">
                 <InputLabel sx={{ m: 0, margin: 0, height:1, border:0, padding:0, fontSize: 14}} id="demo-simple-select-helper-label">Level</InputLabel>
                   <Select
                     defaultValue=""
@@ -298,7 +304,7 @@ export default function Search({allProfessors, courses}) {
                 </FormControl>
               </div>
               <div>
-                <FormControl sx={{ m: 1, width: 120, height:20}} size="small">
+                <FormControl sx={{ m: 1, minWidth: 120, height:20}} size="small">
                 <InputLabel sx={{ m: 0, margin: 0, height:1, border:0, padding:0, fontSize: 14}} id="demo-simple-select-helper-label">Geography</InputLabel>
                   <Select
                     defaultValue="All"
@@ -324,9 +330,9 @@ export default function Search({allProfessors, courses}) {
                 <TextField
                   label="Year"
                   id="outlined-size-small"
-                  onChange={selectSearched}
+                  onChange={selectYear}
                   size="small"
-                  style = {{width:120}}
+                  style = {{minWidth:120}}
                 />
               </div>
             </Box>
