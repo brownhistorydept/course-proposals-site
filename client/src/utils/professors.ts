@@ -4,7 +4,6 @@ import { IUser } from '../../../server/src/models/User';
 
 export async function fetchProfessors(
     setProfessors: (user: IUser[]) => void,
-    setError: (error: string) => void
   ) {
     try {
         const res = await fetch(
@@ -29,6 +28,6 @@ export async function fetchProfessors(
             throw new Error("Failed to fetch professors");
         }
     } catch (error) {
-        setError("Failed to fetch professors");
+        throw new Error("Failed to fetch professors");
     }
   } 

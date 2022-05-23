@@ -15,11 +15,10 @@ import Search from './components/Search';
 function App() {
 
   const [user, setUser] = useState<IUser>();
-  const [, setError] = useState("");
     // called once when components on page have rendered
     useEffect(() => {
         async function getUser() {
-            await fetchUser(setUser, setError);
+            await fetchUser(setUser);
         }
         getUser();
     }, []);
@@ -29,7 +28,7 @@ function App() {
       useEffect(() => {
           async function getCourses() {
               // const params = {finalized: true}
-              await fetchCourses(setCourses, setError, null, true);
+              await fetchCourses(setCourses, null, true);
           }
           getCourses();
       }, []);
@@ -38,7 +37,7 @@ function App() {
       // called once when components on page have rendered
       useEffect(() => {
           async function getProfessors() {
-              await fetchProfessors(setProfessors, setError);
+              await fetchProfessors(setProfessors);
           }
           getProfessors();
       }, []);

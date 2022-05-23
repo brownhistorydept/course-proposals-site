@@ -24,11 +24,11 @@ function CourseViewView() {
   const [user, setUser] = useState<IUser>();
   const [reason, setReason] = useState('');
   const navigate = useNavigate();
-  const [, setError] = useState("");
+  
     // called once when components on page have rendered
     useEffect(() => {
         async function getUser() {
-            await fetchUser(setUser, setError);
+            await fetchUser(setUser);
         }
         getUser();
         
@@ -38,7 +38,7 @@ function CourseViewView() {
     // called once when components on page have rendered
     useEffect(() => {
         async function getProfessors() {
-            await fetchProfessors(setProfessorsValues, setError);
+            await fetchProfessors(setProfessorsValues);
         }
         getProfessors();
         

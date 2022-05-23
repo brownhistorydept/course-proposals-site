@@ -15,30 +15,34 @@ function MyCourses() {
   const [user, setUser] = useState<IUser>();
   const [approvedCourses, setApprovedCourses] = useState<ICourse[]>();
   const [pendingCourses, setPendingCourses] = useState<ICourse[]>();
-  const [, setError] = useState("");
-    // called once when components on page have rendered
-    useEffect(() => {
-        async function getUser() {
-          await fetchUser(setUser, setError);
-        }
+  // called once when components on page have rendered
+  // useEffect(() => {
+  //     async function getUser() {
+  //       await fetchUser(setUser);
+  //     }
 
-        getUser(); 
-    }, []);
+  //     getUser(); 
+  // }, []);
 
-    useEffect(() => {
-      var params = {}; 
-        async function getCourses() {
-            params = {professors: user?._id   };
-            await fetchCourses(setApprovedCourses, setError, params, true);
-            // params = {professors: user?._id ,proposal_status: {$ne:"accepted by CCC"},  }
-            params = {professors: user?._id   }
-            await fetchCourses(setPendingCourses, setError, params, false);
-          
-        }
-        getCourses(); 
-      
-    }, [user]);
-
+  useEffect( () => {
+    // async function getUser() {
+    //   await fetchUser(setUser)
+    // }
+    // getUser();
+    
+    var params = {}; 
+      async function getCourses() {
+        await fetchUser(setUser);
+        console.log(user);
+        params = {professors: user?._id   };
+        console.log(params);
+        await fetchCourses(setApprovedCourses, params, true);
+        await fetchCourses(setPendingCourses, params, false);
+        
+      }
+      getCourses(); 
+    
+  }, []);
 
   return (
     <div className="MyCourses">

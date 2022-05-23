@@ -26,11 +26,10 @@ function CourseProposal() {
 
   const navigate = useNavigate();
   const [user, setUser] = useState<IUser>();
-  const [, setError] = useState("");
     // called once when components on page have rendered
     useEffect(() => {
         async function getUser() {
-            await fetchUser(setUser, setError);
+            await fetchUser(setUser);
         }
         getUser();
         
@@ -40,7 +39,7 @@ function CourseProposal() {
     // called once when components on page have rendered
     useEffect(() => {
         async function getProfessors() {
-            await fetchProfessors(setProfessorsValues, setError);
+            await fetchProfessors(setProfessorsValues);
         }
         getProfessors();
         
@@ -85,14 +84,14 @@ function CourseProposal() {
     const [lecture, setLecture] = useState(false);
     const [writ, setWrit] = useState(false);
     const [rpp, setRPP] = useState(false);
+    const [cblr, setCBLR] = useState(false);
     const [remote, setRemote] = useState(false);
     const [premodern, setPremodern] = useState(false);
     const [semester, setSemester] = useState('Fall');
-    const [year, setYear] = useState(2022);
+    const [year, setYear] = useState(new Date().getFullYear());
     const [time1, setTime1] = useState('A');
     const [time2, setTime2] = useState('B');
     const [time3, setTime3] = useState('C');
-    const [success, setSuccess] = useState(false);
 
     useEffect(() => {
       if (myState != null){
@@ -139,6 +138,9 @@ function CourseProposal() {
         if (typeof course.is_Premodern != "undefined") {
           setPremodern(course.is_Premodern)
         }
+        if (typeof course.is_CBLR != "undefined") {
+          setCBLR(course.is_CBLR)
+        }
       
         setSemester(course.semester)
         setYear(course.year)
@@ -155,9 +157,9 @@ function CourseProposal() {
   const timeValues = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "T"]
   const timeStrings = ["A: MWF 8-8:50", "B: MWF 9-9:50", "C: MWF 10-10:50", "D: MWF 11-11:50", 
                         "E: MWF 12-12:50", "F: MWF 1-1:50", "G: MWF 2-2:50", "H: TTh 9-10:20", 
-                        "I: TTh 10:30-11:50", "J: TTh 1-2:20", "K: TTh 2.30-3.50", 
-                        "L: TTh 6.40-8", "M: M 3-5.30", "N: W 3-5.30", "O: F 3-5.30", 
-                        "P: T 4-6.30", "Q: Th 4-6.30", "T: MW 3-4.20"]
+                        "I: TTh 10:30-11:50", "J: TTh 1-2:20", "K: TTh 2:30-3:50", 
+                        "L: TTh 6:40-8", "M: M 3-5:30", "N: W 3-5:30", "O: F 3-5:30", 
+                        "P: T 4-6:30", "Q: Th 4-6:30", "T: MW 3-4:20"]
   return (
     <div className="CourseProposal">
 
@@ -276,17 +278,7 @@ function CourseProposal() {
                   ))}
                 </Select>
               </FormControl>
-              {/* <Typography variant="body1" my="auto">{user?.displayName}</Typography> */}
               </Grid>
-              {/* <Grid item xs={2}>
-              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>CRN</Typography>
-              </Grid>
-              <Grid item xs={10}>
-              <TextField
-                size='small'
-                onChange={(e)=>setCrn(parseInt(e.target.value))}
-              />
-              </Grid> */}
 
               <Grid item xs={2}>
               <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Semester *</Typography>
@@ -446,6 +438,7 @@ function CourseProposal() {
                     <FormControlLabel control={<Checkbox checked={rpp} onClick={(e)=>{setRPP((e.target as HTMLInputElement).checked)}}/>} label="RPP" />
                     <FormControlLabel control={<Checkbox checked={remote} onClick={(e)=>{setRemote((e.target as HTMLInputElement).checked)}}/>} label="Remote" />
                     <FormControlLabel control={<Checkbox checked={premodern} onClick={(e)=>{setPremodern((e.target as HTMLInputElement).checked)}}/>} label="Premodern" />
+                    <FormControlLabel control={<Checkbox checked={cblr} onClick={(e)=>{setCBLR((e.target as HTMLInputElement).checked)}}/>} label="CBLR" />
                 </FormGroup>
               </Grid>}
               {isUndergrad == 1 &&<Grid item xs={3}></Grid>}
@@ -503,10 +496,13 @@ function CourseProposal() {
                       var undergrad = isUndergrad === 1
                       var course1 = {
                         proposed: {
-                          course_number: `HIST ${courseNumber}`,
+                          on_leave_fall: leaveFall,
+                          on_leave_spring: leaveSpring,
+                          is_regular_prof: isRegular,
                           course_title: courseTitle,
                           description: description,
                           professors: profId,
+                          syllabus_link: syllabusLink,
                           is_undergrad: undergrad,
                           is_RPP: rpp,
                           is_WRIT: writ,
@@ -521,15 +517,17 @@ function CourseProposal() {
                           year: year,
                           time_ranking: [time1, time2, time3],
                           geography: geography,
+                          course_number: `HIST ${courseNumber}`,
+                          further_notes: notes
                         }
                       };
                       if (myState===null){
                         console.log(course1)
-                        const success = await submitCourse(setSuccess, setError, course1);
+                        const success = await submitCourse(course1);
                         if (success){
                           alert("Course successfully submitted!")
                           navigate('/my_courses');
-                        }else{
+                        } else {
                           alert("Error submitting course")
                         }
                     } else if (edit){
@@ -559,7 +557,7 @@ function CourseProposal() {
 
                         if (myState===null){
                           console.log(course2)
-                          const success = await submitCourse(setSuccess, setError, course2);
+                          const success = await submitCourse(course2);
                           if (success){
                             alert("Course successfully submitted!")
                             navigate('/my_courses');

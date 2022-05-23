@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 
 export default function SelectLabels({professors}) {
   
-  // const [, setError] = useState("");
+  // 
   // const [professors, setProfessors] = useState<IUser>("");
   //   // called once when components on page have rendered
   //   useEffect(() => {

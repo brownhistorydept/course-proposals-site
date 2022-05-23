@@ -5,13 +5,13 @@ import { IUser } from '../../../server/src/models/User';
 function Auth() {
 
   const [user, setUser] = useState<IUser>();
-  const [, setError] = useState("");
+  
   // const [loading, setLoading] = useState(true);
 
   // called once when components on page have rendered
   useEffect(() => {
       async function getUser() {
-          await fetchUser(setUser, setError);
+          await fetchUser(setUser);
           // setLoading(false);
       }
       getUser();
@@ -20,7 +20,6 @@ function Auth() {
   // fetches the user if the user is logged in on the backend
   async function fetchUser(
     setUser: (user: IUser) => void,
-    setError: (error: string) => void
   ) {
     try {
         const res = await fetch(
@@ -43,7 +42,7 @@ function Auth() {
             throw new Error("failed to authenticate user");
         }
     } catch (error) {
-        setError("Failed to authenticate user");
+        throw new Error("Failed to authenticate user");
     }
   } 
 

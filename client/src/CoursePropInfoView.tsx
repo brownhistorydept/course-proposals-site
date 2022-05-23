@@ -18,73 +18,72 @@ import { fetchProfessors } from "./utils/professors";
 function CourseViewView() {
 
   const [user, setUser] = useState<IUser>();
-  const [, setError] = useState("");
-    // called once when components on page have rendered
-    useEffect(() => {
-        async function getUser() {
-            await fetchUser(setUser, setError);
-        }
-        getUser();
-        
-    }, []);
-
-    const [professorValues, setProfessorsValues] = useState<IUser[]>();
-    // called once when components on page have rendered
-    useEffect(() => {
-        async function getProfessors() {
-            await fetchProfessors(setProfessorsValues, setError);
-        }
-        getProfessors();
-        
-    }, []);
-
-    interface CustomizedState {
-        course: any,
-        approve: boolean,
-        edit: boolean,
+  // called once when components on page have rendered
+  useEffect(() => {
+      async function getUser() {
+          await fetchUser(setUser);
       }
+      getUser();
       
-    const location = useLocation();
-    const state = location.state as CustomizedState; // Type Casting, then you can get the params passed via router
-    const myState = state;
+  }, []);
 
-    const course = myState.course;
-    const approve = myState.approve;
-    const edit = myState.edit;
+  const [professorValues, setProfessorsValues] = useState<IUser[]>();
+  // called once when components on page have rendered
+  useEffect(() => {
+      async function getProfessors() {
+          await fetchProfessors(setProfessorsValues);
+      }
+      getProfessors();
+      
+  }, []);
 
-    const [professors, setProfessors] = useState<string[]>([]);
+  interface CustomizedState {
+      course: any,
+      approve: boolean,
+      edit: boolean,
+    }
     
-    console.log(course)
+  const location = useLocation();
+  const state = location.state as CustomizedState; // Type Casting, then you can get the params passed via router
+  const myState = state;
 
-    const courseNumber = course["course_number"].split(" ")[1];
-    const courseTitle = course["course_title"]
-    const courseYear = course["year"]
-    const courseDescription = course["description"]
-    const courseSemester = course["semester"]
-    var courseLevel = ""
-    const courseGeography = course["geography"][0]
+  const course = myState.course;
+  const approve = myState.approve;
+  const edit = myState.edit;
 
-    const courseProfessors = course["professors"]
-    console.log(courseProfessors)
+  const [professors, setProfessors] = useState<string[]>([]);
+  
+  console.log(course)
 
-    var profList = []
+  const courseNumber = course["course_number"].split(" ")[1];
+  const courseTitle = course["course_title"]
+  const courseYear = course["year"]
+  const courseDescription = course["description"]
+  const courseSemester = course["semester"]
+  var courseLevel = ""
+  const courseGeography = course["geography"][0]
 
-    for (let i = 0; i < courseProfessors.length; i++) {
-      profList.push(courseProfessors[i].displayName) 
-    }
+  const courseProfessors = course["professors"]
+  console.log(courseProfessors)
 
-    var profString = profList.join(", ")
+  var profList = []
 
-    console.log(profString)
+  for (let i = 0; i < courseProfessors.length; i++) {
+    profList.push(courseProfessors[i].displayName) 
+  }
 
-    if (course["is_undergrad"]) {
-        courseLevel = "Undergraduate"
-    } else {
-        courseLevel = "Graduate"
-    }
+  var profString = profList.join(", ")
 
-    console.log(Math.floor(courseDescription.split(" ").length / 12))
-    console.log(courseDescription.split(" "))
+  console.log(profString)
+
+  if (course["is_undergrad"]) {
+      courseLevel = "Undergraduate"
+  } else {
+      courseLevel = "Graduate"
+  }
+
+  console.log(Math.floor(courseDescription.split(" ").length / 12))
+  console.log(courseDescription.split(" "))
 
 
   return (

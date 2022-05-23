@@ -45,52 +45,6 @@ export default function CourseView({course}) {
     search: false,
   })
 
-  
-  // const courses = [
-//   {course_number: "HIST 0250", 
-//       course_title: "American Exceptionalism: The History of an Idea", 
-//       professors: [{displayName: "Michael Vorenberg"}],
-//       crn: 24823,
-//       semester: "Spring",
-//       year: 2021,
-//       is_RPP: true,
-//       is_WRIT: true,
-//       is_Premodern: true,
-//       geography: "North America",
-//       is_remote: true,
-//       is_undergrad: true,
-//       is_intro: true,
-//   },
-//   {course_number: "HIST 0150D", 
-//       course_title: "Refugees: A Twentieth-Century History",
-//       professors: [{displayName: "Vazira F-Y Zamindar"}],
-//       crn: 12312,
-//       semester: "Fall",
-//       year: 2022,
-//       is_RPP: false,
-//       is_WRIT: true,
-//       is_Premodern: false,
-//       geography: "Europe",
-//       is_remote: true,
-//       is_undergrad: false,
-//       is_intro: true,
-//   },
-//   {course_number: "HIST 0150G", 
-//       course_title: "History of Law: Great Trials", 
-//       professors: [{displayName: "Holly A Case"}],
-//       crn: 32321,
-//       semester: "Spring",
-//       year: 2022,
-//       is_RPP: false,
-//       is_WRIT: false,
-//       is_Premodern: false,
-//       geography: "MESA",
-//       is_remote: true,
-//       is_undergrad: true,
-//       is_intro: true,
-//   }
-// ]
-
   const allCourses = courses;
   
   const filtersMap = {
@@ -191,7 +145,6 @@ export default function CourseView({course}) {
                 <FormControl sx={{ m: 1, width: 120, height:20}} size="small">
                 <InputLabel sx={{ m: 0, margin: 0, height:1, border:0, padding:0, fontSize: 14}} id="demo-simple-select-helper-label">Geography</InputLabel>
                   <Select
-                    defaultValue="All"
                     labelId="demo-simple-select-helper-label"
                     id="demo-simple-select-helper"
                     defaultValue={""}

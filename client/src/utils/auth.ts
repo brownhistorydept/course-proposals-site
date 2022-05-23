@@ -4,7 +4,6 @@ import { IUser } from '../../../server/src/models/User';
 
 export async function fetchUser(
     setUser: (user: IUser) => void,
-    setError: (error: string) => void
   ) {
     try {
         const res = await fetch(
@@ -27,6 +26,6 @@ export async function fetchUser(
             throw new Error("Failed to authenticate user");
         }
     } catch (error) {
-        setError("Failed to authenticate user");
+        throw new Error("Failed to authenticate user");
     }
   } 

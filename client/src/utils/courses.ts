@@ -4,7 +4,6 @@ import { ICourse } from '../../../server/src/models/Course';
 
 export async function fetchCourses(
     setCourses: (courses: ICourse[]) => void,
-    setError: (error: string) => void,
     params: any,
     finalized: boolean
   ) {
@@ -27,7 +26,7 @@ export async function fetchCourses(
                 const resJson = await res.json();
                 setCourses(resJson.result);
             } else {
-                throw new Error("Failed to fetch courses");
+                throw new Error("ONE Failed to fetch courses");
             }
         } else{
             var url = new URL(`${process.env.REACT_APP_SERVER_URL}/courses/search/${finalized}`)
@@ -49,7 +48,7 @@ export async function fetchCourses(
                 // console.log(res)
                 setCourses(resJson.result);
             } else {
-                throw new Error("Failed to fetch courses");
+                throw new Error("TWO Failed to fetch courses");
             }
         }
         
@@ -57,15 +56,12 @@ export async function fetchCourses(
         
         
     } catch (error) {
-        setError("Failed to fetch courses");
+        console.log(error);
+        throw new Error("THREE Failed to fetch courses");
     }
   }
 
-  export async function submitCourse(
-    setSuccess: (success: boolean) => void,
-    setError: (error: string) => void,
-    course_info: any,
-  ) {
+  export async function submitCourse(course_info: any) {
     try {
         const res = await fetch(
             `${process.env.REACT_APP_SERVER_URL}/courses/submit`,
@@ -83,14 +79,11 @@ export async function fetchCourses(
         // if the user is logged in, set the user and authenticated flag
         if (res.status === 200) {
             console.log("submitting course succeeded")
-            // const resJson = await res.json();
-            // setSuccess(true)
             return true;
         } else {
             throw new Error("failed to submit course");
         }
     } catch (error) {
-        // setError("Failed to authenticate user");
         return false;
     }
   }
@@ -115,14 +108,11 @@ export async function fetchCourses(
             // if the user is logged in, set the user and authenticated flag
             if (res.status === 200) {
                 console.log("accepting/rejected succeeded!")
-                // const resJson = await res.json();
-                // setSuccess(true)
                 return true;
             } else {
                 throw new Error("failed to accept/reject course");
             }
         } catch (error) {
-        // setError("Failed to authenticate user");
         return false;
         }
   }
