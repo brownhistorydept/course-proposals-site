@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { ICourse } from "../../server/src/models/Course";
 import { fetchCourses } from "./utils/courses";
-import CourseInfo from './components/CourseInfo';
+import CourseCard from './components/CourseCard';
 
 
 function CourseReview() {
@@ -115,7 +115,7 @@ function CourseReview() {
             </Typography>
             {typeof(underReviewCourses)=="undefined" && <Typography variant="body1"> No courses to review. </Typography>} 
             {underReviewCourses?.map((course, index) => (
-              <CourseInfo course={course} status={true} edit={false} approve={user?.role !== "curriculum coordinator"} new_proposal={false}/> 
+              <CourseCard course={course} status={true} edit={false} approve={user?.role !== "curriculum coordinator"} new_proposal={false}/> 
             ))}
 
             <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={3} marginTop={3}>
@@ -129,26 +129,26 @@ function CourseReview() {
             
             </Typography>
             {directorAcceptedCourses?.map((course, index) => (
-              <CourseInfo course={course} status={true} edit={false} approve={user?.role !== "curriculum coordinator"} new_proposal={false}/> 
+              <CourseCard course={course} status={true} edit={false} approve={user?.role !== "curriculum coordinator"} new_proposal={false}/> 
             ))}
 
             <Typography variant="h6" color="#992525" fontWeight={500} marginBottom={3}>
               Rejected by Director:
             </Typography>
             {directorRejectedCourses?.map((course, index) => (
-              <CourseInfo course={course} status={true} edit={false} approve={user?.role !== "curriculum coordinator"} new_proposal={false}/> 
+              <CourseCard course={course} status={true} edit={false} approve={user?.role !== "curriculum coordinator"} new_proposal={false}/> 
             ))}
 
             <Typography variant="h6" color="#992525" fontWeight={500} marginBottom={3}>
               Rejected by CCC:
             </Typography>
             {cccRejectedCourses?.map((course, index) => (
-              <CourseInfo course={course} status={true} edit={false} approve={user?.role !== "curriculum coordinator"} new_proposal={false}/> 
+              <CourseCard course={course} status={true} edit={false} approve={user?.role !== "curriculum coordinator"} new_proposal={false}/> 
             ))}
             
             
             {/* {courses?.map((course, index) => (
-              <CourseInfo course={course} status={true} edit={false} approve={user?.role !== "curriculum coordinator"} new_proposal={false}/> 
+              <CourseCard course={course} status={true} edit={false} approve={user?.role !== "curriculum coordinator"} new_proposal={false}/> 
             ))} */}
       </Box>
 

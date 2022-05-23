@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { ICourse } from "../../server/src/models/Course";
 import { fetchCourses } from "./utils/courses";
-import CourseInfo from './components/CourseInfo';
+import CourseCard from './components/CourseCard';
 
 
 
@@ -63,7 +63,7 @@ function MyCourses() {
             {typeof(approvedCourses)=="undefined" && <Typography variant="body1"> No courses found </Typography>} 
             </Box>
             {approvedCourses?.map((course, index) => (
-              <CourseInfo key={index} course={course} status={false} edit={false} approve={false} new_proposal={true}/> 
+              <CourseCard key={index} course={course} status={false} edit={false} approve={false} new_proposal={true}/> 
             ))}
 
 
@@ -74,7 +74,7 @@ function MyCourses() {
           {typeof(pendingCourses)=="undefined" && <Typography variant="body1"> No courses found </Typography>} 
           </Box>
           {pendingCourses?.map((course, index) => (
-            <CourseInfo key={index} course={course} status={true} edit={true} approve={false} new_proposal={false}/> 
+            <CourseCard key={index} course={course} status={true} edit={true} approve={false} new_proposal={false}/> 
           ))}
          
       </Box>

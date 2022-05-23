@@ -12,7 +12,7 @@ import Select from '@mui/material/Select';
 import * as React from 'react';
 // import { LocalLaundryService } from '@mui/icons-material';
 
-import CourseInfo from './CourseInfo'
+import CourseCard from './CourseCard'
 
 export default function Search({allProfessors, courses}) {
   const [searched, setSearched] = React.useState('');
@@ -418,7 +418,7 @@ export default function Search({allProfessors, courses}) {
         </Box>
       </Box>
       {filter().map((course, index) => (
-            <CourseInfo course={course} status={false} edit={false} approve={false}/>
+            <CourseCard course={course} status={false} edit={false} approve={false} new_proposal={true}/>
         ))
         }
     </div>

@@ -92,12 +92,13 @@ function CourseProposal() {
     const [time1, setTime1] = useState('A');
     const [time2, setTime2] = useState('B');
     const [time3, setTime3] = useState('C');
+    const [finalTime, setFinalTime] = useState('A');
 
     useEffect(() => {
       if (myState != null){
-        if (typeof course.course_number != "undefined") {
-          setCourseNumber(course.course_number.split(" ")[1])
-        }
+        // if (typeof course.course_number != "undefined") {
+        //   setCourseNumber(course.course_number.split(" ")[1])
+        // }
         setCourseTitle(course.course_title)
         var profList = []
         for (let i = 0; i < course.professors.length; i++) {
@@ -183,6 +184,48 @@ function CourseProposal() {
       </Box>
 
       <Grid container spacing={2} maxWidth={1000} mx="auto">
+          
+          {user?.role == "manager" && <Grid item xs={11}>
+          <Grid item xs={4}>
+                <Typography variant="h6" fontWeight="bold" my="auto" align='left'>Manager Information</Typography>
+              </Grid>
+          </Grid>}
+
+          {user?.role == "manager" && <Grid item xs={11}>
+             
+              <Grid item xs={2}>
+                <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Number</Typography>
+              </Grid>
+       
+              <Grid item xs={0.5}>
+                <Typography variant="body1" width="2">HIST</Typography>
+              </Grid>
+              <Grid item xs={7}>
+                <TextField
+                  size='small'
+                  required
+                  value={courseNumber}
+                  onChange={(e)=>setCourseNumber(e.target.value)}
+                />
+              </Grid>
+
+              <Grid marginTop={2}>
+                <FormControl>
+                  <InputLabel>Final Time</InputLabel>
+                  <Select
+                    label="Final Time"
+                    size='small'
+                    value={finalTime}
+                    onChange={(e)=>{setFinalTime(e.target.value)}}
+                  >
+                  {timeValues.map((time, index)=>
+                    <MenuItem value={time}>{timeStrings[index]}</MenuItem>
+                  )}
+                  </Select>
+                </FormControl>
+              </Grid>
+              </Grid>}
+
               <Grid item xs={2}>
                 <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Regular Professor? *</Typography>
               </Grid>
@@ -214,22 +257,6 @@ function CourseProposal() {
               </Grid>
               <Grid item xs={9.5}>
                 <FormControlLabel control={<Checkbox checked={leaveSpring} onClick={(e)=>{setleaveSpring((e.target as HTMLInputElement).checked)}}/>} label="" />
-              </Grid>
-
-
-              <Grid item xs={2}>
-                <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Number</Typography>
-              </Grid>
-              <Grid item xs={0.5}>
-              <Typography variant="body1" width="2">HIST</Typography>
-              </Grid>
-              <Grid item xs={9.5}>
-              <TextField
-                size='small'
-                required
-                value={courseNumber}
-                onChange={(e)=>setCourseNumber(e.target.value)}
-              />
               </Grid>
 
               <Grid item xs={2}>
@@ -420,6 +447,7 @@ function CourseProposal() {
                 onChange={(e)=>setDescription(e.target.value)}
               />
               </Grid>
+
               
               {isUndergrad == 1 &&<Grid item xs={3}></Grid>}
               {isUndergrad == 1 &&<Grid item xs={3}>
@@ -468,7 +496,7 @@ function CourseProposal() {
                 />
                 <Typography variant="body2" mx="auto"> If you are regular faculty teaching for the first time, please add a syllabus link. </Typography>
                 <Typography variant="body2" mx="auto">* are required fields </Typography>
-              </Grid> 
+              </Grid>
               
             <Grid item marginX="auto" marginBottom={2}>
               <Button 
@@ -580,7 +608,7 @@ function CourseProposal() {
                 variant="contained" 
                 sx={{textTransform:"none", backgroundColor:"#992525", mx:1}}
                 onClick={() => {
-                  window.location.reload();
+                  navigate('/'); // go back to course catalog page; this is the only page that managers/profs/directors all have
                 }}>
                   <Typography gutterBottom variant="body1">
                     Clear

@@ -12,7 +12,7 @@ import Select from '@mui/material/Select';
 import * as React from 'react';
 import { LocalLaundryService } from '@mui/icons-material';
 
-import CourseInfo from './CourseInfo'
+import CourseCard from './CourseCard'
 
 export default function CourseView({course}) {
   const [searched, setSearched] = React.useState('');
@@ -241,7 +241,7 @@ export default function CourseView({course}) {
         </Box>
       </Box>
       {sort().map((course, index) => (
-            <CourseInfo course={course} status={false}/>
+            <CourseCard course={course} status={false}/>
         ))
         }
     </div>

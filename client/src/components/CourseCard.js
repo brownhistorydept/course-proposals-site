@@ -62,7 +62,7 @@ export default function ComplexGrid({course, status, edit, approve, new_proposal
                 <Typography gutterBottom variant="body1">{course.semester} {course.year}</Typography>
               </Grid>
               <Grid item xs={2} container >
-              <Typography gutterBottom variant="body1">CRN {course.crn}</Typography>
+              <Typography gutterBottom variant="body1">{course.final_time}</Typography>
               </Grid>
               <Grid item xs={2} container >
               <Typography gutterBottom variant="body1" sx={{pr:8}}>{course.is_undergrad?"Undergraduate":"Graduate"}</Typography>
@@ -122,7 +122,6 @@ export default function ComplexGrid({course, status, edit, approve, new_proposal
 
         <Grid item align="center" justify="center" my="auto" mr={2}>
           <Link style={{ textDecoration: 'none' }}to={"/view_course"} state = {{course:course, edit:edit, approve:approve, new_proposal:new_proposal}}>
-          {/* <Link to={{pathname: "/view_course", state: {id: 123}}}> */}
             <Button variant="contained" sx={{textTransform:"none", backgroundColor:"#992525"}}>
                 <Typography 
                 gutterBottom 

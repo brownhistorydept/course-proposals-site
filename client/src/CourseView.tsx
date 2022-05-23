@@ -91,31 +91,6 @@ function CourseViewView() {
         courseLevel = "Graduate"
     }
 
-    // console.log(Math.floor(courseDescription.split(" ").length / 12))
-    // console.log(courseDescription.split(" "))
-
-
-    // console.log(state);
-    // console.log(state.edit);
-
-    // if (state !== undefined && state !== null && state.constructor == Object) {
-
-    // }
-
-    // if (state instanceof json) {
-    //     console.log(state)
-    // }
-    
-
-    // console.log(props.location)
-    // let id = props.location.state?.id;
-    // console.log(id);
-
-    // if (props.location.state.courseinfo) {
-    //     console.log(props.location.state.course);
-    // }
-
-  // const [crn, setCrn] = useState(0);
 
   return (
     <div className="CourseProposal">
