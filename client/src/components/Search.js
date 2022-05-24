@@ -61,6 +61,8 @@ export default function Search({allProfessors, courses, user}) {
   }
 
   const filter = () => {
+    // console.log(consider);
+    // console.log(designations)
     if (considerNone()) {
       return allCourses
     } else {
@@ -84,7 +86,7 @@ export default function Search({allProfessors, courses, user}) {
 
       if (consider['designations']) {
         const trueDesignations = Object.entries(designations).filter(([_, value]) => value);
-        toFilter = toFilter.filter(course => trueDesignations.every(designation => course[designation]));
+        toFilter = toFilter.filter(course => trueDesignations.every(designation => course[designation[0]]));
       }
 
       if (consider['search']) {
@@ -167,8 +169,6 @@ export default function Search({allProfessors, courses, user}) {
   };
 
   const selectFilters = (event) => {
-   console.log(event.target.checked);
-   console.log(event.target.name);
     setDesignations({
       ...designations,
       [event.target.name]: event.target.checked,
@@ -177,11 +177,6 @@ export default function Search({allProfessors, courses, user}) {
       ...consider,
       ['designations']: true,
       })
-      
-    console.log(designations);
-    console.log(consider);
-    console.log("end");
-
   };
 
   const selectSearched = (event) => {
