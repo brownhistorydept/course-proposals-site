@@ -264,7 +264,7 @@ function CourseViewView() {
               />
               </Grid>
 
-              <Grid item xs={4}></Grid>
+              <Grid item xs={3.85}></Grid>
               <Grid item xs={3}>
                 <FormGroup>
                   <FormControlLabel control={<Checkbox disabled checked={course.is_capstone}/>} label="Capstone" />
@@ -282,8 +282,9 @@ function CourseViewView() {
                     <FormControlLabel control={<Checkbox disabled checked={course.is_FYS}/>} label="Premodern" />
                 </FormGroup>
               </Grid>
-              <Grid item xs={2}></Grid>
-              
+              <Grid item xs={3}></Grid>
+            
+            <Grid container spacing = {2} justifyContent="center" marginTop={"20px"} maxWidth={1000} mx="auto">
             {approve&&<>
               
                 <Grid item xs={2}>
@@ -291,15 +292,16 @@ function CourseViewView() {
                 </Grid>
                 <Grid item xs={10}>
                 <TextField
-                    fullWidth
+                    // fullWidth
+                    style={{width: 690}}
                     value={reason}
-                      multiline={true}
-                      rows={5}
-                      onChange={(e)=>setReason(e.target.value)}
+                    multiline={true}
+                    rows={5}
+                    onChange={(e)=>setReason(e.target.value)}
                     />
                 </Grid>
               
-                <Grid marginX="auto" marginY="20px">
+                <Grid marginY="20px">
                 <Button 
                   variant="contained" 
                   sx={{textTransform:"none", backgroundColor:"#992525", mx:1}}
@@ -333,10 +335,9 @@ function CourseViewView() {
                       </Typography>
                     </Button>
                   </Grid>
-                {/* </Grid> */}
            </> }
 
-            {edit&&<Grid item marginX="auto" >
+            {edit&&<Grid marginY={"20px"}>
             <Link style={{ textDecoration: 'none' }}to={"/course_proposal"} state = {{course:course, edit:true, existing:false}}>
               <Button 
                 variant="contained" 
@@ -361,6 +362,7 @@ function CourseViewView() {
               </Button>
               </Link>
             </Grid>}
+          </Grid>
 
           </Grid>
 

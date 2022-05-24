@@ -227,7 +227,7 @@ function CourseProposal() {
               </Grid>
 
               <Grid item xs={2.75}>
-                <Typography variant="body2">If final time is not listed in the dropdown, list it here:</Typography>
+                <Typography variant="body2">If final time is not listed in the dropdown, write it here:</Typography>
               </Grid>
 
               <Grid marginTop={2}>
@@ -461,7 +461,7 @@ function CourseProposal() {
               </Grid>
 
               
-              {isUndergrad == 1 &&<Grid item xs={3}></Grid>}
+              {isUndergrad == 1 &&<Grid item xs={4.5}></Grid>}
               {isUndergrad == 1 &&<Grid item xs={3}>
                 <FormGroup>
                   <FormControlLabel control={<Checkbox checked={capstone} onClick={(e)=>{setCapstone((e.target as HTMLInputElement).checked)}}/>} label="Capstone" />
@@ -481,7 +481,7 @@ function CourseProposal() {
                     <FormControlLabel control={<Checkbox checked={cblr} onClick={(e)=>{setCBLR((e.target as HTMLInputElement).checked)}}/>} label="CBLR" />
                 </FormGroup>
               </Grid>}
-              {isUndergrad == 1 &&<Grid item xs={3}></Grid>}
+              {isUndergrad == 1 &&<Grid item xs={1.5}></Grid>}
 
               <Grid item xs={2}>
                 <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Further Notes </Typography>
@@ -507,10 +507,11 @@ function CourseProposal() {
                   onChange={(e)=>setSyllabusLink(e.target.value)}
                 />
                 <Typography variant="body2" mx="auto"> If you are regular faculty teaching for the first time, please add a syllabus link. </Typography>
-                <Typography variant="body2" mx="auto">* are required fields </Typography>
+                <Typography variant="body2" my={"8px"} mx="auto">* are required fields </Typography>
               </Grid>
-              
-            <Grid item marginX="auto" marginBottom={2}>
+            
+            <Grid item xs={6}></Grid>
+            <Grid marginBottom={2}>
               <Button 
                 variant="contained" 
                 sx={{textTransform:"none", backgroundColor:"#992525", mx:1}}
@@ -614,16 +615,6 @@ function CourseProposal() {
                 }}>
                   <Typography gutterBottom variant="body1">
                     Submit
-                  </Typography>
-              </Button>
-              <Button 
-                variant="contained" 
-                sx={{textTransform:"none", backgroundColor:"#992525", mx:1}}
-                onClick={() => {
-                  navigate('/'); // go back to course catalog page; this is the only page that managers/profs/directors all have
-                }}>
-                  <Typography gutterBottom variant="body1">
-                    Clear
                   </Typography>
               </Button>
             </Grid>

@@ -63,7 +63,7 @@ function MyCourses() {
             {typeof(approvedCourses)=="undefined" && <Typography variant="body1"> No courses found </Typography>} 
             </Box>
             {approvedCourses?.map((course, index) => (
-              <CourseCard key={index} course={course} status={false} edit={false} approve={false} new_proposal={true}/> 
+              <CourseCard key={index} course={course} status={false} edit={false} approve={false} new_proposal={false}/> 
             ))}
 
 

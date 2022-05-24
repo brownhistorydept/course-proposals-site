@@ -6,6 +6,7 @@ import MyCourses from './MyCourses';
 import CourseProposal from './CourseProposal';
 import CourseReview from './CourseReview';
 import CourseView from './CourseView'
+import ManageRoles from './ManageRoles'
 
 ReactDOM.render(
   <Router>
@@ -15,6 +16,7 @@ ReactDOM.render(
       <Route path="/course_proposal" element={<CourseProposal />} />
       <Route path="/review_courses" element={<CourseReview />} />
       <Route path="/view_course" element={<CourseView/>} />
+      <Route path="/manage_roles" element={<ManageRoles/>} />
       
     </Routes>
   </Router>,

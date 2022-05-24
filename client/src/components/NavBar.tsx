@@ -19,23 +19,23 @@ export default function NavBar(props: {
   user: IUser | undefined; }) {
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  // const [anchorElUser, setAnchorElUser] = React.useState(null);
 
-  const handleOpenNavMenu = (event : any) => {
-    setAnchorElNav(event.currentTarget);
-  };
+  // const handleOpenNavMenu = (event : any) => {
+  //   setAnchorElNav(event.currentTarget);
+  // };
 
-  const handleOpenUserMenu = (event : any) => {
-    setAnchorElUser(event.currentTarget);
-  };
+  // const handleOpenUserMenu = (event : any) => {
+  //   setAnchorElUser(event.currentTarget);
+  // };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
+  // const handleCloseUserMenu = () => {
+  //   setAnchorElUser(null);
+  // };
 
   return (
     <AppBar position="static" style={{ background: '#992525' }}>
@@ -76,31 +76,46 @@ export default function NavBar(props: {
                 Course Catalog
               </Button>
 
-              <Button
-                key='My Courses'
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block', marginRight:3, textTransform :'none' }}
-                href="/my_courses"
-              >
-                My Courses
-              </Button>
+              {props.user?.role !== "default" && props.user?.role !== "manager" &&
+                <Button
+                  key='My Courses'
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: 'white', display: 'block', marginRight:3, textTransform :'none' }}
+                  href="/my_courses"
+                >
+                  My Courses
+                </Button>
+              }
 
-              <Button
-                key='Course Proposal'
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block', marginRight:3, textTransform :'none' }}
-                href="/course_proposal"
-              >
-                Course Proposal
-              </Button>
-              {(props.user.role==="manager" || props.user.role==="curriculum coordinator" || props.user.role=== "undergraduate director"|| props.user.role==="graduate director") && <Button
-                key='Courses'
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block', marginRight:3, textTransform :'none' }}
-                href="/review_courses"
-              >
-                Review Courses
-              </Button>}
+              {props.user?.role !== "default" &&
+                <Button
+                  key='Course Proposal'
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: 'white', display: 'block', marginRight:3, textTransform :'none' }}
+                  href="/course_proposal"
+                >
+                  Course Proposal
+                </Button>}
+                
+                {props.user.role!=="default" && props.user?.role !=="professor" && 
+                  <Button
+                    key='Review Courses'
+                    onClick={handleCloseNavMenu}
+                    sx={{ my: 2, color: 'white', display: 'block', marginRight:3, textTransform :'none' }}
+                    href="/review_courses"
+                  >
+                    Review Courses
+                  </Button>}
+                
+                {props.user.role==="manager" && 
+                  <Button
+                    key='Manage Roles'
+                    onClick={handleCloseNavMenu}
+                    sx={{ my: 2, color: 'white', display: 'block', marginRight:3, textTransform :'none' }}
+                    href="/manage_roles"
+                  >
+                    Manage Roles
+                  </Button>}
 
             <Profile user={props.user}/>
           </Box>

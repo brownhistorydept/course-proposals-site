@@ -115,7 +115,7 @@ function CourseReview() {
             </Typography>
             {typeof(underReviewCourses)=="undefined" && <Typography variant="body1"> No courses to review. </Typography>} 
             {underReviewCourses?.map((course, index) => (
-              <CourseCard course={course} status={true} edit={false} approve={user?.role !== "curriculum coordinator"} new_proposal={false}/> 
+              <CourseCard course={course} status={true} edit={user?.role === "manager"} approve={user?.role !== "curriculum coordinator"} new_proposal={false}/> 
             ))}
 
             <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={3} marginTop={3}>

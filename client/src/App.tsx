@@ -46,7 +46,7 @@ function App() {
     (user && courses && professors) ?
     <div className="CoursePage">
       <NavBar user={user} />
-      {typeof professors !=='undefined' && <Search allProfessors={professors} courses={courses}/>}
+      {typeof professors !=='undefined' && <Search allProfessors={professors} courses={courses} user={user}/>}
     </div>
     
     

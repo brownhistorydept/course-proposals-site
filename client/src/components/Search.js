@@ -14,7 +14,8 @@ import * as React from 'react';
 
 import CourseCard from './CourseCard'
 
-export default function Search({allProfessors, courses}) {
+export default function Search({allProfessors, courses, user}) {
+
   const [searched, setSearched] = React.useState('');
 
   const [professorSelected, setProfessor] = React.useState('');
@@ -418,7 +419,7 @@ export default function Search({allProfessors, courses}) {
         </Box>
       </Box>
       {filter().map((course, index) => (
-            <CourseCard course={course} status={false} edit={false} approve={false} new_proposal={true}/>
+            <CourseCard course={course} status={false} edit={false} approve={false} new_proposal={user?.role !== "default"}/>
         ))
         }
     </div>
