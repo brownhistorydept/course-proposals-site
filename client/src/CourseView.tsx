@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 
-function CourseViewView() {
+function CourseView() {
 
   const [user, setUser] = useState<IUser>();
   const [reason, setReason] = useState('');
@@ -372,5 +372,4 @@ function CourseViewView() {
   );
 }
 
-export default CourseViewView;
-
+export default CourseView;
