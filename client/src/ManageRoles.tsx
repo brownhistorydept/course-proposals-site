@@ -19,12 +19,8 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
 
-function ManageRoles () {
+function ManageRoles() {
     const allRoles = ['default', 'curriculum coordinator', 'professor', 'undergraduate director', 'graduate director', 'manager'];
 
     const [user, setUser] = useState<IUser>();
@@ -35,7 +31,7 @@ function ManageRoles () {
 
     // called once when components on page have rendered
     async function getAllUsers() {
-        setAllUsers(await fetchUsers(false));
+        await fetchUsers(setAllUsers, false);
     }
 
     async function getUser() {

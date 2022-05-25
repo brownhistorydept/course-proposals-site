@@ -39,7 +39,7 @@ function CourseProposal() {
     // called once when components on page have rendered
     useEffect(() => {
         async function getProfessors() {
-            await fetchUsers(true);
+            await fetchUsers(setProfessorsValues, true);
         }
         getProfessors();
         

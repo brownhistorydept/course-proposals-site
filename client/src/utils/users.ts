@@ -2,7 +2,10 @@ import { IUser } from '../../../server/src/models/User';
 
 // fetches the user if the user is logged in on the backend
 
-export async function fetchUsers(justProfessors: boolean) {
+export async function fetchUsers(
+    setUser: (user: IUser[]) => void,
+    justProfessors: boolean
+    ) {
     try {
         const res = await fetch(
             `${process.env.REACT_APP_SERVER_URL}/users/${justProfessors ? 'professors' : 'all'}`,
@@ -19,7 +22,7 @@ export async function fetchUsers(justProfessors: boolean) {
         
         if (res.status === 200) {
             const resJson = await res.json();
-            return resJson.results;
+            setUser(resJson.results);
         } else {
             throw new Error("Failed to fetch users");
         }

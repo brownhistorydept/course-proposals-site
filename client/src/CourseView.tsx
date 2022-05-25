@@ -34,16 +34,6 @@ function CourseView() {
         
     }, []);
 
-    const [professorValues, setProfessorsValues] = useState<IUser[]>();
-    // called once when components on page have rendered
-    useEffect(() => {
-        async function getProfessors() {
-            await fetchUsers(true);
-        }
-        getProfessors();
-        
-    }, []);
-
     interface CustomizedState {
         course: any,
         approve: boolean,
@@ -59,10 +49,6 @@ function CourseView() {
     const approve = myState.approve;
     const edit = myState.edit;
     const new_proposal = myState.new_proposal;
-
-    const [professors, setProfessors] = useState<string[]>([]);
-    
-    // console.log(course)
 
     const courseNumber = course["course_number"].split(" ")[1];
     const courseTitle = course["course_title"]
