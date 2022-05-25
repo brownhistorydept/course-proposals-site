@@ -1,7 +1,7 @@
 import NavBar from './components/NavBar';
 import { useEffect, useState } from "react";
 import { IUser } from "../../server/src/models/User";
-import { fetchUser } from "./utils/auth";
+import { setAuthenticatedUser } from "./utils/auth";
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -12,7 +12,7 @@ import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
 import {useLocation} from 'react-router'
-import { fetchProfessors } from "./utils/professors";
+import { fetchUsers } from "./utils/users";
 import {Link} from 'react-router-dom';
 import { acceptRejectCourse } from './utils/courses';
 import { useNavigate } from 'react-router-dom';
@@ -28,7 +28,7 @@ function CourseView() {
     // called once when components on page have rendered
     useEffect(() => {
         async function getUser() {
-            await fetchUser(setUser);
+            await setAuthenticatedUser(setUser);
         }
         getUser();
         
@@ -38,7 +38,7 @@ function CourseView() {
     // called once when components on page have rendered
     useEffect(() => {
         async function getProfessors() {
-            await fetchProfessors(setProfessorsValues);
+            await fetchUsers(true);
         }
         getProfessors();
         

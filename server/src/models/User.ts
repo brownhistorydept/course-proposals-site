@@ -3,7 +3,7 @@ const { model, Schema } = mongoose;
 
 // Mongoose schemas are separate from TypeScript interfaces, so you need to define both a document interface and a schema.
 export const ROLES = Object.freeze({
-    DEFAULT: "default user",
+    DEFAULT: "default",
     PROFESSOR: "professor",
     CURRIC_COORD: "curriculum coordinator",
     UG_DIRECTOR: "undergraduate director",

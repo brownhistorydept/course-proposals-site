@@ -1,7 +1,7 @@
 import NavBar from './components/NavBar';
 import { useEffect, useState } from "react";
 import { IUser } from "../../server/src/models/User";
-import { fetchUser } from "./utils/auth";
+import { setAuthenticatedUser } from "./utils/auth";
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { ICourse } from "../../server/src/models/Course";
@@ -18,7 +18,7 @@ function MyCourses() {
   // called once when components on page have rendered
   useEffect(() => {
       async function getUser() {
-        await fetchUser(setUser);
+        await setAuthenticatedUser(setUser);
       }
 
       getUser(); 

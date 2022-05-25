@@ -1,7 +1,7 @@
 import NavBar from './components/NavBar';
 import { useEffect, useState } from "react";
 import { IUser } from "../../server/src/models/User";
-import { fetchUser } from "./utils/auth";
+import { setAuthenticatedUser } from "./utils/auth";
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -15,7 +15,7 @@ import Button from '@mui/material/Button';
 import { submitCourse } from './utils/courses';
 import FormControl from '@mui/material/FormControl';
 import ListItemText from '@mui/material/ListItemText';
-import { fetchProfessors } from "./utils/professors";
+import { fetchUsers } from "./utils/users";
 import InputLabel from '@mui/material/InputLabel';
 import { useNavigate } from 'react-router-dom';
 import {useLocation} from 'react-router'
@@ -29,7 +29,7 @@ function CourseProposal() {
     // called once when components on page have rendered
     useEffect(() => {
         async function getUser() {
-            await fetchUser(setUser);
+            await setAuthenticatedUser(setUser);
         }
         getUser();
         
@@ -39,7 +39,7 @@ function CourseProposal() {
     // called once when components on page have rendered
     useEffect(() => {
         async function getProfessors() {
-            await fetchProfessors(setProfessorsValues);
+            await fetchUsers(true);
         }
         getProfessors();
         
@@ -185,7 +185,7 @@ function CourseProposal() {
 
       <Grid container spacing={2} maxWidth={1000} mx="auto">
 
-          {user?.role == "manager" && 
+          {user?.role === "manager" && 
           <Grid item xs={11} container spacing={2}>
               <Grid item xs={2.2}>
                 <Typography variant="body1" fontWeight="bold" align='right'>Course Number</Typography>
@@ -203,7 +203,7 @@ function CourseProposal() {
               </Grid>
             </Grid>}
 
-            {user?.role == "manager" && 
+            {user?.role === "manager" && 
             <Grid item xs={11} container spacing={2}>
               <Grid item xs={2.2}>
                 <Typography variant="body1" fontWeight="bold" align='right'>Final Time</Typography>
@@ -310,9 +310,9 @@ function CourseProposal() {
                   renderValue={(selected) => selected.join(', ')}
                 >
                   {professorValues?.map((prof) => (
-                    <MenuItem key={prof.displayName} value={prof.displayName}>
+                    <MenuItem key={prof.displayName}>
                       <Checkbox checked={professors.indexOf(prof.displayName) > -1} />
-                      <ListItemText primary={prof.displayName} />
+                      <ListItemText primary={`${prof.displayName} (${prof.email})`} />
                     </MenuItem>
                   ))}
                 </Select>
@@ -365,10 +365,10 @@ function CourseProposal() {
               </Select>
               </Grid>
 
-              {isUndergrad == 1 &&<Grid item xs={2}>
+              {isUndergrad === 1 &&<Grid item xs={2}>
               <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Geography</Typography>
               </Grid>}
-              {isUndergrad == 1 &&<Grid item xs={10}>
+              {isUndergrad === 1 &&<Grid item xs={10}>
               <FormControl fullWidth>
                 <Select
                   size='small'
@@ -461,8 +461,8 @@ function CourseProposal() {
               </Grid>
 
               
-              {isUndergrad == 1 &&<Grid item xs={4.5}></Grid>}
-              {isUndergrad == 1 &&<Grid item xs={3}>
+              {isUndergrad === 1 &&<Grid item xs={4.5}></Grid>}
+              {isUndergrad === 1 &&<Grid item xs={3}>
                 <FormGroup>
                   <FormControlLabel control={<Checkbox checked={capstone} onClick={(e)=>{setCapstone((e.target as HTMLInputElement).checked)}}/>} label="Capstone" />
                   <FormControlLabel control={<Checkbox checked={fys} onClick={(e)=>{setFys((e.target as HTMLInputElement).checked)}}/>} label="First-Year Seminar" />
@@ -472,7 +472,7 @@ function CourseProposal() {
                 </FormGroup>
               </Grid>}
 
-              {isUndergrad == 1 &&<Grid item xs={3}>
+              {isUndergrad === 1 &&<Grid item xs={3}>
                 <FormGroup>
                     <FormControlLabel control={<Checkbox checked={writ} onClick={(e)=>{setWrit((e.target as HTMLInputElement).checked)}}/>} label="WRIT" />
                     <FormControlLabel control={<Checkbox checked={rpp} onClick={(e)=>{setRPP((e.target as HTMLInputElement).checked)}}/>} label="RPP" />
@@ -481,7 +481,7 @@ function CourseProposal() {
                     <FormControlLabel control={<Checkbox checked={cblr} onClick={(e)=>{setCBLR((e.target as HTMLInputElement).checked)}}/>} label="CBLR" />
                 </FormGroup>
               </Grid>}
-              {isUndergrad == 1 &&<Grid item xs={1.5}></Grid>}
+              {isUndergrad === 1 &&<Grid item xs={1.5}></Grid>}
 
               <Grid item xs={2}>
                 <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Further Notes </Typography>
@@ -522,14 +522,14 @@ function CourseProposal() {
                   })
       
 
-                  if (courseNumber === "" || courseTitle === "" || description==="" || year===0 || professors.length == 0){
+                  if (courseNumber === "" || courseTitle === "" || description==="" || year===0 || professors.length === 0){
                     alert("Please fill all required fields")
                   } else if (isNaN(year)){ 
                     alert("Year has to be a numerical value")
                   } else if (time1===time2 || time2 === time3 || time1===time3){
                     alert("Please enter different times for Time Ranking")
                   } else {
-                    if (isUndergrad == 1) {
+                    if (isUndergrad === 1) {
                       var profId: string[] = []
                       professors.map((prof)=>{
                         profId.push(profMap.get(prof)!)

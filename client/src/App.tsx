@@ -5,9 +5,9 @@ import Typography from '@mui/material/Typography';
 import Auth from "./components/Auth"
 import { useEffect, useState } from "react";
 import { IUser } from "../../server/src/models/User";
-import { fetchUser } from "./utils/auth";
+import { setAuthenticatedUser } from "./utils/auth";
 import { fetchCourses } from "./utils/courses";
-import { fetchProfessors } from "./utils/professors";
+import { fetchUsers } from "./utils/users";
 import { ICourse } from "../../server/src/models/Course";
 // import CourseCard from './components/CourseCard'
 import Search from './components/Search';
@@ -18,7 +18,7 @@ function App() {
     // called once when components on page have rendered
     useEffect(() => {
         async function getUser() {
-            await fetchUser(setUser);
+            await setAuthenticatedUser(setUser);
         }
         getUser();
     }, []);
@@ -37,7 +37,7 @@ function App() {
       // called once when components on page have rendered
       useEffect(() => {
           async function getProfessors() {
-              await fetchProfessors(setProfessors);
+              await fetchUsers(true);
           }
           getProfessors();
       }, []);
