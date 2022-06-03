@@ -9,10 +9,12 @@ import { setAuthenticatedUser } from "./utils/auth";
 import { fetchCourses } from "./utils/courses";
 import { fetchUsers } from "./utils/users";
 import { ICourse } from "../../server/src/models/Course";
-// import CourseCard from './components/CourseCard'
 import Search from './components/Search';
+import { useNavigate } from 'react-router-dom';
 
 function App() {
+
+  const navigate = useNavigate();
 
   const [user, setUser] = useState<IUser>();
     // called once when components on page have rendered
@@ -23,32 +25,29 @@ function App() {
         getUser();
     }, []);
 
-    const [courses, setCourses] = useState<ICourse[]>();
-      // called once when components on page have rendered
-      useEffect(() => {
-          async function getCourses() {
-              // const params = {finalized: true}
-              await fetchCourses(setCourses, null, true);
-          }
-          getCourses();
-      }, []);
+  //   const [courses, setCourses] = useState<ICourse[]>();
+  //     // called once when components on page have rendered
+  //     useEffect(() => {
+  //         async function getCourses() {
+  //             // const params = {finalized: true}
+  //             await fetchCourses(setCourses, null, true);
+  //         }
+  //         getCourses();
+  //     }, []);
 
-  const [professors, setProfessors] = useState<IUser[]>();
-      // called once when components on page have rendered
-      useEffect(() => {
-          async function getProfessors() {
-              await fetchUsers(setProfessors, true);
-          }
-          getProfessors();
-      }, []);
+  // const [professors, setProfessors] = useState<IUser[]>();
+  //     // called once when components on page have rendered
+  //     useEffect(() => {
+  //         async function getProfessors() {
+  //             await fetchUsers(setProfessors, true);
+  //         }
+  //         getProfessors();
+  //     }, []);
  
   return(
-    (user && courses && professors) ?
-    <div className="CoursePage">
-      <NavBar user={user} />
-      {typeof professors !=='undefined' && <Search allProfessors={professors} courses={courses} user={user}/>}
-    </div>
-    
+    (user) ?
+      <div><NavBar user={user} />
+      {navigate('./course_catalog')}</div>
     
     :<div className="App">
       <NavBar user={user} />

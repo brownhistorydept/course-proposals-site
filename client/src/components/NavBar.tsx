@@ -71,7 +71,7 @@ export default function NavBar(props: {
                 key='Course Catalog'
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block', marginRight:3, textTransform :'none' }}
-                href="/"
+                href="/course_catalog"
               >
                 Course Catalog
               </Button>

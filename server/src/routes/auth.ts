@@ -10,13 +10,15 @@ authRouter.get("/google",
         hd: "brown.edu", // limits the authentication to brown.edu addresses
         scope: ["profile", "email"],
         prompt: "select_account",
+        successRedirect: `${process.env.CLIENT_URL}/course_catalog`,
+        failureRedirect: `${process.env.CLIENT_URL}`,
     })
 );
 
 // redirect to home page after successfully login via google
 authRouter.get("/google/callback",
     passport.authenticate("google", {
-        successRedirect: `${process.env.CLIENT_URL}`,
+        successRedirect: `${process.env.CLIENT_URL}/course_catalog`,
         failureRedirect: "/auth/login/failed",
         failureMessage: "/auth/login/failed",
     })

@@ -5,12 +5,10 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import * as React from 'react';
-// import { LocalLaundryService } from '@mui/icons-material';
 
 import CourseCard from './CourseCard'
 
@@ -102,13 +100,13 @@ export default function Search({allProfessors, courses, user}) {
       setProfessor(event.target.value);
       setConsider({
         ...consider,
-        ['professor']: false,
+        'professor': false,
       });
     } else {
       setProfessor(event.target.value);
       setConsider({
         ...consider,
-        ['professor']: true,
+        'professor': true,
       });
     }
   };
@@ -118,13 +116,13 @@ export default function Search({allProfessors, courses, user}) {
       setYear(new Date().getFullYear());
       setConsider({
         ...consider,
-        ['year']: false,
+        'year': false,
       });
     } else {
       setYear(parseInt(event.target.value));
       setConsider({
         ...consider,
-        ['year']: true,
+        'year': true,
       });
     }
   }
@@ -134,20 +132,20 @@ export default function Search({allProfessors, courses, user}) {
       setLevel(true);
       setConsider({
         ...consider,
-        ['level']: true,
+        'level': true,
       });
     }
     else if (event.target.value === "Graduate") {
       setLevel(false);
       setConsider({
         ...consider,
-        ['level']: true,
+        'level': true,
       });
     }
     else if (event.target.value === "All") {
       setConsider({
         ...consider,
-        ['level']: false,
+        'level': false,
       });
     }
   };
@@ -157,13 +155,13 @@ export default function Search({allProfessors, courses, user}) {
       setGeography(event.target.value);
       setConsider({
         ...consider,
-        ['geography']: false,
+        'geography': false,
       });
     } else {
       setGeography(event.target.value);
       setConsider({
         ...consider,
-        ['geography']: true,
+        'geography': true,
       });
     }
   };
@@ -175,7 +173,7 @@ export default function Search({allProfessors, courses, user}) {
     });
     setConsider({
       ...consider,
-      ['designations']: true,
+      'designations': true,
       })
   };
 
@@ -184,13 +182,13 @@ export default function Search({allProfessors, courses, user}) {
       setSearched(event.target.value)
       setConsider({
         ...consider,
-        ['search']: false,
+        'search': false,
         })
     } else {
       setSearched(event.target.value)
       setConsider({
         ...consider,
-        ['search']: true,
+        'search': true,
         })
     }
   };
@@ -341,7 +339,7 @@ export default function Search({allProfessors, courses, user}) {
                     control={
                       <Checkbox checked={is_RPP} onChange={selectFilters} name="is_RPP" />
                     }
-                    label="RPP"
+                    label="Race, Power, & Privilege (RPP)"
                   />
                   <FormControlLabel
                     control={
@@ -353,7 +351,7 @@ export default function Search({allProfessors, courses, user}) {
                     control={
                       <Checkbox checked={is_CBLR} onChange={selectFilters} name="is_CBLR" />
                     }
-                    label="CBLR"
+                    label="Community-Based Learning & Research (CBLR)"
                   />
                   <FormControlLabel
                     control={
@@ -365,13 +363,13 @@ export default function Search({allProfessors, courses, user}) {
                     control={
                       <Checkbox checked={is_FYS} onChange={selectFilters} name="is_FYS" />
                     }
-                    label="FYS"
+                    label="First-Year Seminar"
                   />
                   <FormControlLabel
                     control={
                       <Checkbox checked={is_SYS} onChange={selectFilters} name="is_SYS" />
                     }
-                    label="SYS"
+                    label="Second-Year Seminar"
                   />
                   <FormControlLabel
                     control={
@@ -407,6 +405,7 @@ export default function Search({allProfessors, courses, user}) {
             height: 50,
             margin: 0,
             paddingLeft: 2,
+            paddingTop: 2,
           }}> 
           <Typography variant="h5">
               ___________________________________________________________________________________________________

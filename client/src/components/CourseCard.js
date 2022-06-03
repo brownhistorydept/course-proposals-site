@@ -1,4 +1,3 @@
-import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
@@ -8,12 +7,6 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import {Link} from 'react-router-dom';
 
-const Img = styled('img')({
-  margin: 'auto',
-  display: 'block',
-  maxWidth: '100%',
-  maxHeight: '100%',
-});
 
 export default function ComplexGrid({course, status, edit, approve, new_proposal}) {
 
@@ -49,7 +42,7 @@ export default function ComplexGrid({course, status, edit, approve, new_proposal
              <Grid item xs container >
               <Grid item xs={5} container >
                 {course.professors.map((name,index)=>{
-                  if (index==course.professors.length-1) {
+                  if (index===course.professors.length-1) {
                     return <Typography gutterBottom variant="body1" key={name.displayName}>{name.displayName}</Typography>
                   } else {
                     return <Typography gutterBottom variant="body1" key= {name.displayName}>{name.displayName},&nbsp;</Typography>
@@ -80,11 +73,14 @@ export default function ComplexGrid({course, status, edit, approve, new_proposal
                   {course.is_WRIT && <FormControlLabel disabled checked control={<Checkbox />} label="WRIT" key="WRIT"/>}
                   {!course.is_WRIT && <FormControlLabel disabled control={<Checkbox />} label="WRIT" key="WRIT1" />}
 
+                  {course.is_CBLR && <FormControlLabel disabled checked control={<Checkbox />} label="CBLR" key="CBLR"/>}
+                  {!course.is_CBLR && <FormControlLabel disabled control={<Checkbox />} label="CBLR" key="CBLR1"/>}
+
                   {course.is_remote && <FormControlLabel disabled checked control={<Checkbox />} label="REM" key="REM"/>}
                   {!course.is_remote && <FormControlLabel disabled control={<Checkbox />} label="REM" key="REM1"/>}
 
-                  {course.is_Premodern && <FormControlLabel disabled checked control={<Checkbox />} label="P" key="P"/>}
-                  {!course.is_Premodern && <FormControlLabel disabled control={<Checkbox />} label="P" key="P1"/>}
+                  {course.is_Premodern && <FormControlLabel disabled checked control={<Checkbox />} label="Premodern" key="P"/>}
+                  {!course.is_Premodern && <FormControlLabel disabled control={<Checkbox />} label="Premodern" key="P1"/>}
 
                   {course.is_intro && <FormControlLabel disabled checked control={<Checkbox />} label="Intro" key="Intro"/>}
                   {!course.is_intro && <FormControlLabel disabled control={<Checkbox />} label="Intro" key="Intro1"/>}
