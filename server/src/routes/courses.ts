@@ -1,7 +1,8 @@
 import { Response, Router } from "express";
 import Course, { ICourse, PROPOSAL_STATUS, COURSE_STATUS } from "../models/Course"
 import { IGetUserAuthInfoRequest, authCheck } from "../middleware/auth";
-import { ROLES } from "../models/User";
+import { ROLES, IUser } from "../models/User";
+import { sendAcceptEmail } from "../config/mailer";
 
 const courseRouter = Router();
 
@@ -220,7 +221,12 @@ courseRouter.post("/accept-reject/:is_accept", authCheck, async (req: IGetUserAu
 
         try {
             await Course.updateOne({_id: course._id}, {proposal_status: new_status});
-            
+
+            // very janky with types - should be a better way to do this
+            const profEmails = ((await (await Course.findOne({ _id: course._id })).populate('professors')).professors as unknown as IUser[]).map(p => p.email);
+            console.log(profEmails);
+            sendAcceptEmail(profEmails.join(', '));
+
             res.status(200).json({
                 message: "accepting/rejected course succeeded"
             });
