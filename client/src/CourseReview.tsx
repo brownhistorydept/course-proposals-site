@@ -107,13 +107,11 @@ function CourseReview() {
                 Review Courses
             </Typography>
 
-            {/* {typeof(courses)=="undefined" && <Typography variant="body1"> No courses found </Typography>}  */}
-
         </Box>
             <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={3}>
                 To Review
             </Typography>
-            {typeof(underReviewCourses)=="undefined" && <Typography variant="body1"> No courses to review. </Typography>} 
+            {underReviewCourses?.length == 0 && <Typography variant="body1"> No courses to review. </Typography>} 
             {underReviewCourses?.map((course, index) => (
               <CourseCard course={course} status={true} edit={user?.role === "manager"} approve={user?.role !== "curriculum coordinator"} new_proposal={false}/> 
             ))}
@@ -121,8 +119,6 @@ function CourseReview() {
             <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={3} marginTop={3}>
                 Reviewed
             </Typography>
-            {typeof(cccRejectedCourses)=="undefined" && typeof(directorRejectedCourses)=="undefined" && typeof(directorAcceptedCourses)=="undefined" && <Typography variant="body1"> No courses to review </Typography>} 
-
             
             <Typography variant="h6" color="#992525" fontWeight={500} marginBottom={3}>
               Accepted by Director:

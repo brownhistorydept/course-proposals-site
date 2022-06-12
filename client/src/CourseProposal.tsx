@@ -13,6 +13,7 @@ import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
 import { submitCourse } from './utils/courses';
+import { editCourse } from './utils/courses'; 
 import FormControl from '@mui/material/FormControl';
 import ListItemText from '@mui/material/ListItemText';
 import { fetchUsers } from "./utils/users";
@@ -56,11 +57,11 @@ function CourseProposal() {
   window.history.replaceState(null, "")
   const myState = state;
 
-  var course = {} as ICourse;
+  var originalCourse = {} as ICourse;
   var edit = false;
   var existing = false;
   if (myState !== null){
-    course = myState.course;
+    originalCourse = myState.course;
     edit = myState.edit;
     existing = myState.existing;
   }
@@ -99,55 +100,55 @@ function CourseProposal() {
         // if (typeof course.course_number != "undefined") {
         //   setCourseNumber(course.course_number.split(" ")[1])
         // }
-        setCourseTitle(course.course_title)
+        setCourseTitle(originalCourse.course_title)
         var profList = []
-        for (let i = 0; i < course.professors.length; i++) {
-          const name = course.professors[i] as unknown as IUser
+        for (let i = 0; i < originalCourse.professors.length; i++) {
+          const name = originalCourse.professors[i] as unknown as IUser
           profList.push(name.displayName) 
         }
         setProfessors(profList)
-        setIsUndergrad(course.is_undergrad?1:0)
-        if(typeof course.geography !== "undefined"){
-          setGeography(course.geography)
+        setIsUndergrad(originalCourse.is_undergrad?1:0)
+        if(typeof originalCourse.geography !== "undefined"){
+          setGeography(originalCourse.geography)
         }
         
-        setDescription(course.description)
-        if (typeof course.is_capstone != "undefined") {
-          setCapstone(course.is_capstone)
+        setDescription(originalCourse.description)
+        if (typeof originalCourse.is_capstone != "undefined") {
+          setCapstone(originalCourse.is_capstone)
         }
-        if (typeof course.is_FYS != "undefined") {
-          setSys(course.is_FYS)
+        if (typeof originalCourse.is_FYS != "undefined") {
+          setSys(originalCourse.is_FYS)
         }
-        if (typeof course.is_SYS != "undefined") {
-          setSys(course.is_SYS)
+        if (typeof originalCourse.is_SYS != "undefined") {
+          setSys(originalCourse.is_SYS)
         }
-        if (typeof course.is_intro != "undefined") {
-          setIntro(course.is_intro)
+        if (typeof originalCourse.is_intro != "undefined") {
+          setIntro(originalCourse.is_intro)
         }
-        if (typeof course.is_lecture != "undefined") {
-          setLecture(course.is_lecture)
+        if (typeof originalCourse.is_lecture != "undefined") {
+          setLecture(originalCourse.is_lecture)
         }
-        if (typeof course.is_WRIT != "undefined") {
-          setWrit(course.is_WRIT)
+        if (typeof originalCourse.is_WRIT != "undefined") {
+          setWrit(originalCourse.is_WRIT)
         }
-        if (typeof course.is_RPP != "undefined") {
-          setRPP(course.is_RPP)
+        if (typeof originalCourse.is_RPP != "undefined") {
+          setRPP(originalCourse.is_RPP)
         }
-        if (typeof course.is_remote != "undefined") {
-          setRemote(course.is_remote)
+        if (typeof originalCourse.is_remote != "undefined") {
+          setRemote(originalCourse.is_remote)
         }
-        if (typeof course.is_Premodern != "undefined") {
-          setPremodern(course.is_Premodern)
+        if (typeof originalCourse.is_Premodern != "undefined") {
+          setPremodern(originalCourse.is_Premodern)
         }
-        if (typeof course.is_CBLR != "undefined") {
-          setCBLR(course.is_CBLR)
+        if (typeof originalCourse.is_CBLR != "undefined") {
+          setCBLR(originalCourse.is_CBLR)
         }
       
-        setSemester(course.semester)
-        setYear(course.year)
-        setTime1(course.time_ranking[0])
-        setTime2(course.time_ranking[1])
-        setTime3(course.time_ranking[2])
+        setSemester(originalCourse.semester)
+        setYear(originalCourse.year)
+        setTime1(originalCourse.time_ranking[0])
+        setTime2(originalCourse.time_ranking[1])
+        setTime3(originalCourse.time_ranking[2])
       }
 
     }, []);
@@ -522,7 +523,7 @@ function CourseProposal() {
                   })
       
 
-                  if (courseNumber === "" || courseTitle === "" || description==="" || year===0 || professors.length === 0){
+                  if (courseTitle === "" || description==="" || year===0 || professors.length === 0){
                     alert("Please fill all required fields")
                   } else if (isNaN(year)){ 
                     alert("Year has to be a numerical value")
@@ -535,81 +536,98 @@ function CourseProposal() {
                         profId.push(profMap.get(prof)!)
                       })
                       var undergrad = isUndergrad === 1
-                      var course1 = {
-                        proposed: {
-                          on_leave_fall: leaveFall,
-                          on_leave_spring: leaveSpring,
-                          is_regular_prof: isRegular,
-                          course_title: courseTitle,
-                          description: description,
-                          professors: profId,
-                          syllabus_link: syllabusLink,
-                          is_undergrad: undergrad,
-                          is_RPP: rpp,
-                          is_WRIT: writ,
-                          is_Premodern: premodern,
-                          is_FYS: fys,
-                          is_SYS: sys,
-                          is_capstone: capstone,
-                          is_lecture: lecture,
-                          is_intro: intro,
-                          is_remote: remote,
-                          semester: semester,
-                          year: year,
-                          time_ranking: [time1, time2, time3],
-                          geography: geography,
-                          course_number: `HIST ${courseNumber}`,
-                          further_notes: notes
-                        }
+                      var proposedCourse = {
+                        on_leave_fall: leaveFall,
+                        on_leave_spring: leaveSpring,
+                        is_regular_prof: isRegular,
+                        course_title: courseTitle,
+                        description: description,
+                        professors: profId,
+                        syllabus_link: syllabusLink,
+                        is_undergrad: undergrad,
+                        is_RPP: rpp,
+                        is_WRIT: writ,
+                        is_Premodern: premodern,
+                        is_FYS: fys,
+                        is_SYS: sys,
+                        is_capstone: capstone,
+                        is_lecture: lecture,
+                        is_intro: intro,
+                        is_remote: remote,
+                        semester: semester,
+                        year: year,
+                        time_ranking: [time1, time2, time3],
+                        geography: geography,
+                        course_number: `HIST ${courseNumber}`,
+                        further_notes: notes,
+                        proposal_status: ''
+                      }
+                      var courses = {
+                        proposed: proposedCourse,
+                        original: originalCourse
                       };
-                      if (myState===null){
-                        console.log(course1)
-                        const success = await submitCourse(course1);
+                      
+                      if (myState===null){ // submit new course you made by clicking course proposal in navbar
+                        console.log(courses)
+                        const success = await submitCourse(courses);
                         if (success){
                           alert("Course successfully submitted!")
                           navigate('/my_courses');
                         } else {
                           alert("Error submitting course")
                         }
-                    } else if (edit){
-                      alert("edit course")
-                    } else if (existing){
-                      alert("existing course")
-                    }
-
-                    } else {
-                      var profId: string[] = []
-                      professors.map((prof)=>{
-                        profId.push(profMap.get(prof)!)
-                      })
-                      var undergrad = isUndergrad === 0
-                      var course2 = {
-                        proposed: {
-                          course_number: `HIST ${courseNumber}`,
-                          course_title: courseTitle,
-                          description: description,
-                          professors: profId,
-                          is_undergrad: undergrad,
-                          semester: semester,
-                          year: year,
-                          time_ranking: [time1, time2, time3],
-                        }
-                      };
-
-                        if (myState===null){
-                          console.log(course2)
-                          const success = await submitCourse(course2);
-                          if (success){
-                            alert("Course successfully submitted!")
-                            navigate('/my_courses');
-                          }else{
-                            alert("Error submitting course")
-                          }
-                      } else if (edit){
+                      } else if (edit){ // edit existing course
                         alert("edit course")
-                      } else if (existing){
-                        alert("existing course")
+                        proposedCourse = {...proposedCourse, proposal_status: originalCourse!.proposal_status!}
+                        const success = await editCourse(proposedCourse);
+                        if (success){
+                          alert("Course successfully edited!")
+                          navigate('/my_courses');
+                        } else {
+                          alert("Error editing course")
+                        }
+                      } else { // new proposal based on existing course
+                          
                       }
+                      
+                    // } else if (existing){
+                    //   alert("existing course")
+                    // }
+
+                      } else {
+                        var profId: string[] = []
+                        professors.map((prof)=>{
+                          profId.push(profMap.get(prof)!)
+                        })
+                        var undergrad = isUndergrad === 0
+                        var course2 = {
+                          proposed: {
+                            course_number: `HIST ${courseNumber}`,
+                            course_title: courseTitle,
+                            description: description,
+                            professors: profId,
+                            is_undergrad: undergrad,
+                            semester: semester,
+                            year: year,
+                            time_ranking: [time1, time2, time3],
+                          }
+                        };
+
+                          if (myState===null){
+                            console.log(course2)
+                            const success = await submitCourse(course2);
+                            if (success){
+                              alert("Course successfully submitted!")
+                              navigate('/my_courses');
+                            }else{
+                              alert("Error submitting course")
+                            }
+                        } else if (edit){
+                          alert("edit course")
+                        }
+                        // } else if (existing){
+                      //   alert("existing course")
+                      // }
                     }
                   }  
                 }}>

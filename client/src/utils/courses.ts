@@ -87,6 +87,40 @@ export async function fetchCourses(
         return false;
     }
   }
+
+  export async function editCourse(course_info: any) {
+    try {
+        const res = await fetch(
+            `${process.env.REACT_APP_SERVER_URL}/courses/edit`,
+            {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(course_info),   
+            }
+        );
+        console.log(res.status);
+        var message = await res.json();
+        console.log(message);
+        console.log(course_info);
+
+
+        // if the user is logged in, set the user and authenticated flag
+        if (res.status === 200) {
+            console.log("editing course succeeded")
+            return true;
+        } else {
+            throw new Error("failed to edit course");
+        }
+    } catch (error) {
+        return false;
+    }
+  }
+
+
+
   
     export async function acceptRejectCourse(
         course_info: any,
@@ -103,7 +137,7 @@ export async function fetchCourses(
             body: JSON.stringify(course_info),   
         }
         );
-            console.log(res.status);
+            // console.log(res.status);
 
             // if the user is logged in, set the user and authenticated flag
             if (res.status === 200) {

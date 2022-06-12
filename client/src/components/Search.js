@@ -39,7 +39,7 @@ export default function Search({allProfessors, courses, user}) {
   })
 
   const [consider, setConsider] = React.useState({
-    year: false,
+    year: true,
     professor: false,
     level: false,
     geography: false,
@@ -65,6 +65,7 @@ export default function Search({allProfessors, courses, user}) {
       return allCourses
     } else {
       var toFilter = allCourses
+      console.log(allCourses);
 
       if (consider['year']) {
         toFilter = toFilter.filter(course => course.year === year);
@@ -113,7 +114,7 @@ export default function Search({allProfessors, courses, user}) {
 
   const selectYear = (event) => {
     if (event.target.value === "") {
-      setYear(new Date().getFullYear());
+      // setYear(new Date().getFullYear());
       setConsider({
         ...consider,
         'year': false,
@@ -325,6 +326,7 @@ export default function Search({allProfessors, courses, user}) {
                   label="Year"
                   id="outlined-size-small"
                   onChange={selectYear}
+                  defaultValue={year}
                   size="small"
                   style = {{minWidth:120}}
                 />

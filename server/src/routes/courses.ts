@@ -1,7 +1,7 @@
 import { Response, Router } from "express";
 import Course, { ICourse, PROPOSAL_STATUS, COURSE_STATUS } from "../models/Course"
 import { IGetUserAuthInfoRequest, authCheck } from "../middleware/auth";
-import { ROLES, IUser } from "../models/User";
+import { ROLES, IUser } from "../models/User"; 
 import { sendAcceptEmail } from "../config/mailer";
 
 const courseRouter = Router();
@@ -45,13 +45,7 @@ courseRouter.get("/search/:finalized", authCheck, async (req: IGetUserAuthInfoRe
     
     try {
         const result = await search({...search_term, ...finalized_term, ...restrictions}); 
-        if (result.length == 0) {
-            res.status(400).json({
-                message: "No results found.",
-            });
-        } else {
-            res.status(200).json({result});
-        }
+        res.status(200).json({result});
     } catch (err) {
         console.log(err);
         res.status(400).json({
@@ -147,7 +141,9 @@ courseRouter.post("/edit", authCheck, async (req: IGetUserAuthInfoRequest, res: 
 
     if (req.user.role !== ROLES.MANAGER) {
         // if you don't own the course
-        if (!course.professors.includes(req.user._id)) { 
+        console.log(course.professors);
+        console.log((req.user._id as any).valueOf());
+        if (!course.professors.includes((req.user._id as any).valueOf())) { 
             res.status(403).json({
                 message: "Do not have permission to edit another professor's course"
             });
