@@ -59,11 +59,9 @@ function CourseProposal() {
 
   var originalCourse = {} as ICourse;
   var edit = false;
-  var existing = false;
   if (myState !== null){
     originalCourse = myState.course;
     edit = myState.edit;
-    existing = myState.existing;
   }
  
     const [isRegular, setRegular] = useState(1);
@@ -103,8 +101,7 @@ function CourseProposal() {
         setCourseTitle(originalCourse.course_title)
         var profList = []
         for (let i = 0; i < originalCourse.professors.length; i++) {
-          const name = originalCourse.professors[i] as unknown as IUser
-          profList.push(name.displayName) 
+          profList.push(originalCourse.professors[i]) 
         }
         setProfessors(profList)
         setIsUndergrad(originalCourse.is_undergrad?1:0)
@@ -149,6 +146,34 @@ function CourseProposal() {
         setTime1(originalCourse.time_ranking[0])
         setTime2(originalCourse.time_ranking[1])
         setTime3(originalCourse.time_ranking[2])
+        
+        if (typeof originalCourse.final_time != "undefined") {
+          setFinalTime(originalCourse.final_time)
+        }
+
+        if (typeof originalCourse.course_number != "undefined") {
+          setCourseNumber(originalCourse.course_number.split(" ")[1])
+        }
+
+        if (typeof originalCourse.is_regular_prof != "undefined") {
+          originalCourse.is_regular_prof? setRegular(1) : setRegular(0)
+        }
+      
+        if (typeof originalCourse.on_leave_fall != "undefined") {
+          setleaveFall(originalCourse.on_leave_fall)
+        }
+
+        if (typeof originalCourse.on_leave_spring != "undefined") {
+          setleaveSpring(originalCourse.on_leave_spring)
+        }
+
+        if (typeof originalCourse.syllabus_link != "undefined") {
+          setSyllabusLink(originalCourse.syllabus_link)
+        }
+
+        if (typeof originalCourse.further_notes != "undefined") {
+          setNotes(originalCourse.further_notes)
+        }
       }
 
     }, []);
@@ -560,7 +585,8 @@ function CourseProposal() {
                         geography: geography,
                         course_number: `HIST ${courseNumber}`,
                         further_notes: notes,
-                        proposal_status: ''
+                        proposal_status: '',
+                        _id: ''
                       }
                       var courses = {
                         proposed: proposedCourse,
@@ -578,7 +604,7 @@ function CourseProposal() {
                         }
                       } else if (edit){ // edit existing course
                         alert("edit course")
-                        proposedCourse = {...proposedCourse, proposal_status: originalCourse!.proposal_status!}
+                        proposedCourse = {...proposedCourse, _id: originalCourse!._id!, proposal_status: originalCourse!.proposal_status!}
                         const success = await editCourse(proposedCourse);
                         if (success){
                           alert("Course successfully edited!")
@@ -589,10 +615,6 @@ function CourseProposal() {
                       } else { // new proposal based on existing course
                           
                       }
-                      
-                    // } else if (existing){
-                    //   alert("existing course")
-                    // }
 
                       } else {
                         var profId: string[] = []
@@ -622,12 +644,8 @@ function CourseProposal() {
                             }else{
                               alert("Error submitting course")
                             }
-                        } else if (edit){
-                          alert("edit course")
                         }
-                        // } else if (existing){
-                      //   alert("existing course")
-                      // }
+                  
                     }
                   }  
                 }}>

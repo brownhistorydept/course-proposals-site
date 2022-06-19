@@ -161,7 +161,9 @@ courseRouter.post("/edit", authCheck, async (req: IGetUserAuthInfoRequest, res: 
 
     try {
         await Course.updateOne({_id: course._id}, course);
-        
+        console.log(course._id);
+        console.log(course);
+        console.log("editing success");
         res.status(200).json({
             message: "editing course succeeded"
         });

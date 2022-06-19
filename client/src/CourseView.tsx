@@ -12,11 +12,9 @@ import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
 import {useLocation} from 'react-router'
-import { fetchUsers } from "./utils/users";
 import {Link} from 'react-router-dom';
 import { acceptRejectCourse } from './utils/courses';
 import { useNavigate } from 'react-router-dom';
-
 
 
 function CourseView() {
@@ -50,16 +48,21 @@ function CourseView() {
     const edit = myState.edit;
     const new_proposal = myState.new_proposal;
 
-    const courseNumber = course["course_number"].split(" ")[1];
+    const courseNumber = course["course_number"].split(" ")[1]
     const courseTitle = course["course_title"]
     const courseYear = course["year"]
     const courseDescription = course["description"]
     const courseSemester = course["semester"]
     var courseLevel = ""
     const courseGeography = course["geography"][0]
+    const courseFinalTime = course["final_time"]
+    const courseIsRegular = course["is_regular_prof"]? "Yes" : "No"
+    const courseLeaveFall = course["on_leave_fall"]? "Yes" : "No"
+    const courseLeaveSpring = course["on_leave_spring"]? "Yes" : "No"
+    const courseSyllabusLink = course["syllabus_link"]
+    const courseFurtherNotes = course["further_notes"]
 
     const courseProfessors = course["professors"]
-    // console.log(courseProfessors)
 
     var profList = []
 
@@ -69,25 +72,28 @@ function CourseView() {
 
     var profString = profList.join(", ")
 
-    // console.log(profString)
-
     if (course["is_undergrad"]) {
         courseLevel = "Undergraduate"
     } else {
         courseLevel = "Graduate"
     }
 
+    var proposalProfessors = user? [user.displayName] : [""]
+    if (user?.role == "manager") {
+      proposalProfessors = profList
+    }
+
     // course to be used for a new proposal; reset year, semester, professor
     const proposalCourse = {
       ...course,
-      professors: [],
+      professors: proposalProfessors,
       year: new Date().getFullYear(),
       semester: ''
     }
 
 
   return (
-    <div className="CourseProposal">
+    <div className="CourseView">
 
       <NavBar user = {user}/>
       <Box sx={{
@@ -109,11 +115,57 @@ function CourseView() {
       </Box>
 
       <Grid container spacing={2} maxWidth={1000} mx="auto">
+        
+            <Grid item xs={2}>
+              <Typography variant="body1" fontWeight="bold" align='right'>Regular Professor?</Typography>
+            </Grid>
+            <Grid item xs={10}>
+              <TextField
+                fullWidth
+                size='small'
+                value = {courseIsRegular}
+                variant="standard"
+                InputProps={{
+                  disableUnderline: true,
+                  readOnly: true,
+                }}
+              />
+            </Grid>
+
+            <Grid item xs={2}>
+              <Typography variant="body1" fontWeight="bold" align='right'>Planning to take leave in fall?</Typography>
+            </Grid>
+            <Grid item xs={10}>
+              <TextField
+                fullWidth
+                size='small'
+                value = {courseLeaveFall}
+                variant="standard"
+                InputProps={{
+                  disableUnderline: true,
+                  readOnly: true,
+                }}
+              />
+            </Grid>
+
+            <Grid item xs={2}>
+              <Typography variant="body1" fontWeight="bold" align='right'>Planning to take leave in spring?</Typography>
+            </Grid>
+            <Grid item xs={10}>
+              <TextField
+                fullWidth
+                size='small'
+                value = {courseLeaveSpring}
+                variant="standard"
+                InputProps={{
+                  disableUnderline: true,
+                  readOnly: true,
+                }}
+              />
+            </Grid>
+
               <Grid item xs={2}>
-                <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Number *</Typography>
-              </Grid>
-              <Grid item xs={0.5}>
-              <Typography variant="body1" width="2">HIST</Typography>
+                <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Number</Typography>
               </Grid>
               <Grid item xs={9.5}>
               <TextField
@@ -123,13 +175,13 @@ function CourseView() {
                        readOnly: true,
                      }}
                 size='small'
-                value = {courseNumber}
+                value = {courseNumber? "HIST " + courseNumber : courseNumber}
                 sx = {{border: 0}}
               />
               </Grid>
 
               <Grid item xs={2}>
-              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Title *</Typography>
+              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Title</Typography>
               </Grid>
               <Grid item xs={10}>
               <TextField
@@ -148,7 +200,6 @@ function CourseView() {
               <Grid item xs={2}>
               <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Professor(s)</Typography>
               </Grid>
-              {/* <FormControl fullWidth> */}
               <Grid item xs={10}>
                 <TextField
                   fullWidth
@@ -160,11 +211,10 @@ function CourseView() {
                     readOnly: true,
                   }}
                 />
-          
               </Grid>
 
               <Grid item xs={2}>
-              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Semester *</Typography>
+              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Semester</Typography>
               </Grid>
               <Grid item xs={10}>
               <TextField
@@ -181,7 +231,7 @@ function CourseView() {
               </Grid>
 
               <Grid item xs={2}>
-              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Level *</Typography>
+              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Level</Typography>
               </Grid>
               <Grid item xs={10}>
               <TextField
@@ -216,7 +266,7 @@ function CourseView() {
               </Grid>
 
               <Grid item xs={2}>
-              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Time Ranking*</Typography>
+              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Time Ranking</Typography>
               </Grid>
               <Grid item xs={10}>
               <TextField
@@ -234,7 +284,24 @@ function CourseView() {
               </Grid>
 
               <Grid item xs={2}>
-              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Description* </Typography>
+              <Typography variant="body1" fontWeight="bold" align='right'>Final Time</Typography>
+            </Grid>
+            <Grid item xs={10}>
+              <TextField
+                fullWidth
+                size='small'
+                value = {courseFinalTime}
+                variant="standard"
+                InputProps={{
+                  disableUnderline: true,
+                  readOnly: true,
+                }}
+              />
+            </Grid>
+
+
+              <Grid item xs={2}>
+              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Description</Typography>
               </Grid>
               <Grid item xs={10}>
               <TextField
@@ -250,7 +317,7 @@ function CourseView() {
               />
               </Grid>
 
-              <Grid item xs={3.85}></Grid>
+              <Grid item xs={4.5}></Grid>
               <Grid item xs={3}>
                 <FormGroup>
                   <FormControlLabel control={<Checkbox disabled checked={course.is_capstone}/>} label="Capstone" />
@@ -268,9 +335,43 @@ function CourseView() {
                     <FormControlLabel control={<Checkbox disabled checked={course.is_FYS}/>} label="Premodern" />
                 </FormGroup>
               </Grid>
-              <Grid item xs={3}></Grid>
+              <Grid item xs={1.5}></Grid>
+
+              <Grid item xs={2}>
+              <Typography variant="body1" fontWeight="bold" align='right'>Syllabus Link</Typography>
+              </Grid>
+              <Grid item xs={10}>
+                <TextField
+                  fullWidth
+                  size='small'
+                  value = {courseSyllabusLink}
+                  variant="standard"
+                  InputProps={{
+                    disableUnderline: true,
+                    readOnly: true,
+                  }}
+                />
+              </Grid>
+
+              <Grid item xs={2}>
+              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Further Notes</Typography>
+              </Grid>
+              <Grid item xs={10}>
+              <TextField
+              variant="standard"
+              InputProps={{
+                  disableUnderline: true,
+                  readOnly: true,
+                }}
+              fullWidth
+                multiline={true}
+                rows={courseFurtherNotes? Math.floor(courseFurtherNotes.split(" ").length / 13) : 1}
+                value = {courseFurtherNotes}
+              />
+              </Grid>
+
             
-            <Grid container spacing = {2} justifyContent="center" marginTop={"20px"} maxWidth={1000} mx="auto">
+            {/* <Grid container spacing = {2} justifyContent="center" marginTop={"20px"} maxWidth={1000} mx="auto"> */}
             {approve&&<>
               
                 <Grid item xs={2}>
@@ -322,8 +423,9 @@ function CourseView() {
                     </Button>
                   </Grid>
            </> }
-
-            {edit&&<Grid marginY={"20px"}>
+            
+            {edit&&<Grid item xs={6}></Grid>}
+            {edit&&<Grid item xs={6} marginBottom={2}>
             <Link style={{ textDecoration: 'none' }}to={"/course_proposal"} state = {{course:course, edit:true, existing:false}}>
               <Button 
                 variant="contained" 
@@ -350,7 +452,7 @@ function CourseView() {
             </Grid>}
           </Grid>
 
-          </Grid>
+          {/* </Grid> */}
 
       
 
