@@ -36,11 +36,11 @@ function CourseProposal() {
         
     }, []);
 
-  const [professorValues, setProfessorsValues] = useState<IUser[]>();
+  const [allProfessors, setAllProfessors] = useState<IUser[]>();
     // called once when components on page have rendered
     useEffect(() => {
         async function getProfessors() {
-            await fetchUsers(setProfessorsValues, true);
+            await fetchUsers(setAllProfessors, true);
         }
         getProfessors();
         
@@ -99,11 +99,9 @@ function CourseProposal() {
         //   setCourseNumber(course.course_number.split(" ")[1])
         // }
         setCourseTitle(originalCourse.course_title)
-        var profList = []
-        for (let i = 0; i < originalCourse.professors.length; i++) {
-          profList.push(originalCourse.professors[i]) 
-        }
-        setProfessors(profList)
+        setProfessors(originalCourse.professors);
+        console.log(professors)
+        
         setIsUndergrad(originalCourse.is_undergrad?1:0)
         if(typeof originalCourse.geography !== "undefined"){
           setGeography(originalCourse.geography)
@@ -335,8 +333,8 @@ function CourseProposal() {
                   }}
                   renderValue={(selected) => selected.join(', ')}
                 >
-                  {professorValues?.map((prof) => (
-                    <MenuItem key={prof.displayName}>
+                  {allProfessors?.map((prof) => (
+                    <MenuItem key={prof.displayName} value={prof.displayName}>
                       <Checkbox checked={professors.indexOf(prof.displayName) > -1} />
                       <ListItemText primary={`${prof.displayName} (${prof.email})`} />
                     </MenuItem>
@@ -543,7 +541,7 @@ function CourseProposal() {
                 sx={{textTransform:"none", backgroundColor:"#992525", mx:1}}
                 onClick={async () => {
                   let profMap = new Map<string, string>();
-                  professorValues?.map((prof)=>{
+                  allProfessors?.map((prof)=>{
                     profMap.set(prof.displayName!,prof._id!)
                   })
       

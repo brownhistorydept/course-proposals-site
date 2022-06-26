@@ -61,8 +61,13 @@ function CourseView() {
     const courseLeaveSpring = course["on_leave_spring"]? "Yes" : "No"
     const courseSyllabusLink = course["syllabus_link"]
     const courseFurtherNotes = course["further_notes"]
-
     const courseProfessors = course["professors"]
+
+    if (course["is_undergrad"]) {
+      courseLevel = "Undergraduate"
+    } else {
+      courseLevel = "Graduate"
+    }
 
     var profList = []
 
@@ -70,12 +75,9 @@ function CourseView() {
       profList.push(courseProfessors[i].displayName) 
     }
 
-    var profString = profList.join(", ")
-
-    if (course["is_undergrad"]) {
-        courseLevel = "Undergraduate"
-    } else {
-        courseLevel = "Graduate"
+    const editCourse = {
+      ...course,
+      professors: profList
     }
 
     var proposalProfessors = user? [user.displayName] : [""]
@@ -90,6 +92,8 @@ function CourseView() {
       year: new Date().getFullYear(),
       semester: ''
     }
+
+    var profString = profList.join(", ")
 
 
   return (
@@ -426,7 +430,8 @@ function CourseView() {
             
             {edit&&<Grid item xs={6}></Grid>}
             {edit&&<Grid item xs={6} marginBottom={2}>
-            <Link style={{ textDecoration: 'none' }}to={"/course_proposal"} state = {{course:course, edit:true, existing:false}}>
+              
+            <Link style={{ textDecoration: 'none' }}to={"/course_proposal"} state = {{course:editCourse, edit:true, existing:false}}>
               <Button 
                 variant="contained" 
                 sx={{textTransform:"none", backgroundColor:"#992525", mx:1}}
