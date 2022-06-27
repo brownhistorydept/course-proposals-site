@@ -16,50 +16,50 @@ import { passportInit } from "./config/passport";
 import { mongoConnection } from "./config/mongo";
 
 export function main() {
-    passportInit();
-    const app = express();
+	passportInit();
+	const app = express();
 
-    mongoConnection();
+	mongoConnection();
 
-    // express session
-    app.use(
-        session({
-            secret: process.env.SESSION_SECRET,
-            resave: false,
-            saveUninitialized: false,
-            cookie: { maxAge: 86400000 * 30 }, // 30 days cookie expiry
-            store: MongoStore.create({
-                mongoUrl: process.env.MONGODB_URI,
-            }),
-        })
-    );
+	// express session
+	app.use(
+		session({
+			secret: process.env.SESSION_SECRET,
+			resave: false,
+			saveUninitialized: false,
+			cookie: { maxAge: 86400000 * 30 }, // 30 days cookie expiry
+			store: MongoStore.create({
+				mongoUrl: process.env.MONGODB_URI,
+			}),
+		})
+	);
 
-    // parse incoming cookies of html requests
-    app.use(cookieParser());
-    // parse body of http request
-    app.use(express.json());
+	// parse incoming cookies of html requests
+	app.use(cookieParser());
+	// parse body of http request
+	app.use(express.json());
 
-    // initialize and set up passport to use sessions
-    app.use(passport.initialize());
-    app.use(passport.session());
+	// initialize and set up passport to use sessions
+	app.use(passport.initialize());
+	app.use(passport.session());
 
-    // set up cors to allow us to accept requests from front end client
-    app.use(
-        cors({
-            origin: process.env.CLIENT_URL,
-            methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-            credentials: true,
-        })
-    );
+	// set up cors to allow us to accept requests from front end client
+	app.use(
+		cors({
+			origin: process.env.CLIENT_URL,
+			methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+			credentials: true,
+		})
+	);
 
-    // set up routes
-    app.use("/auth", authRouter);
-    app.use("/courses", courseRouter);
-    app.use("/users", userRouter);
+	// set up routes
+	app.use("/auth", authRouter);
+	app.use("/courses", courseRouter);
+	app.use("/users", userRouter);
 
-    // server starts listening
-    app.listen(process.env.PORT, () => {
-        console.log(`Server running on port ${process.env.PORT}`);
-    });
+	// server starts listening
+	app.listen(process.env.PORT, () => {
+		console.log(`Server running on port ${process.env.PORT}`);
+	});
 }
 main();

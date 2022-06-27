@@ -21,98 +21,98 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
 function ManageRoles() {
-    const allRoles = ['default', 'curriculum coordinator', 'professor', 'undergraduate director', 'graduate director', 'manager'];
+  const allRoles = ['default', 'curriculum coordinator', 'professor', 'undergraduate director', 'graduate director', 'manager'];
 
-    const [user, setUser] = useState<IUser>();
-    const [allUsers, setAllUsers] = useState<IUser[]>();
-    const [alertOpen, setAlertOpen] = useState(false);
-    const [lastUser, setLastUser] = useState<IUser>();
-    const [lastRole, setLastRole] = useState('');
+  const [user, setUser] = useState<IUser>();
+  const [allUsers, setAllUsers] = useState<IUser[]>();
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [lastUser, setLastUser] = useState<IUser>();
+  const [lastRole, setLastRole] = useState('');
 
-    // called once when components on page have rendered
-    async function getAllUsers() {
-        await fetchUsers(setAllUsers, false);
+  // called once when components on page have rendered
+  async function getAllUsers() {
+    await fetchUsers(setAllUsers, false);
+  }
+
+  async function getUser() {
+    await setAuthenticatedUser(setUser);
+  }
+
+  useEffect(() => {
+    getUser();
+    getAllUsers();
+  }, []);
+
+  async function handleClose(isAccepted: boolean) {
+    if (isAccepted) {
+      await changeRole(lastUser!, lastRole)
+      getUser()
+      getAllUsers();
     }
+    setAlertOpen(false);
+  }
 
-    async function getUser() {
-        await setAuthenticatedUser(setUser);
+  async function handleDropdownChange(u: IUser, value: string) {
+    if (value === "manager" || u.role === "manager") {
+      setLastUser(u);
+      setLastRole(value);
+      setAlertOpen(true);
+    } else {
+      await changeRole(u, value);
+      getUser()
+      getAllUsers();
     }
+  }
 
-    useEffect(() => {
-        getUser();
-        getAllUsers();
-    }, []);
-
-    async function handleClose(isAccepted: boolean) {
-        if (isAccepted) {
-            await changeRole(lastUser!, lastRole)
-            getUser()
-            getAllUsers();
-        }
-        setAlertOpen(false);
-    }
-    
-    async function handleDropdownChange(u: IUser, value: string) {
-        if (value === "manager" || u.role === "manager") {
-            setLastUser(u);
-            setLastRole(value);
-            setAlertOpen(true);
-        } else {
-            await changeRole(u, value);
-            getUser()
-            getAllUsers();
-        }
-    }
-
-    return (
-        <>
-        <NavBar user={user}/>
-        <TableContainer component={Paper}>
-            <Table>
-                <TableHead>
-                <TableRow>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Email</TableCell>
-                    <TableCell>Role</TableCell>
-                </TableRow>
-                </TableHead>
-                <TableBody>
-                {allUsers?.map(u => (
-                    <TableRow key={u.displayName}>
-                        <TableCell>{u.displayName}</TableCell>
-                        <TableCell>{u.email}</TableCell>
-                        <TableCell>
-                            <Select
-                                size='small'
-                                defaultValue={u.role}
-                                value={u.role}
-                                onChange={(e) => handleDropdownChange(u, e.target.value)}
-                                sx={{marginRight: 1}}
-                            >
-                                {allRoles.map(role => 
-                                    <MenuItem value={role}>{role}</MenuItem>)}
-                            </Select>
-                        </TableCell>
-                    </TableRow>
-                ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
-        <Dialog open={alertOpen} onClose={handleClose}>
-            <DialogTitle>{"Are you sure?"}</DialogTitle>
-            <DialogContent>
-                <DialogContentText>
-                    You are attempting to either appoint someone a manager or remove someone as a manager.
-                    Are you sure you would like to do this?
-                </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={() => handleClose(false)}>Go Back</Button>
-                <Button onClick={() => handleClose(true)} autoFocus>Confirm</Button>
-            </DialogActions>
-        </Dialog>
-        </>
-    );
+  return (
+    <>
+      <NavBar user={user} />
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>Email</TableCell>
+              <TableCell>Role</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {allUsers?.map(u => (
+              <TableRow key={u.displayName}>
+                <TableCell>{u.displayName}</TableCell>
+                <TableCell>{u.email}</TableCell>
+                <TableCell>
+                  <Select
+                    size='small'
+                    defaultValue={u.role}
+                    value={u.role}
+                    onChange={(e) => handleDropdownChange(u, e.target.value)}
+                    sx={{ marginRight: 1 }}
+                  >
+                    {allRoles.map(role =>
+                      <MenuItem value={role}>{role}</MenuItem>)}
+                  </Select>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <Dialog open={alertOpen} onClose={handleClose}>
+        <DialogTitle>{"Are you sure?"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            You are attempting to either appoint someone a manager or remove someone as a manager.
+            Are you sure you would like to do this?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => handleClose(false)}>Go Back</Button>
+          <Button onClick={() => handleClose(true)} autoFocus>Confirm</Button>
+        </DialogActions>
+      </Dialog>
+    </>
+  );
 }
 
-export default ManageRoles
+export default ManageRoles;

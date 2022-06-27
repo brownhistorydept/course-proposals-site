@@ -12,16 +12,11 @@ import * as React from 'react';
 
 import CourseCard from './CourseCard'
 
-export default function Search({allProfessors, courses, user}) {
-
+export default function Search({ allProfessors, courses: allCourses, user }) {
   const [searched, setSearched] = React.useState('');
-
   const [professorSelected, setProfessor] = React.useState('');
-
   const [level, setLevel] = React.useState();
-
   const [geography, setGeography] = React.useState('');
-
   const [year, setYear] = React.useState(new Date().getFullYear());
   // not sure having it default to the default year makes sense, but with '' react thinks its a string so === test fails
 
@@ -47,8 +42,6 @@ export default function Search({allProfessors, courses, user}) {
     search: false,
   })
 
-  const allCourses = courses;
-
   const considerNone = () => {
     for (const [, value] of Object.entries(consider)) {
       if (value) {
@@ -59,13 +52,10 @@ export default function Search({allProfessors, courses, user}) {
   }
 
   const filter = () => {
-    // console.log(consider);
-    // console.log(designations)
     if (considerNone()) {
       return allCourses
     } else {
       var toFilter = allCourses
-      console.log(allCourses);
 
       if (consider['year']) {
         toFilter = toFilter.filter(course => course.year === year);
@@ -74,7 +64,7 @@ export default function Search({allProfessors, courses, user}) {
       if (consider['professor']) {
         toFilter = toFilter.filter(course => course.professors[0]['displayName'] === professorSelected);
       }
-      
+
       if (consider['level']) {
         toFilter = toFilter.filter(course => course.is_undergrad === level);
       }
@@ -93,7 +83,7 @@ export default function Search({allProfessors, courses, user}) {
       }
 
       return toFilter;
-    }  
+    }
   }
 
   const selectProfessor = (event) => {
@@ -114,7 +104,6 @@ export default function Search({allProfessors, courses, user}) {
 
   const selectYear = (event) => {
     if (event.target.value === "") {
-      // setYear(new Date().getFullYear());
       setConsider({
         ...consider,
         'year': false,
@@ -175,7 +164,7 @@ export default function Search({allProfessors, courses, user}) {
     setConsider({
       ...consider,
       'designations': true,
-      })
+    })
   };
 
   const selectSearched = (event) => {
@@ -184,13 +173,13 @@ export default function Search({allProfessors, courses, user}) {
       setConsider({
         ...consider,
         'search': false,
-        })
+      })
     } else {
       setSearched(event.target.value)
       setConsider({
         ...consider,
         'search': true,
-        })
+      })
     }
   };
 
@@ -201,39 +190,39 @@ export default function Search({allProfessors, courses, user}) {
     for (var i = 0, len = courses.length; i < len; i++) {
       var l = courses[i];
       var courseString = l['course_title'];
-      var noPunc = courseString.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
-      var finalString = noPunc.replace(/\s{2,}/g," ");
+      var noPunc = courseString.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+      var finalString = noPunc.replace(/\s{2,}/g, " ");
       var stringArr = finalString.split(" ").map(element => element.toLowerCase())
 
       for (var j = 0, len2 = lowerArr.length; j < len2; j++) {
-          if (stringArr.includes(lowerArr[j]) && !filteredList.includes(l)) {
-            filteredList.push(l);
-          }
+        if (stringArr.includes(lowerArr[j]) && !filteredList.includes(l)) {
+          filteredList.push(l);
+        }
       }
     }
     //make hashset
     return filteredList
   }
 
-  const {is_RPP, is_WRIT, is_CBLR, is_Premodern, is_FYS, is_SYS, is_capstone, is_lecture, is_intro, is_remote} = designations;
+  const { is_RPP, is_WRIT, is_CBLR, is_Premodern, is_FYS, is_SYS, is_capstone, is_lecture, is_intro, is_remote } = designations;
 
   return (
-    <div align='left'> 
+    <div align='left'>
       <Box sx={{
-            margin: 'auto', marginTop: 4, maxWidth:1060, paddingLeft: 0, border:0
-          }}>
-        <br/>
+        margin: 'auto', marginTop: 4, maxWidth: 1060, paddingLeft: 0, border: 0
+      }}>
+        <br />
         <Box
-            sx={{
+          sx={{
             width: 1030,
             height: 120,
             margin: 0,
             paddingLeft: 2,
-          }}> 
+          }}>
           <Typography variant="h3">
-              Course Catalog
+            Course Catalog
           </Typography>
-          <Box sx={{display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)'}}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)' }}>
             <Box
               component="form"
               sx={{
@@ -244,180 +233,180 @@ export default function Search({allProfessors, courses, user}) {
             >
               <div>
                 <TextField
-                  label="Search by Course Name"
+                  label="Search by Course Title"
                   fullWidth
                   id="outlined-size-small"
                   onChange={selectSearched}
                   size="small"
-                  style = {{width: 1010}}
+                  style={{ width: 1010 }}
                 />
-                <br/>
+                <br />
               </div>
             </Box>
           </Box>
         </Box>
-        <Box sx={{ display: 'flex', width: 1, marginTop: 3, marginLeft:1, p: 0, border: '0px solid', marginBottom: 2}}>
-          <Box sx={{display: 'grid', paddingLeft: 1, width: 0.3, border: '0px solid', flexGrow: 1, gridTemplateColumns: 'repeat(10, 1fr)' }}>
-              
-              <div>
-                <FormControl sx={{ m: 1, minWidth: 120}} size="small">
-                <InputLabel sx={{ m: 0, margin: 0, border:0, padding:0, fontSize: 14}} id="demo-simple-select-helper-label">Professor</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-helper-label"
-                    id="demo-simple-select-helper"
-                    defaultValue="All"
-                    value={professorSelected}
-                    label="Professor"
-                    onChange={selectProfessor}
-                    sx = {{height:30, padding: 0, border: 0 }}
-                  > 
-                    <MenuItem value="All">All</MenuItem>
-                    {allProfessors?.map((prof) => (
-                      <MenuItem value={prof} key={prof}>
-                        {prof.displayName}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </div>
-              <div>
-                <FormControl sx={{ m: 1, minWidth: 120}} size="small">
-                <InputLabel sx={{ m: 0, margin: 0, height:1, border:0, padding:0, fontSize: 14}} id="demo-simple-select-helper-label">Level</InputLabel>
-                  <Select
-                    defaultValue=""
-                    labelId="demo-simple-select-helper-label"
-                    id="demo-simple-select-helper"
-                    value={level}
-                    label="Level"
-                    onChange={selectLevel}
-                    sx = {{height:30, padding: 0, border: 0 }}
-                  > 
-                    <MenuItem value="All">All</MenuItem>
-                    <MenuItem value="Undergraduate">Undergraduate</MenuItem>
-                    <MenuItem value="Graduate">Graduate</MenuItem>
-                  </Select>
-                </FormControl>
-              </div>
-              <div>
-                <FormControl sx={{ m: 1, minWidth: 120, height:20}} size="small">
-                <InputLabel sx={{ m: 0, margin: 0, height:1, border:0, padding:0, fontSize: 14}} id="demo-simple-select-helper-label">Geography</InputLabel>
-                  <Select
-                    defaultValue="All"
-                    labelId="demo-simple-select-helper-label"
-                    id="demo-simple-select-helper"
-                    value={geography}
-                    label="Geography"
-                    onChange={selectGeography}
-                    sx = {{height:30, padding: 0, border: 0 }}
-                  > 
-                    <MenuItem value="All">All</MenuItem>
-                    <MenuItem value="Africa">Africa</MenuItem>
-                    <MenuItem value="East Asia">East Asia</MenuItem>
-                    <MenuItem value="Europe">Europe</MenuItem>
-                    <MenuItem value="Latin America">Latin America</MenuItem>
-                    <MenuItem value="MESA">Middle East - South Asia</MenuItem>
-                    <MenuItem value="North America">North America</MenuItem>
-                    <MenuItem value="Global">Global</MenuItem>
-                  </Select>
-                </FormControl>
-              </div>
-              <div>
-                <TextField
-                  label="Year"
-                  id="outlined-size-small"
-                  onChange={selectYear}
-                  defaultValue={year}
-                  size="small"
-                  style = {{minWidth:120}}
-                />
-              </div>
-            </Box>
-          </Box>
-          <Box sx={{ display: 'flex', paddingLeft: 3, width: 1, gap: 0, border: '0px solid', flexGrow: 1, gridTemplateColumns: 'repeat(10, 1fr)' }}>
-            <Box sx={{ display: 'flex', height: 50, }}>
-              <FormControl sx={{ m: 0}} component="fieldset" variant="standard">
-                <FormGroup row={true}>
-                  <FormControlLabel
-                    control={
-                      <Checkbox checked={is_RPP} onChange={selectFilters} name="is_RPP" />
-                    }
-                    label="Race, Power, & Privilege (RPP)"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox checked={is_WRIT} onChange={selectFilters} name="is_WRIT" />
-                    }
-                    label="WRIT"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox checked={is_CBLR} onChange={selectFilters} name="is_CBLR" />
-                    }
-                    label="Community-Based Learning & Research (CBLR)"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox checked={is_Premodern} onChange={selectFilters} name="is_Premodern" />
-                    }
-                    label="Premodern"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox checked={is_FYS} onChange={selectFilters} name="is_FYS" />
-                    }
-                    label="First-Year Seminar"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox checked={is_SYS} onChange={selectFilters} name="is_SYS" />
-                    }
-                    label="Second-Year Seminar"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox checked={is_capstone} onChange={selectFilters} name="is_capstone" />
-                    }
-                    label="Capstone"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox checked={is_lecture} onChange={selectFilters} name="is_lecture" />
-                    }
-                    label="Lecture"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox checked={is_intro} onChange={selectFilters} name="is_intro" />
-                    }
-                    label="Intro"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox checked={is_remote} onChange={selectFilters} name="is_remote" />
-                    }
-                    label="Remote"
-                  />
-                </FormGroup>
+        <Box sx={{ display: 'flex', width: 1, marginTop: 3, marginLeft: 1, p: 0, border: '0px solid', marginBottom: 2 }}>
+          <Box sx={{ display: 'grid', paddingLeft: 1, width: 0.3, border: '0px solid', flexGrow: 1, gridTemplateColumns: 'repeat(10, 1fr)' }}>
+
+            <div>
+              <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                <InputLabel sx={{ m: 0, margin: 0, border: 0, padding: 0, fontSize: 14 }} id="demo-simple-select-helper-label">Professor</InputLabel>
+                <Select
+                  labelId="demo-simple-select-helper-label"
+                  id="demo-simple-select-helper"
+                  defaultValue="All"
+                  value={professorSelected}
+                  label="Professor"
+                  onChange={selectProfessor}
+                  sx={{ height: 30, padding: 0, border: 0 }}
+                >
+                  <MenuItem value="All">All</MenuItem>
+                  {allProfessors?.map((prof) => (
+                    <MenuItem value={prof} key={prof}>
+                      {prof.displayName}
+                    </MenuItem>
+                  ))}
+                </Select>
               </FormControl>
-            </Box>
-          </Box> 
+            </div>
+            <div>
+              <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                <InputLabel sx={{ m: 0, margin: 0, height: 1, border: 0, padding: 0, fontSize: 14 }} id="demo-simple-select-helper-label">Level</InputLabel>
+                <Select
+                  defaultValue=""
+                  labelId="demo-simple-select-helper-label"
+                  id="demo-simple-select-helper"
+                  value={level}
+                  label="Level"
+                  onChange={selectLevel}
+                  sx={{ height: 30, padding: 0, border: 0 }}
+                >
+                  <MenuItem value="All">All</MenuItem>
+                  <MenuItem value="Undergraduate">Undergraduate</MenuItem>
+                  <MenuItem value="Graduate">Graduate</MenuItem>
+                </Select>
+              </FormControl>
+            </div>
+            <div>
+              <FormControl sx={{ m: 1, minWidth: 120, height: 20 }} size="small">
+                <InputLabel sx={{ m: 0, margin: 0, height: 1, border: 0, padding: 0, fontSize: 14 }} id="demo-simple-select-helper-label">Geography</InputLabel>
+                <Select
+                  defaultValue="All"
+                  labelId="demo-simple-select-helper-label"
+                  id="demo-simple-select-helper"
+                  value={geography}
+                  label="Geography"
+                  onChange={selectGeography}
+                  sx={{ height: 30, padding: 0, border: 0 }}
+                >
+                  <MenuItem value="All">All</MenuItem>
+                  <MenuItem value="Africa">Africa</MenuItem>
+                  <MenuItem value="East Asia">East Asia</MenuItem>
+                  <MenuItem value="Europe">Europe</MenuItem>
+                  <MenuItem value="Latin America">Latin America</MenuItem>
+                  <MenuItem value="MESA">Middle East - South Asia</MenuItem>
+                  <MenuItem value="North America">North America</MenuItem>
+                  <MenuItem value="Global">Global</MenuItem>
+                </Select>
+              </FormControl>
+            </div>
+            <div>
+              <TextField
+                label="Year"
+                id="outlined-size-small"
+                onChange={selectYear}
+                defaultValue={year}
+                size="small"
+                style={{ minWidth: 120 }}
+              />
+            </div>
+          </Box>
+        </Box>
+        <Box sx={{ display: 'flex', paddingLeft: 3, width: 1, gap: 0, border: '0px solid', flexGrow: 1, gridTemplateColumns: 'repeat(10, 1fr)' }}>
+          <Box sx={{ display: 'flex', height: 50, }}>
+            <FormControl sx={{ m: 0 }} component="fieldset" variant="standard">
+              <FormGroup row={true}>
+                <FormControlLabel
+                  control={
+                    <Checkbox checked={is_RPP} onChange={selectFilters} name="is_RPP" />
+                  }
+                  label="Race, Power, & Privilege (RPP)"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox checked={is_WRIT} onChange={selectFilters} name="is_WRIT" />
+                  }
+                  label="WRIT"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox checked={is_CBLR} onChange={selectFilters} name="is_CBLR" />
+                  }
+                  label="Community-Based Learning & Research (CBLR)"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox checked={is_Premodern} onChange={selectFilters} name="is_Premodern" />
+                  }
+                  label="Premodern"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox checked={is_FYS} onChange={selectFilters} name="is_FYS" />
+                  }
+                  label="First-Year Seminar"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox checked={is_SYS} onChange={selectFilters} name="is_SYS" />
+                  }
+                  label="Second-Year Seminar"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox checked={is_capstone} onChange={selectFilters} name="is_capstone" />
+                  }
+                  label="Capstone"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox checked={is_lecture} onChange={selectFilters} name="is_lecture" />
+                  }
+                  label="Lecture"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox checked={is_intro} onChange={selectFilters} name="is_intro" />
+                  }
+                  label="Intro"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox checked={is_remote} onChange={selectFilters} name="is_remote" />
+                  }
+                  label="Remote"
+                />
+              </FormGroup>
+            </FormControl>
+          </Box>
+        </Box>
         <Box
-            sx={{
+          sx={{
             width: 1,
             height: 50,
             margin: 0,
             paddingLeft: 2,
             paddingTop: 2,
-          }}> 
+          }}>
           <Typography variant="h5">
-              ___________________________________________________________________________________________________
+            ___________________________________________________________________________________________________
           </Typography>
         </Box>
       </Box>
       {filter().map((course, index) => (
-            <CourseCard course={course} status={false} edit={false} approve={false} new_proposal={user?.role !== "default"}/>
-        ))
-        }
+        <CourseCard key={index} course={course} status={false} edit={false} approve={false} new_proposal={user?.role !== "default"} />
+      ))
+      }
     </div>
   );
 };

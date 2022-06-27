@@ -13,13 +13,12 @@ ReactDOM.render(
   <Router>
     <Routes>
       <Route path="/" element={<App />} />
-      <Route path="/course_catalog" element={<CourseCatalog/>} />
+      <Route path="/course_catalog" element={<CourseCatalog />} />
       <Route path="/my_courses" element={<MyCourses />} />
       <Route path="/course_proposal" element={<CourseProposal />} />
       <Route path="/review_courses" element={<CourseReview />} />
-      <Route path="/view_course" element={<CourseView/>} />
-      <Route path="/manage_roles" element={<ManageRoles/>} />
-      
+      <Route path="/view_course" element={<CourseView />} />
+      <Route path="/manage_roles" element={<ManageRoles />} />
     </Routes>
   </Router>,
   document.getElementById('root')

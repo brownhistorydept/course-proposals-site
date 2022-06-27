@@ -12,18 +12,20 @@ import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import { IUser } from '../../../server/src/models/User';
+import { handleLogoutClick } from '../utils/auth';
 
 export default function Profile(props: {
-    user: IUser | undefined;
+  user: IUser | undefined;
 }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  const handleClick = (event : any) => {
+  const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
+  
   return (
     <React.Fragment>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
@@ -80,22 +82,22 @@ export default function Profile(props: {
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         <Typography
-            sx={{ mr: 2, display: { xs: 'none', md: 'flex', margin: '10px'} }}
-            >
-            {props.user ? props.user.displayName : "Name"}
+          sx={{ mr: 2, display: { xs: 'none', md: 'flex', margin: '10px' } }}
+        >
+          {props.user ? props.user.displayName : "Name"}
         </Typography>
         <Typography
-            sx={{ mr: 2, display: { xs: 'none', md: 'flex', margin: '10px'} }}
-            >
-            {props.user ? props.user.email : "Email"}
+          sx={{ mr: 2, display: { xs: 'none', md: 'flex', margin: '10px' } }}
+        >
+          {props.user ? props.user.email : "Email"}
         </Typography>
         <Typography
-            sx={{ mr: 2, display: { xs: 'none', md: 'flex', margin: '10px'} }}
-            >
-            Role: {props.user ? props.user.role : "Role"}
+          sx={{ mr: 2, display: { xs: 'none', md: 'flex', margin: '10px' } }}
+        >
+          Role: {props.user ? props.user.role : "Role"}
         </Typography>
         <Divider />
-        <MenuItem>
+        <MenuItem onClick={handleLogoutClick}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
