@@ -19,19 +19,6 @@ function strToBool(str: string): boolean {
 // search courses
 courseRouter.get("/search/:finalized", authCheck, async (req: IGetUserAuthInfoRequest, res: Response) => {
 
-  // restrict searches based on role
-  let restrictions;
-
-  if (req.user.role == ROLES.GRAD_DIRECTOR) {
-    restrictions = { is_undergrad: false };
-  } else if (req.user.role == ROLES.UG_DIRECTOR) {
-    restrictions = { is_undergrad: true };
-  } else if (req.user.role == ROLES.PROFESSOR) {
-    restrictions = { professor: req.user._id };
-  } else if (req.user.role == ROLES.DEFAULT) {
-    restrictions = { proposal_status: PROPOSAL_STATUS.CCC_ACCEPTED };
-  }
-
   const search_term = req.query;
   let finalized_term = {};
 
@@ -43,8 +30,10 @@ courseRouter.get("/search/:finalized", authCheck, async (req: IGetUserAuthInfoRe
     }
   }
 
+  console.log({ ...search_term, ...finalized_term})
+
   try {
-    const result = await search({ ...search_term, ...finalized_term, ...restrictions });
+    const result = await search({ ...search_term, ...finalized_term });
     res.status(200).json({ result });
   } catch (err) {
     res.status(400).json({
