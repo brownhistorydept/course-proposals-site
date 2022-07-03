@@ -389,7 +389,7 @@ function CourseView() {
             />
           </Grid>
 
-          <Grid marginY="20px">
+          <Grid marginY="20px" marginX="auto">
             <Button
               variant="contained"
               sx={{ textTransform: "none", backgroundColor: "#992525", mx: 1 }}
