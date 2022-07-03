@@ -389,7 +389,7 @@ function CourseView() {
             />
           </Grid>
 
-          <Grid marginY="20px" marginX="auto">
+          <Grid margin="auto" marginY="20px">
             <Button
               variant="contained"
               sx={{ textTransform: "none", backgroundColor: "#992525", mx: 1 }}
@@ -422,13 +422,9 @@ function CourseView() {
                 Reject
               </Typography>
             </Button>
-          </Grid>
-        </>}
 
-        {edit && <Grid item xs={6}></Grid>}
-        {edit && <Grid item xs={6} marginBottom={2}>
-
-          <Link style={{ textDecoration: 'none' }} to={"/course_proposal"} state={{ course: editCourse, edit: true, existing: false }}>
+        {edit && 
+          <Link style={{ textDecoration: 'none', marginTop: "20px" }} to={"/course_proposal"} state={{ course: editCourse, edit: true, existing: false }}>
             <Button
               variant="contained"
               sx={{ textTransform: "none", backgroundColor: "#992525", mx: 1 }}
@@ -438,7 +434,10 @@ function CourseView() {
               </Typography>
             </Button>
           </Link>
-        </Grid>}
+        }
+
+        </Grid>
+        </>}
 
         {new_proposal && <Grid item marginX="auto" >
           <Link style={{ textDecoration: 'none' }} to={"/course_proposal"} state={{ course: proposalCourse, edit: false, existing: true }}>
