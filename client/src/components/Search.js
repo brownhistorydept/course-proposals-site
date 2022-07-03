@@ -404,7 +404,7 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
         </Box>
       </Box>
       {filter().map((course, index) => (
-        <CourseCard key={index} course={course} status={false} edit={false} approve={false} new_proposal={user?.role !== "default"} />
+        <CourseCard key={index} course={course} status={false} canEdit={false} canAccept={false} canNewProposal={user?.role !== "default"} />
       ))
       }
     </div>

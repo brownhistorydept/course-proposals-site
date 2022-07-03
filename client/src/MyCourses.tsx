@@ -7,11 +7,15 @@ import Box from '@mui/material/Box';
 import { ICourse } from "../../server/src/models/Course";
 import { fetchCourses } from "./utils/courses";
 import CourseCard from './components/CourseCard';
+import { Checkbox, FormControl, Grid, ListItemText, MenuItem, Select } from '@mui/material';
 
 function MyCourses() {
   const [user, setUser] = useState<IUser>();
-  const [approvedCourses, setApprovedCourses] = useState<ICourse[]>();
-  const [pendingCourses, setPendingCourses] = useState<ICourse[]>();
+  const [acceptedCourses, setAcceptedCourses] = useState<ICourse[]>();
+  const [submittedCourses, setSubmittedCourses] = useState<ICourse[]>();
+
+  const [years, setYears] = useState<string[]>([new Date().getFullYear().toString()]);
+
   // called once when components on page have rendered
   useEffect(() => {
     async function getUser() {
@@ -27,16 +31,16 @@ function MyCourses() {
     }
     async function getCourses() {
       params = { professors: user?._id };
-      console.log(params);
-      await fetchCourses(setApprovedCourses, params, true);
-      await fetchCourses(setPendingCourses, params, false);
+      await fetchCourses(setAcceptedCourses, params, true);
+      await fetchCourses(setSubmittedCourses, params, false);
 
     }
     getCourses();
   }, [user]);
-  // I added [user] so that useEffect gets called every time user changes
-  // this means that it it'll return if user is undefined, and once user is set it'll get called once (and only once) to set the user. 
-  // https://linguinecode.com/post/why-react-setstate-usestate-does-not-update-immediately
+
+
+  var allYears = [...new Set((acceptedCourses? acceptedCourses.map(course => course.year.toString()) : []).concat(submittedCourses? submittedCourses.map(course => course.year.toString()) : []))];
+  console.log(allYears)
 
   return (
     <div className="MyCourses">
@@ -51,14 +55,40 @@ function MyCourses() {
             My Courses
           </Typography>
 
+          <Grid item xs={3}>
+            <FormControl fullWidth>
+              <Select
+                size='small'
+                multiple
+                value={years}
+                onChange={(event) => {
+                  const {
+                    target: { value },
+                  } = event;
+                  setYears(
+                    typeof value === 'string' ? value.split(',') : value,
+                  );
+                }}
+                renderValue={(selected) => selected.join(', ')}
+              >
+                {allYears?.map((year) => (
+                  <MenuItem key={year} value={year}>
+                    <Checkbox checked={years.indexOf(year) > -1} />
+                    <ListItemText primary={year} />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+
 
           <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={3}>
-            Approved
+            Accepted by CCC
           </Typography>
-          {typeof (approvedCourses) == "undefined" && <Typography variant="body1"> No courses found </Typography>}
+          {typeof (acceptedCourses) == "undefined" && <Typography variant="body1"> No courses found </Typography>}
         </Box>
-        {approvedCourses?.map((course, index) => (
-          <CourseCard key={index} course={course} status={false} edit={false} approve={false} new_proposal={false} />
+        {acceptedCourses?.map((course, index) => (
+          <CourseCard key={index} course={course} status={false} canEdit={false} canAccept={false} canNewProposal={false} />
         ))}
 
 
@@ -66,10 +96,10 @@ function MyCourses() {
           <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={3} marginTop={5}>
             Submitted
           </Typography>
-          {typeof (pendingCourses) == "undefined" && <Typography variant="body1"> No courses found </Typography>}
+          {typeof (submittedCourses) == "undefined" && <Typography variant="body1"> No courses found </Typography>}
         </Box>
-        {pendingCourses?.map((course, index) => (
-          <CourseCard key={index} course={course} status={true} edit={true} approve={false} new_proposal={false} />
+        {submittedCourses?.map((course, index) => (
+          <CourseCard key={index} course={course} status={true} canEdit={true} canAccept={false} canNewProposal={false} />
         ))}
 
       </Box>

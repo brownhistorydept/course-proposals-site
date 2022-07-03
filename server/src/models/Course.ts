@@ -36,7 +36,7 @@ export interface ICourse {
   course_title: string,
   description: string,
   professors: string[], // professors is an array of strings, where each string is the professor's Object ID
-  syllabus_link: string,
+  syllabus_link?: string,
   // boolean designations
   is_undergrad: boolean, // if false, then grad
   is_RPP?: boolean,
@@ -61,7 +61,7 @@ export interface ICourse {
   final_time?: string, // string of A,B,C or another string for a time outside of these (manager enters this once time is finalized)
   course_number?: string,
   // further notes
-  further_notes: string;
+  further_notes?: string;
 }
 
 const courseSchema = new Schema<ICourse>({
@@ -75,7 +75,7 @@ const courseSchema = new Schema<ICourse>({
   course_title: { type: String, required: true },
   description: { type: String, required: true },
   professors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-  syllabus_link: { type: String, required: true },
+  syllabus_link: { type: String, required: false },
   // boolean designations
   is_undergrad: { type: Boolean, required: true },
   is_RPP: { type: Boolean, required: false },
@@ -100,7 +100,7 @@ const courseSchema = new Schema<ICourse>({
   course_number: { type: String, required: false },
   final_time: { type: String, required: false },
   // further notes
-  further_notes: { type: String, required: true },
+  further_notes: { type: String, required: false },
 });
 
 const Course = model<ICourse>("Course", courseSchema);

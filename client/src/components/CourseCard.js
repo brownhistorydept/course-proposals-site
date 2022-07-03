@@ -7,7 +7,7 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { Link } from 'react-router-dom';
 
-export default function ComplexGrid({ course, status, edit, approve, new_proposal }) {
+export default function ComplexGrid({ course, status, canEdit, canAccept, canNewProposal }) {
   return (
     <Paper
       sx={{
@@ -106,7 +106,7 @@ export default function ComplexGrid({ course, status, edit, approve, new_proposa
         </Grid>
 
         <Grid item align="center" justify="center" my="auto" mr={2}>
-          <Link style={{ textDecoration: 'none' }} to={"/view_course"} state={{ course: course, edit: edit, approve: approve, new_proposal: new_proposal }}>
+          <Link style={{ textDecoration: 'none' }} to={"/view_course"} state={{ course: course, canEdit: canEdit, canAccept: canAccept, canNewProposal: canNewProposal }}>
             <Button variant="contained" sx={{ textTransform: "none", backgroundColor: "#992525" }}>
               <Typography
                 gutterBottom

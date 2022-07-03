@@ -32,9 +32,9 @@ function CourseView() {
 
   interface CustomizedState {
     course: any,
-    approve: boolean,
-    edit: boolean,
-    new_proposal: boolean
+    canAccept: boolean,
+    canEdit: boolean,
+    canNewProposal: boolean
   }
 
   const location = useLocation();
@@ -42,9 +42,9 @@ function CourseView() {
   const myState = state;
 
   const course = myState.course;
-  const approve = myState.approve;
-  const edit = myState.edit;
-  const new_proposal = myState.new_proposal;
+  const canAccept = myState.canAccept;
+  const canEdit = myState.canEdit;
+  const canNewProposal = myState.canNewProposal;
 
   const courseNumber = course["course_number"].split(" ")[1]
   const courseTitle = course["course_title"]
@@ -52,7 +52,7 @@ function CourseView() {
   const courseDescription = course["description"]
   const courseSemester = course["semester"]
   var courseLevel = ""
-  const courseGeography = course["geography"][0]
+  const courseGeography = course["geography"]
   const courseFinalTime = course["final_time"]
   const courseIsRegular = course["is_regular_prof"] ? "Yes" : "No"
   const courseLeaveFall = course["on_leave_fall"] ? "Yes" : "No"
@@ -92,6 +92,7 @@ function CourseView() {
   }
 
   var profString = profList.join(", ")
+  var geoString  = courseGeography.length === 0 ? "" : courseGeography.join(", ")
 
 
   return (
@@ -261,7 +262,7 @@ function CourseView() {
               disableUnderline: true,
               readOnly: true,
             }}
-            value={courseGeography}
+            value={geoString}
 
           >
           </TextField>
@@ -373,7 +374,7 @@ function CourseView() {
         </Grid>
 
 
-        {approve && <>
+        {canAccept && <>
 
           <Grid item xs={2}>
             <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Comments for Professor</Typography>
@@ -425,10 +426,10 @@ function CourseView() {
           </Grid>
         </>}
 
-        {edit && <Grid item xs={6}></Grid>}
-        {edit && <Grid item xs={6} marginBottom={2}>
+        {canEdit && <Grid item xs={6}></Grid>}
+        {canEdit && <Grid item xs={6} marginBottom={2}>
 
-          <Link style={{ textDecoration: 'none' }} to={"/course_proposal"} state={{ course: editCourse, edit: true, existing: false }}>
+          <Link style={{ textDecoration: 'none' }} to={"/course_proposal"} state={{ course: editCourse, isEditing: true, isNewProposal: false }}>
             <Button
               variant="contained"
               sx={{ textTransform: "none", backgroundColor: "#992525", mx: 1 }}
@@ -440,8 +441,8 @@ function CourseView() {
           </Link>
         </Grid>}
 
-        {new_proposal && <Grid item marginX="auto" >
-          <Link style={{ textDecoration: 'none' }} to={"/course_proposal"} state={{ course: proposalCourse, edit: false, existing: true }}>
+        {canNewProposal && <Grid item marginX="auto" >
+          <Link style={{ textDecoration: 'none' }} to={"/course_proposal"} state={{ course: proposalCourse, isEditing: false, isNewProposal: true }}>
             <Button
               variant="contained"
               sx={{ textTransform: "none", backgroundColor: "#992525", mx: 1 }}

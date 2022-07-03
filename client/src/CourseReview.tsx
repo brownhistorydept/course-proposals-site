@@ -11,6 +11,7 @@ import CourseCard from './components/CourseCard';
 function CourseReview() {
   const [user, setUser] = useState<IUser>();
   const [underReviewCourses, setUnderReviewCourses] = useState<ICourse[]>();
+  const [cccAcceptedCourses, setCCCAcceptedCourses] = useState<ICourse[]>();
   const [cccRejectedCourses, setCCCRejectedCourses] = useState<ICourse[]>();
   const [directorRejectedCourses, setDirectorRejectedCourses] = useState<ICourse[]>();
   const [directorAcceptedCourses, setDirectorAcceptedCourses] = useState<ICourse[]>();
@@ -34,6 +35,14 @@ function CourseReview() {
       }
 
       await fetchCourses(setUnderReviewCourses, params, false);
+    }
+    getCourses();
+  }, [user]);
+
+  // get CCC accepted courses
+  useEffect(() => {
+    async function getCourses() {
+      await fetchCourses(setCCCAcceptedCourses, {}, true);
     }
     getCourses();
   }, [user]);
@@ -104,8 +113,8 @@ function CourseReview() {
           To Review
         </Typography>
         {underReviewCourses?.length == 0 && <Typography variant="body1"> No courses to review. </Typography>}
-        {underReviewCourses?.map((course, index) => (
-          <CourseCard course={course} status={true} edit={user?.role === "manager"} approve={user?.role !== "curriculum coordinator"} new_proposal={false} />
+        {underReviewCourses?.map((course, _) => (
+          <CourseCard course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role === "manager" || user?.role === "graduate director" || user?.role === "undergraduate director"} canNewProposal={false} />
         ))}
 
         <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={3} marginTop={3}>
@@ -113,25 +122,35 @@ function CourseReview() {
         </Typography>
 
         <Typography variant="h6" color="#992525" fontWeight={500} marginBottom={3}>
+          Accepted by CCC:
+
+        </Typography>
+        {user?.role === "manager" &&
+        cccAcceptedCourses?.map((course, _) => (
+          <CourseCard course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role === "manager"} canNewProposal={false} />
+        ))
+        } 
+
+        <Typography variant="h6" color="#992525" fontWeight={500} marginBottom={3}>
           Accepted by Director:
 
         </Typography>
-        {directorAcceptedCourses?.map((course, index) => (
-          <CourseCard course={course} status={true} edit={false} approve={user?.role !== "curriculum coordinator"} new_proposal={false} />
+        {directorAcceptedCourses?.map((course, _) => (
+          <CourseCard course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role !== "curriculum coordinator"} canNewProposal={false} />
         ))}
 
         <Typography variant="h6" color="#992525" fontWeight={500} marginBottom={3}>
           Rejected by Director:
         </Typography>
-        {directorRejectedCourses?.map((course, index) => (
-          <CourseCard course={course} status={true} edit={false} approve={user?.role !== "curriculum coordinator"} new_proposal={false} />
+        {directorRejectedCourses?.map((course, _) => (
+          <CourseCard course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role !== "curriculum coordinator"} canNewProposal={false} />
         ))}
 
         <Typography variant="h6" color="#992525" fontWeight={500} marginBottom={3}>
           Rejected by CCC:
         </Typography>
-        {cccRejectedCourses?.map((course, index) => (
-          <CourseCard course={course} status={true} edit={false} approve={user?.role !== "curriculum coordinator"} new_proposal={false} />
+        {cccRejectedCourses?.map((course, _) => (
+          <CourseCard course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role !== "curriculum coordinator"} canNewProposal={false} />
         ))}
       </Box>
 

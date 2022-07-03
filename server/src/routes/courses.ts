@@ -30,7 +30,7 @@ courseRouter.get("/search/:finalized", authCheck, async (req: IGetUserAuthInfoRe
     }
   }
 
-  console.log({ ...search_term, ...finalized_term})
+  // console.log({ ...search_term, ...finalized_term})
 
   try {
     const result = await search({ ...search_term, ...finalized_term });
@@ -72,6 +72,8 @@ courseRouter.get("/search-dev-only/:finalized", async (req: IGetUserAuthInfoRequ
 });
 
 function getCourseStatus(proposed_course, original_course) {
+  console.log(proposed_course);
+  console.log(original_course);
   if (!original_course) {
     return COURSE_STATUS.NEW;
   }
@@ -121,7 +123,7 @@ courseRouter.post("/submit", authCheck, async (req: IGetUserAuthInfoRequest, res
 
 // edit a course
 courseRouter.post("/edit", authCheck, async (req: IGetUserAuthInfoRequest, res: Response) => {
-  const course = req.body as ICourse;
+  var course = req.body as ICourse;
 
   if (req.user.role !== ROLES.MANAGER) {
     // if you don't own the course
@@ -139,6 +141,10 @@ courseRouter.post("/edit", authCheck, async (req: IGetUserAuthInfoRequest, res: 
       });
       return;
     }
+  }
+
+  if (req.user.role !== ROLES.MANAGER) {
+    course.proposal_status = PROPOSAL_STATUS.DIRECTOR_REVIEW;
   }
 
   try {
