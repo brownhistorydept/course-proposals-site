@@ -19,10 +19,12 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { useNavigate } from 'react-router-dom';
 
 function ManageRoles() {
   const allRoles = ['default', 'curriculum coordinator', 'professor', 'undergraduate director', 'graduate director', 'manager'];
 
+  const navigate = useNavigate();
   const [user, setUser] = useState<IUser>();
   const [allUsers, setAllUsers] = useState<IUser[]>();
   const [alertOpen, setAlertOpen] = useState(false);
@@ -62,6 +64,10 @@ function ManageRoles() {
       getUser()
       getAllUsers();
     }
+  }
+
+  if (user?.role !== "manager") {
+    navigate('/course_catalog');
   }
 
   return (

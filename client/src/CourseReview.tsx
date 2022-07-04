@@ -7,8 +7,10 @@ import Box from '@mui/material/Box';
 import { ICourse } from "../../server/src/models/Course";
 import { fetchCourses } from "./utils/courses";
 import CourseCard from './components/CourseCard';
+import { useNavigate } from 'react-router-dom';
 
 function CourseReview() {
+  const navigate = useNavigate();
   const [user, setUser] = useState<IUser>();
   const [underReviewCourses, setUnderReviewCourses] = useState<ICourse[]>();
   const [cccAcceptedCourses, setCCCAcceptedCourses] = useState<ICourse[]>();
@@ -94,6 +96,10 @@ function CourseReview() {
     }
     getCourses();
   }, [user]);
+
+  if (user?.role === "default" || user?.role === "professor") {
+    navigate('/course_catalog');
+  }
 
   return (
     <div className="CourseReview">

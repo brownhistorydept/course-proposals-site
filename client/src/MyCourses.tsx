@@ -8,13 +8,15 @@ import { ICourse } from "../../server/src/models/Course";
 import { fetchCourses } from "./utils/courses";
 import CourseCard from './components/CourseCard';
 import { Checkbox, FormControl, Grid, ListItemText, MenuItem, Select } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 function MyCourses() {
+  const navigate = useNavigate();
   const [user, setUser] = useState<IUser>();
   const [acceptedCourses, setAcceptedCourses] = useState<ICourse[]>();
   const [submittedCourses, setSubmittedCourses] = useState<ICourse[]>();
-
   const [years, setYears] = useState<string[]>([new Date().getFullYear().toString()]);
+  const [semesters, setSemesters] = useState<string[]>([]);
 
   // called once when components on page have rendered
   useEffect(() => {
@@ -38,10 +40,48 @@ function MyCourses() {
     getCourses();
   }, [user]);
 
-
+  // set of every year/semester this user has a course entry; used to populate dropdown options
   var allYears = [...new Set((acceptedCourses? acceptedCourses.map(course => course.year.toString()) : []).concat(submittedCourses? submittedCourses.map(course => course.year.toString()) : []))];
-  console.log(allYears)
+  var allSemesters = [...new Set((acceptedCourses? acceptedCourses.map(course => course.semester) : []).concat(submittedCourses? submittedCourses.map(course => course.semester) : []))];
 
+  // FIXME
+  // useEffect(() => {
+  //   const semesterObj =
+  //     {
+  //       0: 'Winter', // Jan
+  //       1: 'Spring', // Feb
+  //       2: 'Spring', // Mar
+  //       3: 'Spring', // Apr
+  //       4: 'Spring', // May
+  //       5: 'Summer', // Jun
+  //       6: 'Summer', // Jul
+  //       7: 'Summer', // Aug
+  //       8: 'Fall', // Sep
+  //       9: 'Fall', // Oct
+  //       10: 'Fall', // Nov
+  //       11: 'Winter' // Dec
+  //     }
+
+  //     const semesterMap = new Map(Object.entries(semesterObj));
+  //     var currentSemester = semesterMap.get(new Date().getMonth().toString());
+
+  //     if (!allSemesters?.includes(currentSemester!)) { // if current semester isn't in courses, just set default to first semester listed
+  //       currentSemester = allSemesters[0]
+  //     }
+  //     // console.log('semesters');
+  //     // console.log(semesters);
+  //     console.log(semesters)
+  //     console.log(currentSemester)
+
+  //   async function getSemester() {
+  //     setSemesters([currentSemester!])
+  //   }
+  // getSemester();
+  // });
+
+  if (user?.role === "default" || user?.role === "manager") {
+    navigate('/course_catalog');
+  }
   return (
     <div className="MyCourses">
 
@@ -55,7 +95,7 @@ function MyCourses() {
             My Courses
           </Typography>
 
-          <Grid item xs={3}>
+          <Grid item xs={3} marginBottom='10px'>
             <FormControl fullWidth>
               <Select
                 size='small'
@@ -81,12 +121,45 @@ function MyCourses() {
             </FormControl>
           </Grid>
 
+          <Grid item xs={3} marginBottom='20px'>
+            <FormControl fullWidth>
+              <Select
+                size='small'
+                multiple
+                value={semesters}
+                onChange={(event) => {
+                  const {
+                    target: { value },
+                  } = event;
+                  setSemesters(
+                    typeof value === 'string' ? value.split(',') : value,
+                  );
+                }}
+                renderValue={(selected) => selected.join(', ')}
+              >
+                {allSemesters?.map((semester) => (
+                  <MenuItem key={semester} value={semester}>
+                    <Checkbox checked={semesters.indexOf(semester) > -1} />
+                    <ListItemText primary={semester} />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+
 
           <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={3}>
             Accepted by CCC
           </Typography>
           {typeof (acceptedCourses) == "undefined" && <Typography variant="body1"> No courses found </Typography>}
         </Box>
+        
+        {/* work in progress */}
+        {/* {acceptedCourses?
+        (acceptedCourses.filter(course => years.includes(course.year.toString()) && semesters.includes(course.semester)).map(course, index) => (
+          <CourseCard key={index} course={course} status={false} canEdit={false} canAccept={false} canNewProposal={false} />
+        )))} */}
+
         {acceptedCourses?.map((course, index) => (
           <CourseCard key={index} course={course} status={false} canEdit={false} canAccept={false} canNewProposal={false} />
         ))}

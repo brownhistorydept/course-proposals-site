@@ -338,7 +338,12 @@ function CourseProposal() {
     "I: TTh 10:30-11:50", "J: TTh 1-2:20", "K: TTh 2:30-3:50",
     "L: TTh 6:40-8", "M: M 3-5:30", "N: W 3-5:30", "O: F 3-5:30",
     "P: T 4-6:30", "Q: Th 4-6:30", "T: MW 3-4:20"]
-  return (
+
+    if (user?.role === "default") {
+      navigate('/course_catalog');
+    }
+
+    return (
     <div className="CourseProposal">
 
       <NavBar user={user} />
@@ -510,6 +515,7 @@ function CourseProposal() {
             sx={{ marginRight: 1 }}
           >
             <MenuItem value={"Fall"}>Fall</MenuItem>
+            <MenuItem value={"Winter"}>Winter</MenuItem>
             <MenuItem value={"Spring"}>Spring</MenuItem>
             <MenuItem value={"Summer"}>Summer</MenuItem>
           </Select>
