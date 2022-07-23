@@ -13,8 +13,8 @@ import { useNavigate } from 'react-router-dom';
 function MyCourses() {
   const navigate = useNavigate();
   const [user, setUser] = useState<IUser>();
-  const [acceptedCourses, setAcceptedCourses] = useState<ICourse[]>();
-  const [submittedCourses, setSubmittedCourses] = useState<ICourse[]>();
+  const [acceptedCourses, setAcceptedCourses] = useState<ICourse[]>([]);
+  const [submittedCourses, setSubmittedCourses] = useState<ICourse[]>([]);
   const [yearSems, setYearSems] = useState<string[]>([]);
   const [yearSemOptions, setYearSemOptions] = useState<string[]>([]);
 
@@ -40,7 +40,7 @@ function MyCourses() {
   }, [user]);
 
   useEffect(() => {
-    if (typeof user === "undefined" || (typeof acceptedCourses === "undefined" && typeof submittedCourses == 'undefined')) {
+    if (typeof user === "undefined") {
       return;
     }
     getYearSems();
@@ -49,16 +49,16 @@ function MyCourses() {
   function getYearSems() {
     const allCourses = (acceptedCourses ?? []).concat((submittedCourses ?? []));
     const sortedCourses = allCourses.sort((c1, c2) => {
-    const semesters = ['Spring', 'Summer', 'Fall', 'Winter'];
-    if (c1.year > c2.year) {
-      return -1;
-    } else if (c1.year < c2.year) {
-      return 1;
-    } else {
-      return semesters.indexOf(c2.semester) - semesters.indexOf(c1.semester);
-    }
-  });
-   
+      const semesters = ['Spring', 'Summer', 'Fall', 'Winter'];
+      if (c1.year > c2.year) {
+        return -1;
+      } else if (c1.year < c2.year) {
+        return 1;
+      } else {
+        return semesters.indexOf(c2.semester) - semesters.indexOf(c1.semester);
+      }
+    });
+
     const options = [...new Set(sortedCourses.map(course => `${course.semester} ${course.year}`))]
     // set of every year/semester this user has a course entry; used to populate dropdown options
     setYearSemOptions(options);
@@ -117,7 +117,7 @@ function MyCourses() {
             (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
               ? <CourseCard key={index} course={course} status={false} canEdit={false} canAccept={false} canNewProposal={false} /> : <></>
           ))}
-          
+
           <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={3} marginTop={5}>
             Submitted
           </Typography>
