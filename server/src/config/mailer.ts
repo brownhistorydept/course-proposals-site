@@ -14,12 +14,9 @@ function sendEmail(
   subject: string,
   text: string
 ): any {
-  console.log('to: ', to)
-  console.log('subject: ', subject)
-  console.log('text: ', text)
   return transporter.sendMail({
     from: `"Department of History Course Proposals" ${process.env.GMAIL_USERNAME}`,
-    to: 'sidharth_anand@brown.edu',
+    to,
     subject,
     text,
   });
