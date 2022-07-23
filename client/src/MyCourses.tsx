@@ -151,7 +151,7 @@ function MyCourses() {
           <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={3}>
             Accepted by CCC
           </Typography>
-          {typeof (acceptedCourses) == "undefined" && <Typography variant="body1"> No courses found </Typography>}
+          {typeof (acceptedCourses) === "undefined" && <Typography variant="body1"> No courses found </Typography>}
         </Box>
         
         {/* work in progress */}
@@ -169,7 +169,7 @@ function MyCourses() {
           <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={3} marginTop={5}>
             Submitted
           </Typography>
-          {typeof (submittedCourses) == "undefined" && <Typography variant="body1"> No courses found </Typography>}
+          {typeof (submittedCourses) === "undefined" && <Typography variant="body1"> No courses found </Typography>}
         </Box>
         {submittedCourses?.map((course, index) => (
           <CourseCard key={index} course={course} status={true} canEdit={true} canAccept={false} canNewProposal={false} />

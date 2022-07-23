@@ -118,7 +118,7 @@ function CourseReview() {
         <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={3}>
           To Review
         </Typography>
-        {underReviewCourses?.length == 0 && <Typography variant="body1"> No courses to review. </Typography>}
+        {underReviewCourses?.length === 0 && <Typography variant="body1"> No courses to review. </Typography>}
         {underReviewCourses?.map((course, _) => (
           <CourseCard course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role === "manager" || user?.role === "graduate director" || user?.role === "undergraduate director"} canNewProposal={false} />
         ))}

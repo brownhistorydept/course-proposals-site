@@ -1,4 +1,5 @@
 import nodemailer, { SentMessageInfo } from "nodemailer";
+import { ICourse } from "../models/Course";
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -9,25 +10,42 @@ const transporter = nodemailer.createTransport({
 });
 
 function sendEmail(
-  to: string,
+  to: string[],
   subject: string,
   text: string
-): Promise<SentMessageInfo> {
+): any {
+  console.log('to: ', to)
+  console.log('subject: ', subject)
+  console.log('text: ', text)
   return transporter.sendMail({
     from: `"Department of History Course Proposals" ${process.env.GMAIL_USERNAME}`,
-    to,
+    to: 'sidharth_anand@brown.edu',
     subject,
     text,
   });
 }
 
 // placeholder functionality
-export function sendAcceptEmail(to: string) {
+export function sendAcceptEmail(to: string[], course: ICourse, reason: string, isDirector: boolean) {
   sendEmail(
     to,
     "Course Proposal Accepted",
     `Hey!
-    \nYour course proposal has been accepted!
+    \nYour course proposal titled "${course.course_title}" has been accepted by ${isDirector ? 'a director' : 'the CCC'} and received the following comments:
+    \n${reason}
+    \nGo to ${process.env.CLIENT_URL} for more information.
+    \n--\nDepartment of History Course Proposals Automated Message`
+  );
+}
+
+// placeholder functionality
+export function sendRejectEmail(to: string[], course: ICourse, reason: string, isDirector: boolean) {
+  sendEmail(
+    to,
+    "Course Proposal Rejected",
+    `Sorry,
+    \nYour course proposal titled "${course.course_title}" has been rejected by ${isDirector ? 'a director' : 'the CCC'} for the following reason:
+    \n${reason}
     \nGo to ${process.env.CLIENT_URL} for more information.
     \n--\nDepartment of History Course Proposals Automated Message`
   );

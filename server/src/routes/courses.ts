@@ -2,7 +2,7 @@ import { Response, Router } from "express";
 import Course, { ICourse, PROPOSAL_STATUS, COURSE_STATUS } from "../models/Course"
 import { IGetUserAuthInfoRequest, authCheck } from "../middleware/auth";
 import { ROLES, IUser } from "../models/User";
-import { sendAcceptEmail } from "../config/mailer";
+import { sendAcceptEmail, sendRejectEmail } from "../config/mailer";
 
 const courseRouter = Router();
 
@@ -57,7 +57,7 @@ courseRouter.get("/search-dev-only/:finalized", async (req: IGetUserAuthInfoRequ
 
   try {
     const result = await search({ ...search_term, ...finalized_term });
-    if (result.length == 0) {
+    if (result.length === 0) {
       res.status(400).json({
         message: "No results found.",
       });
@@ -171,26 +171,25 @@ courseRouter.post("/submit-dev-only", async (req: IGetUserAuthInfoRequest, res: 
 });
 
 courseRouter.post("/accept-reject/:is_accept", authCheck, async (req: IGetUserAuthInfoRequest, res: Response) => {
-
-  const is_accept = typeof req.params.is_accept !== 'undefined' && strToBool(req.params.is_accept);
+  const isAccept = typeof req.params.is_accept !== 'undefined' && strToBool(req.params.is_accept);
 
   if (req.user.role === ROLES.MANAGER || req.user.role === ROLES.GRAD_DIRECTOR || req.user.role === ROLES.UG_DIRECTOR) {
-    const course = req.body as ICourse;
+    const { course, reason } = req.body as { course: ICourse, reason: string };
     let new_status;
-    if (req.user.role == ROLES.UG_DIRECTOR && course.is_undergrad) {
-      if (is_accept) {
+    if (req.user.role === ROLES.UG_DIRECTOR && course.is_undergrad) {
+      if (isAccept) {
         new_status = PROPOSAL_STATUS.DIRECTOR_ACCEPTED;;
       } else {
         new_status = PROPOSAL_STATUS.DIRECTOR_REJECTED;
       }
-    } else if (req.user.role == ROLES.GRAD_DIRECTOR && !course.is_undergrad) {
-      if (is_accept) {
+    } else if (req.user.role === ROLES.GRAD_DIRECTOR && !course.is_undergrad) {
+      if (isAccept) {
         new_status = PROPOSAL_STATUS.DIRECTOR_ACCEPTED;
       } else {
         new_status = PROPOSAL_STATUS.DIRECTOR_REJECTED;
       }
-    } else if (req.user.role == ROLES.MANAGER) {
-      if (is_accept) {
+    } else if (req.user.role === ROLES.MANAGER) {
+      if (isAccept) {
         new_status = PROPOSAL_STATUS.CCC_ACCEPTED;
       } else {
         new_status = PROPOSAL_STATUS.CCC_REJECTED;
@@ -205,8 +204,16 @@ courseRouter.post("/accept-reject/:is_accept", authCheck, async (req: IGetUserAu
       await Course.updateOne({ _id: course._id }, { proposal_status: new_status });
 
       // very janky with types - should be a better way to do this
-      const profEmails = ((await (await Course.findOne({ _id: course._id })).populate('professors')).professors as unknown as IUser[]).map(p => p.email);
-      sendAcceptEmail(profEmails.join(', '));
+      const courseDocument = await Course.findOne({ _id: course._id });
+      const courseDocumentWithProfessors = await courseDocument.populate('professors');
+      const profEmails = (courseDocumentWithProfessors.professors as unknown as IUser[]).map(p => p.email);
+      // const profEmails = (((await Course.findOne({ _id: course._id })).populate('professors')).professors as unknown as IUser[]).map(p => p.email);
+      
+      if (isAccept) {
+        sendAcceptEmail(profEmails, course, reason, req.user.role !== ROLES.MANAGER);
+      } else {
+        sendRejectEmail(profEmails, course, reason, req.user.role !== ROLES.MANAGER);
+      }
 
       res.status(200).json({
         message: "accepting/rejected course succeeded"

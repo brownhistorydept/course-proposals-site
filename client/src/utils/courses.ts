@@ -33,7 +33,7 @@ export async function fetchCourses(
   }
 }
 
-export async function submitCourse(course_info: any) {
+export async function submitCourse(course: any) {
   try {
     const res = await fetch(
       `${process.env.REACT_APP_SERVER_URL}/courses/submit`,
@@ -43,7 +43,7 @@ export async function submitCourse(course_info: any) {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(course_info),
+        body: JSON.stringify(course),
       }
     );
 
@@ -57,7 +57,7 @@ export async function submitCourse(course_info: any) {
   }
 }
 
-export async function editCourse(course_info: any) {
+export async function editCourse(course: any) {
   try {
     const res = await fetch(
       `${process.env.REACT_APP_SERVER_URL}/courses/edit`,
@@ -67,7 +67,7 @@ export async function editCourse(course_info: any) {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(course_info),
+        body: JSON.stringify(course),
       }
     );
 
@@ -85,8 +85,9 @@ export async function editCourse(course_info: any) {
 }
 
 export async function acceptRejectCourse(
-  course_info: any,
+  course: any,
   is_accept: boolean,
+  reason: string,
 ) {
   try {
     const url = new URL(`${process.env.REACT_APP_SERVER_URL}/courses/accept-reject/${is_accept}`)
@@ -96,9 +97,11 @@ export async function acceptRejectCourse(
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(course_info),
-    }
-    )
+      body: JSON.stringify({
+        course,
+        reason,
+      }),
+    });
 
     if (res.status === 200) {
       return true;

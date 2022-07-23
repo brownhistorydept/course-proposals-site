@@ -79,7 +79,7 @@ function CourseView() {
   }
 
   var proposalProfessors = user ? [user.displayName] : [""]
-  if (user?.role == "manager") {
+  if (user?.role === "manager") {
     proposalProfessors = profList
   }
 
@@ -395,7 +395,7 @@ function CourseView() {
               variant="contained"
               sx={{ textTransform: "none", backgroundColor: "#992525", mx: 1 }}
               onClick={async () => {
-                const success = await acceptRejectCourse(course, true);
+                const success = await acceptRejectCourse(course, true, reason);
                 if (success) {
                   alert("Course successfully accepted.")
                   navigate('/review_courses');
@@ -411,7 +411,7 @@ function CourseView() {
               variant="contained"
               sx={{ textTransform: "none", backgroundColor: "#992525", mx: 1 }}
               onClick={async () => {
-                const success = await acceptRejectCourse(course, false);
+                const success = await acceptRejectCourse(course, false, reason);
                 if (success) {
                   alert("Course successfully rejected.")
                   navigate('/review_courses');
