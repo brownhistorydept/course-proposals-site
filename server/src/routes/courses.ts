@@ -30,8 +30,6 @@ courseRouter.get("/search/:finalized", authCheck, async (req: IGetUserAuthInfoRe
     }
   }
 
-  // console.log({ ...search_term, ...finalized_term})
-
   try {
     const result = await search({ ...search_term, ...finalized_term });
     res.status(200).json({ result });
@@ -72,8 +70,7 @@ courseRouter.get("/search-dev-only/:finalized", async (req: IGetUserAuthInfoRequ
 });
 
 function getCourseStatus(proposed_course, original_course) {
-  console.log(proposed_course);
-  console.log(original_course);
+
   if (!original_course) {
     return COURSE_STATUS.NEW;
   }
@@ -207,13 +204,12 @@ courseRouter.post("/accept-reject/:is_accept", authCheck, async (req: IGetUserAu
       const courseDocument = await Course.findOne({ _id: course._id });
       const courseDocumentWithProfessors = await courseDocument.populate('professors');
       const profEmails = (courseDocumentWithProfessors.professors as unknown as IUser[]).map(p => p.email);
-      // const profEmails = (((await Course.findOne({ _id: course._id })).populate('professors')).professors as unknown as IUser[]).map(p => p.email);
       
-      if (isAccept) {
-        sendAcceptEmail(profEmails, course, reason, req.user.role !== ROLES.MANAGER);
-      } else {
-        sendRejectEmail(profEmails, course, reason, req.user.role !== ROLES.MANAGER);
-      }
+      // if (isAccept) {
+      //   sendAcceptEmail(profEmails, course, reason, req.user.role !== ROLES.MANAGER);
+      // } else {
+      //   sendRejectEmail(profEmails, course, reason, req.user.role !== ROLES.MANAGER);
+      // }
 
       res.status(200).json({
         message: "accepting/rejected course succeeded"

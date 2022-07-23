@@ -15,11 +15,14 @@ import { useLocation } from 'react-router'
 import { Link } from 'react-router-dom';
 import { acceptRejectCourse } from './utils/courses';
 import { useNavigate } from 'react-router-dom';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, } from '@mui/material';
 
 function CourseView() {
-
   const [user, setUser] = useState<IUser>();
   const [reason, setReason] = useState('');
+  const [alertTitle, setAlertTitle] = useState('');
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertRedirect, setAlertRedirect] = useState(false);
   const navigate = useNavigate();
 
   // called once when components on page have rendered
@@ -92,8 +95,13 @@ function CourseView() {
   }
 
   var profString = profList.join(", ")
-  var geoString  = courseGeography.length === 0 ? "" : courseGeography.join(", ")
+  var geoString = courseGeography.length === 0 ? "" : courseGeography.join(", ")
 
+  const openAlert = (title: string, redirect: boolean)  => {
+    setAlertTitle(title);
+    setAlertOpen(true);
+    setAlertRedirect(redirect);
+  }
 
   return (
     <div className="CourseView">
@@ -397,10 +405,9 @@ function CourseView() {
               onClick={async () => {
                 const success = await acceptRejectCourse(course, true, reason);
                 if (success) {
-                  alert("Course successfully accepted.")
-                  navigate('/review_courses');
+                  openAlert('Course successfully accepted', true);
                 } else {
-                  alert("Error accepting course")
+                  openAlert('Error accepting course', false);
                 }
               }}>
               <Typography gutterBottom variant="body1">
@@ -413,10 +420,9 @@ function CourseView() {
               onClick={async () => {
                 const success = await acceptRejectCourse(course, false, reason);
                 if (success) {
-                  alert("Course successfully rejected.")
-                  navigate('/review_courses');
+                  openAlert('Course successfully rejected', true);
                 } else {
-                  alert("Error rejecting course")
+                  openAlert('Error rejecting course', false);
                 }
               }}>
               <Typography gutterBottom variant="body1">
@@ -424,20 +430,20 @@ function CourseView() {
               </Typography>
             </Button>
 
-        {canEdit && 
-          <Link style={{ textDecoration: 'none', marginTop: "20px" }} to={"/course_proposal"} state={{ course: editCourse, isEditing: true, isNewProposal: false }}>
-            <Button
-              variant="contained"
-              sx={{ textTransform: "none", backgroundColor: "#992525", mx: 1 }}
-            >
-              <Typography gutterBottom variant="body1">
-                Edit
-              </Typography>
-            </Button>
-          </Link>
-        }
+            {canEdit &&
+              <Link style={{ textDecoration: 'none', marginTop: "20px" }} to={"/course_proposal"} state={{ course: editCourse, isEditing: true, isNewProposal: false }}>
+                <Button
+                  variant="contained"
+                  sx={{ textTransform: "none", backgroundColor: "#992525", mx: 1 }}
+                >
+                  <Typography gutterBottom variant="body1">
+                    Edit
+                  </Typography>
+                </Button>
+              </Link>
+            }
 
-        </Grid>
+          </Grid>
         </>}
 
         {canNewProposal && <Grid item marginX="auto" >
@@ -454,6 +460,19 @@ function CourseView() {
         </Grid>}
       </Grid>
 
+      <Dialog open={alertOpen}>
+        <DialogTitle>{alertTitle}</DialogTitle>
+        <DialogActions>
+          <Button autoFocus onClick={() => {
+            setAlertOpen(false);
+            if (alertRedirect) {
+              navigate('/review_courses');
+            }
+          }}>
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

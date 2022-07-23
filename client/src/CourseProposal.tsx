@@ -21,10 +21,15 @@ import InputLabel from '@mui/material/InputLabel';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router'
 import { ICourse } from "../../server/src/models/Course";
+import { Dialog, DialogActions, DialogTitle } from '@mui/material';
 
 function CourseProposal() {
   const navigate = useNavigate();
   const [user, setUser] = useState<IUser>();
+  const [alertTitle, setAlertTitle] = useState('');
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertPath, setAlertPath] = useState<string | undefined>();
+  
   // called once when components on page have rendered
   useEffect(() => {
     async function getUser() {
@@ -76,12 +81,12 @@ function CourseProposal() {
       const success = await editCourse(proposedUndergradCourse);
       if (success) {
         if (user?.role === "manager") {
-          navigate('/review_courses');
+          openAlert("Course successfully edited", '/review_courses');
         } else {
-          navigate('/my_courses');
+          openAlert("Course successfully edited", '/my_courses')
         } 
       } else {
-        alert("Error editing course")
+        openAlert("Error editing course")
         return;
       }
     } else {
@@ -105,12 +110,12 @@ function CourseProposal() {
       const success = await editCourse(proposedGradCourse);
       if (success) {
         if (user?.role === "manager") {
-          navigate('/review_courses');
+          openAlert("Course successfully submitted", '/review_courses')
         } else {
-          navigate('/my_courses');
+          openAlert("Course successfully submitted", '/my_courses')
         }
       } else {
-        alert("Error editing course")
+        openAlert("Error editing course")
         return;
       }
     }
@@ -120,7 +125,7 @@ function CourseProposal() {
     
     if (isUndergrad === 1) {
       if (geography.length === 0) {
-        alert("Please select geography")
+        openAlert("Please select geography")
         return;
       }
       var proposedUndergradCourse = {
@@ -157,12 +162,12 @@ function CourseProposal() {
       
       if (success) {
         if (user?.role === "manager") {
-          navigate('/review_courses');
+          openAlert("Course successfully submitted", '/review_courses')
         } else {
-          navigate('/my_courses');
+          openAlert("Course successfully submitted", '/my_courses')
         }
       } else {
-        alert("Error submitting course")
+        openAlert("Error submitting course")
         return;
       }
     } else {
@@ -189,12 +194,12 @@ function CourseProposal() {
       }
       if (success) {
         if (user?.role === "manager") {
-          navigate('/review_courses');
+          openAlert("Course successfully submitted", '/review_courses')
         } else {
-          navigate('/my_courses');
+          openAlert("Course successfully submitted", '/my_courses')
         }
       } else {
-        alert("Error submitting course")
+        openAlert("Error submitting course")
         return;
       }
     }
@@ -253,7 +258,6 @@ function CourseProposal() {
     if (myState != null) {
       setCourseTitle(originalCourse.course_title)
       setProfessors(originalCourse.professors);
-      console.log(professors)
 
       setIsUndergrad(originalCourse.is_undergrad ? 1 : 0)
       if (typeof originalCourse.geography !== "undefined") {
@@ -341,6 +345,12 @@ function CourseProposal() {
 
     if (user?.role === "default") {
       navigate('/course_catalog');
+    }
+
+    const openAlert = (title: string, path?: string)  => {
+      setAlertTitle(title);
+      setAlertOpen(true);
+      setAlertPath(path);
     }
 
     return (
@@ -700,11 +710,11 @@ function CourseProposal() {
             onClick={() => {
 
               if (courseTitle === "" || description === "" || year === 0 || professors.length === 0) {
-                alert("Please fill in all required fields")
+                openAlert("Please fill in all required fields")
               } else if (isNaN(year)) {
-                alert("Year has to be a numerical value")
+                openAlert("Year has to be a numerical value")
               } else if (time1 === time2 || time2 === time3 || time1 === time3) {
-                alert("Please enter three different times for Time Ranking")
+                openAlert("Please enter three different times for Time Ranking")
               }
               
               let profMap = new Map<string, string>();
@@ -727,7 +737,20 @@ function CourseProposal() {
           </Button>
         </Grid>
       </Grid>
-      
+    
+      <Dialog open={alertOpen}>
+        <DialogTitle>{alertTitle}</DialogTitle>
+        <DialogActions>
+          <Button autoFocus onClick={() => {
+            setAlertOpen(false);
+            if (alertPath) {
+              navigate(alertPath);
+            }
+          }}>
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
