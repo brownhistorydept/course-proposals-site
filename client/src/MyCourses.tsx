@@ -13,10 +13,9 @@ import { useNavigate } from 'react-router-dom';
 function MyCourses() {
   const navigate = useNavigate();
   const [user, setUser] = useState<IUser>();
-  const [acceptedCourses, setAcceptedCourses] = useState<ICourse[]>();
-  const [submittedCourses, setSubmittedCourses] = useState<ICourse[]>();
-  const [years, setYears] = useState<string[]>([new Date().getFullYear().toString()]);
-  const [semesters, setSemesters] = useState<string[]>([]);
+  const [acceptedCourses, setAcceptedCourses] = useState<ICourse[]>([]);
+  const [submittedCourses, setSubmittedCourses] = useState<ICourse[]>([]);
+  const [yearSems, setYearSems] = useState<string[]>([]);
 
   // called once when components on page have rendered
   useEffect(() => {
@@ -35,49 +34,23 @@ function MyCourses() {
       params = { professors: user?._id };
       await fetchCourses(setAcceptedCourses, params, true);
       await fetchCourses(setSubmittedCourses, params, false);
-
     }
     getCourses();
   }, [user]);
 
+  const allCourses = acceptedCourses.concat(submittedCourses);
+  const sortedCourses = allCourses.sort((c1, c2) => {
+    const semesters = ['Spring', 'Summer', 'Fall', 'Winter'];
+    if (c1.year > c2.year) {
+      return -1;
+    } else if (c1.year < c2.year) {
+      return 1;
+    } else {
+      return semesters.indexOf(c2.semester) - semesters.indexOf(c1.semester);
+    }
+  });
   // set of every year/semester this user has a course entry; used to populate dropdown options
-  var allYears = [...new Set((acceptedCourses? acceptedCourses.map(course => course.year.toString()) : []).concat(submittedCourses? submittedCourses.map(course => course.year.toString()) : []))];
-  var allSemesters = [...new Set((acceptedCourses? acceptedCourses.map(course => course.semester) : []).concat(submittedCourses? submittedCourses.map(course => course.semester) : []))];
-
-  // FIXME
-  // useEffect(() => {
-  //   const semesterObj =
-  //     {
-  //       0: 'Winter', // Jan
-  //       1: 'Spring', // Feb
-  //       2: 'Spring', // Mar
-  //       3: 'Spring', // Apr
-  //       4: 'Spring', // May
-  //       5: 'Summer', // Jun
-  //       6: 'Summer', // Jul
-  //       7: 'Summer', // Aug
-  //       8: 'Fall', // Sep
-  //       9: 'Fall', // Oct
-  //       10: 'Fall', // Nov
-  //       11: 'Winter' // Dec
-  //     }
-
-  //     const semesterMap = new Map(Object.entries(semesterObj));
-  //     var currentSemester = semesterMap.get(new Date().getMonth().toString());
-
-  //     if (!allSemesters?.includes(currentSemester!)) { // if current semester isn't in courses, just set default to first semester listed
-  //       currentSemester = allSemesters[0]
-  //     }
-  //     // console.log('semesters');
-  //     // console.log(semesters);
-  //     console.log(semesters)
-  //     console.log(currentSemester)
-
-  //   async function getSemester() {
-  //     setSemesters([currentSemester!])
-  //   }
-  // getSemester();
-  // });
+  const yearSemOptions = [...new Set(sortedCourses.map(course => `${course.semester} ${course.year}`))];
 
   if (user?.role === "default" || user?.role === "manager") {
     navigate('/course_catalog');
@@ -95,86 +68,52 @@ function MyCourses() {
             My Courses
           </Typography>
 
-          <Grid item xs={3} marginBottom='10px'>
+          <Grid item xs={8} marginBottom='10px'>
             <FormControl fullWidth>
               <Select
                 size='small'
                 multiple
-                value={years}
+                value={yearSems}
                 onChange={(event) => {
                   const {
                     target: { value },
                   } = event;
-                  setYears(
+                  setYearSems(
                     typeof value === 'string' ? value.split(',') : value,
                   );
                 }}
                 renderValue={(selected) => selected.join(', ')}
               >
-                {allYears?.map((year) => (
-                  <MenuItem key={year} value={year}>
-                    <Checkbox checked={years.indexOf(year) > -1} />
-                    <ListItemText primary={year} />
+                {yearSemOptions.map((pair) => (
+                  <MenuItem key={pair} value={pair}>
+                    <Checkbox checked={yearSems.indexOf(pair) > -1} />
+                    <ListItemText primary={pair} />
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
           </Grid>
+        </Box>
 
-          <Grid item xs={3} marginBottom='20px'>
-            <FormControl fullWidth>
-              <Select
-                size='small'
-                multiple
-                value={semesters}
-                onChange={(event) => {
-                  const {
-                    target: { value },
-                  } = event;
-                  setSemesters(
-                    typeof value === 'string' ? value.split(',') : value,
-                  );
-                }}
-                renderValue={(selected) => selected.join(', ')}
-              >
-                {allSemesters?.map((semester) => (
-                  <MenuItem key={semester} value={semester}>
-                    <Checkbox checked={semesters.indexOf(semester) > -1} />
-                    <ListItemText primary={semester} />
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-
-
+        <Box sx={{ paddingLeft: 2, }}>
           <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={3}>
             Accepted by CCC
           </Typography>
-          {typeof (acceptedCourses) === "undefined" && <Typography variant="body1"> No courses found </Typography>}
-        </Box>
-        
-        {/* work in progress */}
-        {/* {acceptedCourses?
-        (acceptedCourses.filter(course => years.includes(course.year.toString()) && semesters.includes(course.semester)).map(course, index) => (
-          <CourseCard key={index} course={course} status={false} canEdit={false} canAccept={false} canNewProposal={false} />
-        )))} */}
 
-        {acceptedCourses?.map((course, index) => (
-          <CourseCard key={index} course={course} status={false} canEdit={false} canAccept={false} canNewProposal={false} />
-        ))}
-
-
-        <Box sx={{ width: 500, margin: 0, paddingLeft: 2, }}>
+          {acceptedCourses?.map((course, index) => (
+            (yearSems.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
+              ? <CourseCard key={index} course={course} status={false} canEdit={false} canAccept={false} canNewProposal={false} /> : <></>
+          ))}
+          
           <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={3} marginTop={5}>
             Submitted
           </Typography>
-          {typeof (submittedCourses) === "undefined" && <Typography variant="body1"> No courses found </Typography>}
-        </Box>
-        {submittedCourses?.map((course, index) => (
-          <CourseCard key={index} course={course} status={true} canEdit={true} canAccept={false} canNewProposal={false} />
-        ))}
 
+          {submittedCourses?.map((course, index) => (
+            (yearSems.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
+              ? <CourseCard key={index} course={course} status={true} canEdit={true} canAccept={false} canNewProposal={false} /> : <></>
+          ))}
+        </Box>
       </Box>
 
     </div>
