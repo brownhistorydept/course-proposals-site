@@ -13,9 +13,10 @@ import { useNavigate } from 'react-router-dom';
 function MyCourses() {
   const navigate = useNavigate();
   const [user, setUser] = useState<IUser>();
-  const [acceptedCourses, setAcceptedCourses] = useState<ICourse[]>([]);
-  const [submittedCourses, setSubmittedCourses] = useState<ICourse[]>([]);
+  const [acceptedCourses, setAcceptedCourses] = useState<ICourse[]>();
+  const [submittedCourses, setSubmittedCourses] = useState<ICourse[]>();
   const [yearSems, setYearSems] = useState<string[]>([]);
+  const [yearSemOptions, setYearSemOptions] = useState<string[]>([]);
 
   // called once when components on page have rendered
   useEffect(() => {
@@ -38,8 +39,16 @@ function MyCourses() {
     getCourses();
   }, [user]);
 
-  const allCourses = acceptedCourses.concat(submittedCourses);
-  const sortedCourses = allCourses.sort((c1, c2) => {
+  useEffect(() => {
+    if (typeof user === "undefined" || (typeof acceptedCourses === "undefined" && typeof submittedCourses == 'undefined')) {
+      return;
+    }
+    getYearSems();
+  }, [acceptedCourses, submittedCourses])
+
+  function getYearSems() {
+    const allCourses = (acceptedCourses ?? []).concat((submittedCourses ?? []));
+    const sortedCourses = allCourses.sort((c1, c2) => {
     const semesters = ['Spring', 'Summer', 'Fall', 'Winter'];
     if (c1.year > c2.year) {
       return -1;
@@ -49,8 +58,12 @@ function MyCourses() {
       return semesters.indexOf(c2.semester) - semesters.indexOf(c1.semester);
     }
   });
-  // set of every year/semester this user has a course entry; used to populate dropdown options
-  const yearSemOptions = [...new Set(sortedCourses.map(course => `${course.semester} ${course.year}`))];
+   
+    const options = [...new Set(sortedCourses.map(course => `${course.semester} ${course.year}`))]
+    // set of every year/semester this user has a course entry; used to populate dropdown options
+    setYearSemOptions(options);
+    setYearSems([options[0]])
+  }
 
   if (user?.role === "default" || user?.role === "manager") {
     navigate('/course_catalog');
@@ -101,7 +114,7 @@ function MyCourses() {
           </Typography>
 
           {acceptedCourses?.map((course, index) => (
-            (yearSems.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
+            (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
               ? <CourseCard key={index} course={course} status={false} canEdit={false} canAccept={false} canNewProposal={false} /> : <></>
           ))}
           
@@ -110,7 +123,7 @@ function MyCourses() {
           </Typography>
 
           {submittedCourses?.map((course, index) => (
-            (yearSems.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
+            (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
               ? <CourseCard key={index} course={course} status={true} canEdit={true} canAccept={false} canNewProposal={false} /> : <></>
           ))}
         </Box>
