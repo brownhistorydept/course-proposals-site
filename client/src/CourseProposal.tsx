@@ -49,162 +49,6 @@ function CourseProposal() {
 
   }, []);
 
-  async function edit(profId: string[]) {
-    if (isUndergrad === 1) {
-      var proposedUndergradCourse = {
-        on_leave_fall: leaveFall,
-        on_leave_spring: leaveSpring,
-        is_regular_prof: isRegular === 1,
-        course_title: courseTitle,
-        description: description,
-        professors: profId,
-        syllabus_link: syllabusLink,
-        is_undergrad: true,
-        is_RPP: rpp,
-        is_WRIT: writ,
-        is_Premodern: premodern,
-        is_FYS: fys,
-        is_SYS: sys,
-        is_capstone: capstone,
-        is_lecture: lecture,
-        is_intro: intro,
-        is_remote: remote,
-        semester: semester,
-        year: year,
-        time_ranking: [time1, time2, time3],
-        geography: geography,
-        course_number: `HIST ${courseNumber}`,
-        further_notes: notes,
-        proposal_status: originalCourse!.proposal_status!,
-        _id: originalCourse!._id!
-      }
-      const success = await editCourse(proposedUndergradCourse);
-      if (success) {
-        if (user?.role === "manager") {
-          openAlert("Course successfully edited", '/review_courses');
-        } else {
-          openAlert("Course successfully edited", '/my_courses')
-        } 
-      } else {
-        openAlert("Error editing course")
-        return;
-      }
-    } else {
-      var proposedGradCourse = {
-        on_leave_fall: leaveFall,
-        on_leave_spring: leaveSpring,
-        is_regular_prof: isRegular === 1,
-        course_title: courseTitle,
-        description: description,
-        professors: profId,
-        syllabus_link: syllabusLink,
-        is_undergrad: false,
-        semester: semester,
-        year: year,
-        time_ranking: [time1, time2, time3],
-        course_number: `HIST ${courseNumber}`,
-        further_notes: notes,
-        proposal_status: originalCourse!.proposal_status!,
-        _id: originalCourse!._id!
-      }
-      const success = await editCourse(proposedGradCourse);
-      if (success) {
-        if (user?.role === "manager") {
-          openAlert("Course successfully submitted", '/review_courses')
-        } else {
-          openAlert("Course successfully submitted", '/my_courses')
-        }
-      } else {
-        openAlert("Error editing course")
-        return;
-      }
-    }
-  }
-
-  async function submit(profId: string[]) {
-    
-    if (isUndergrad === 1) {
-      if (geography.length === 0) {
-        openAlert("Please select geography")
-        return;
-      }
-      var proposedUndergradCourse = {
-        on_leave_fall: leaveFall,
-        on_leave_spring: leaveSpring,
-        is_regular_prof: isRegular === 1,
-        course_title: courseTitle,
-        description: description,
-        professors: profId,
-        syllabus_link: syllabusLink,
-        is_undergrad: true,
-        is_RPP: rpp,
-        is_WRIT: writ,
-        is_Premodern: premodern,
-        is_FYS: fys,
-        is_SYS: sys,
-        is_capstone: capstone,
-        is_lecture: lecture,
-        is_intro: intro,
-        is_remote: remote,
-        semester: semester,
-        year: year,
-        time_ranking: [time1, time2, time3],
-        geography: geography,
-        course_number: `HIST ${courseNumber}`,
-        further_notes: notes,
-      }
-      var success = false;
-      if (isNewProposal) {
-        success = await submitCourse({original: originalCourse!, proposed: proposedUndergradCourse});
-      } else {
-        success = await submitCourse({proposed: proposedUndergradCourse});
-      }
-      
-      if (success) {
-        if (user?.role === "manager") {
-          openAlert("Course successfully submitted", '/review_courses')
-        } else {
-          openAlert("Course successfully submitted", '/my_courses')
-        }
-      } else {
-        openAlert("Error submitting course")
-        return;
-      }
-    } else {
-      var proposedGradCourse = {
-        on_leave_fall: leaveFall,
-        on_leave_spring: leaveSpring,
-        is_regular_prof: isRegular === 1,
-        course_title: courseTitle,
-        description: description,
-        professors: profId,
-        syllabus_link: syllabusLink,
-        is_undergrad: false,
-        semester: semester,
-        year: year,
-        time_ranking: [time1, time2, time3],
-        course_number: `HIST ${courseNumber}`,
-        further_notes: notes,
-      }
-      var success = false;
-      if (isNewProposal) {
-        success = await submitCourse({original: originalCourse!, proposed: proposedGradCourse});
-      } else {
-        success = await submitCourse({proposed: proposedGradCourse});
-      }
-      if (success) {
-        if (user?.role === "manager") {
-          openAlert("Course successfully submitted", '/review_courses')
-        } else {
-          openAlert("Course successfully submitted", '/my_courses')
-        }
-      } else {
-        openAlert("Error submitting course")
-        return;
-      }
-    }
-  }
-
   interface CustomizedState {
     course: any,
     isEditing: boolean,
@@ -352,6 +196,203 @@ function CourseProposal() {
       setAlertOpen(true);
       setAlertPath(path);
     }
+
+    async function hasError() {
+      if (courseTitle === "" || description === "" || year === 0 || professors.length === 0) {
+        openAlert("Please fill in all required fields")
+        return true;
+      } else if (isNaN(year)) {
+        openAlert("Year has to be a numerical value")
+        return true;
+      } else if (time1 === time2 || time2 === time3 || time1 === time3) {
+        openAlert("Please enter three different times for Time Ranking")
+        return true;
+      } else if (isUndergrad === 1 && geography.length === 0) {
+        openAlert("Please select geography")
+        return true;
+      }
+    
+      return false;
+    }
+
+  async function edit() {
+    const error = await hasError()
+    if (error) {
+      return;
+    }
+
+    let profMap = new Map<string, string>();
+    allProfessors?.map((prof) => {
+      profMap.set(prof.displayName!, prof._id!)
+    })
+    var profId: string[] = []
+    professors.map((prof) => {
+      profId.push(profMap.get(prof)!)
+    })
+    if (isUndergrad === 1) {
+      var proposedUndergradCourse = {
+        on_leave_fall: leaveFall,
+        on_leave_spring: leaveSpring,
+        is_regular_prof: isRegular === 1,
+        course_title: courseTitle,
+        description: description,
+        professors: profId,
+        syllabus_link: syllabusLink,
+        is_undergrad: true,
+        is_RPP: rpp,
+        is_WRIT: writ,
+        is_Premodern: premodern,
+        is_FYS: fys,
+        is_SYS: sys,
+        is_capstone: capstone,
+        is_lecture: lecture,
+        is_intro: intro,
+        is_remote: remote,
+        semester: semester,
+        year: year,
+        time_ranking: [time1, time2, time3],
+        geography: geography,
+        course_number: `HIST ${courseNumber}`,
+        further_notes: notes,
+        proposal_status: originalCourse!.proposal_status!,
+        _id: originalCourse!._id!
+      }
+      const success = await editCourse(proposedUndergradCourse);
+      if (success) {
+        if (user?.role === "manager") {
+          openAlert("Course successfully edited", '/review_courses');
+        } else {
+          openAlert("Course successfully edited", '/my_courses')
+        } 
+      } else {
+        openAlert("Error editing course")
+        return;
+      }
+    } else {
+      var proposedGradCourse = {
+        on_leave_fall: leaveFall,
+        on_leave_spring: leaveSpring,
+        is_regular_prof: isRegular === 1,
+        course_title: courseTitle,
+        description: description,
+        professors: profId,
+        syllabus_link: syllabusLink,
+        is_undergrad: false,
+        semester: semester,
+        year: year,
+        time_ranking: [time1, time2, time3],
+        course_number: `HIST ${courseNumber}`,
+        further_notes: notes,
+        proposal_status: originalCourse!.proposal_status!,
+        _id: originalCourse!._id!
+      }
+      const success = await editCourse(proposedGradCourse);
+      if (success) {
+        if (user?.role === "manager") {
+          openAlert("Course successfully submitted", '/review_courses')
+        } else {
+          openAlert("Course successfully submitted", '/my_courses')
+        }
+      } else {
+        openAlert("Error editing course")
+        return;
+      }
+    }
+  }
+
+  async function submit() {
+    
+    const error = await hasError()
+    if (error) {
+      return;
+    }
+    
+    let profMap = new Map<string, string>();
+    allProfessors?.map((prof) => {
+      profMap.set(prof.displayName!, prof._id!)
+    })
+    var profId: string[] = []
+    professors.map((prof) => {
+      profId.push(profMap.get(prof)!)
+    })
+    
+    if (isUndergrad === 1) {
+      var proposedUndergradCourse = {
+        on_leave_fall: leaveFall,
+        on_leave_spring: leaveSpring,
+        is_regular_prof: isRegular === 1,
+        course_title: courseTitle,
+        description: description,
+        professors: profId,
+        syllabus_link: syllabusLink,
+        is_undergrad: true,
+        is_RPP: rpp,
+        is_WRIT: writ,
+        is_Premodern: premodern,
+        is_FYS: fys,
+        is_SYS: sys,
+        is_capstone: capstone,
+        is_lecture: lecture,
+        is_intro: intro,
+        is_remote: remote,
+        semester: semester,
+        year: year,
+        time_ranking: [time1, time2, time3],
+        geography: geography,
+        course_number: `HIST ${courseNumber}`,
+        further_notes: notes,
+      }
+      var success = false;
+      if (isNewProposal) {
+        success = await submitCourse({original: originalCourse!, proposed: proposedUndergradCourse});
+      } else {
+        success = await submitCourse({proposed: proposedUndergradCourse});
+      }
+      
+      if (success) {
+        if (user?.role === "manager") {
+          openAlert("Course successfully submitted", '/review_courses')
+        } else {
+          openAlert("Course successfully submitted", '/my_courses')
+        }
+      } else {
+        openAlert("Error submitting course")
+        return;
+      }
+    } else {
+      var proposedGradCourse = {
+        on_leave_fall: leaveFall,
+        on_leave_spring: leaveSpring,
+        is_regular_prof: isRegular === 1,
+        course_title: courseTitle,
+        description: description,
+        professors: profId,
+        syllabus_link: syllabusLink,
+        is_undergrad: false,
+        semester: semester,
+        year: year,
+        time_ranking: [time1, time2, time3],
+        course_number: `HIST ${courseNumber}`,
+        further_notes: notes,
+      }
+      var success = false;
+      if (isNewProposal) {
+        success = await submitCourse({original: originalCourse!, proposed: proposedGradCourse});
+      } else {
+        success = await submitCourse({proposed: proposedGradCourse});
+      }
+      if (success) {
+        if (user?.role === "manager") {
+          openAlert("Course successfully submitted", '/review_courses')
+        } else {
+          openAlert("Course successfully submitted", '/my_courses')
+        }
+      } else {
+        openAlert("Error submitting course")
+        return;
+      }
+    }
+  }
 
     return (
     <div className="CourseProposal">
@@ -708,28 +749,15 @@ function CourseProposal() {
             variant="contained"
             sx={{ textTransform: "none", backgroundColor: "#992525", mx: 1 }}
             onClick={() => {
-
-              if (courseTitle === "" || description === "" || year === 0 || professors.length === 0) {
-                openAlert("Please fill in all required fields")
-              } else if (isNaN(year)) {
-                openAlert("Year has to be a numerical value")
-              } else if (time1 === time2 || time2 === time3 || time1 === time3) {
-                openAlert("Please enter three different times for Time Ranking")
-              }
-              
-              let profMap = new Map<string, string>();
-              allProfessors?.map((prof) => {
-                profMap.set(prof.displayName!, prof._id!)
-              })
-              var profId: string[] = []
-              professors.map((prof) => {
-                profId.push(profMap.get(prof)!)
-              })
+              console.log(courseTitle)
+              console.log(description)
+              console.log(year)
+              console.log(professors.length)
 
               if (isEditing) {
-                edit(profId)
+                edit()
               } else {
-                submit(profId)
+                submit()
               }}}>
             <Typography gutterBottom variant="body1">
               Submit
