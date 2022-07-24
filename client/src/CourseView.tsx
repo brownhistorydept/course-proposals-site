@@ -125,7 +125,7 @@ function CourseView() {
         </Box>
       </Box>
 
-      <Grid container spacing={2} maxWidth={1000} mx="auto">
+      <Grid container spacing={2} maxWidth={1000} mx="auto" marginBottom='20px'>
 
         <Grid item xs={2}>
           <Typography variant="body1" fontWeight="bold" align='right'>Regular Professor?</Typography>
@@ -381,25 +381,31 @@ function CourseView() {
           />
         </Grid>
 
-
         {canAccept && <>
 
-          <Grid item xs={2}>
-            <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Comments for Professor</Typography>
-          </Grid>
-          <Grid item xs={10}>
-            <TextField
-              // fullWidth
-              style={{ width: 690 }}
-              value={reason}
-              multiline={true}
-              rows={5}
-              onChange={(e) => setReason(e.target.value)}
-            />
-          </Grid>
+        <Grid item xs={2}>
+          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Comments for Professor</Typography>
+        </Grid>
+        <Grid item xs={10}>
+          <TextField
+            style={{ width: 800 }}
+            value={reason}
+            multiline={true}
+            rows={5}
+            onChange={(e) => setReason(e.target.value)}
+          />
+        </Grid> </>}
+        
+        </Grid>
+        
+        <Grid container spacing={2} justifyContent="center" paddingBottom={2}>
+        
+        {/* purely aesthetics, just to make the buttons line up with the checkboxes and not look off */}
+        <Grid item xs={1}></Grid>
 
-          <Grid margin="auto" marginY="20px">
-            <Button
+        {canAccept && <>
+          <Button
+              style={{ textDecoration: 'none', marginTop: "20px" }}
               variant="contained"
               sx={{ textTransform: "none", backgroundColor: "#992525", mx: 1 }}
               onClick={async () => {
@@ -415,6 +421,7 @@ function CourseView() {
               </Typography>
             </Button>
             <Button
+              style={{ textDecoration: 'none', marginTop: "20px" }}
               variant="contained"
               sx={{ textTransform: "none", backgroundColor: "#992525", mx: 1 }}
               onClick={async () => {
@@ -429,24 +436,24 @@ function CourseView() {
                 Reject
               </Typography>
             </Button>
+          </>}
 
-            {canEdit &&
-              <Link style={{ textDecoration: 'none', marginTop: "20px" }} to={"/course_proposal"} state={{ course: editCourse, isEditing: true, isNewProposal: false }}>
-                <Button
-                  variant="contained"
-                  sx={{ textTransform: "none", backgroundColor: "#992525", mx: 1 }}
-                >
-                  <Typography gutterBottom variant="body1">
-                    Edit
-                  </Typography>
-                </Button>
-              </Link>
-            }
+        {canEdit && <>
+          <Link style={{ textDecoration: 'none', marginTop: "20px" }} to={"/course_proposal"} state={{ course: editCourse, isEditing: true, isNewProposal: false }}>
+            <Button
+              variant="contained"
+              sx={{ textTransform: "none", backgroundColor: "#992525", mx: 1 }}
+            >
+              <Typography gutterBottom variant="body1">
+                Edit
+              </Typography>
+            </Button>
+          </Link>
+          </>}
+        
 
-          </Grid>
-        </>}
-
-        {canNewProposal && <Grid item marginX="auto" >
+        {canNewProposal && <>
+          <Grid item marginX="auto" >
           <Link style={{ textDecoration: 'none' }} to={"/course_proposal"} state={{ course: proposalCourse, isEditing: false, isNewProposal: true }}>
             <Button
               variant="contained"
@@ -457,8 +464,10 @@ function CourseView() {
               </Typography>
             </Button>
           </Link>
-        </Grid>}
-      </Grid>
+        </Grid>
+        </>}
+
+        </Grid>
 
       <Dialog open={alertOpen}>
         <DialogTitle>{alertTitle}</DialogTitle>

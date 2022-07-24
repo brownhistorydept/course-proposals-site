@@ -13,8 +13,8 @@ import { useNavigate } from 'react-router-dom';
 function MyCourses() {
   const navigate = useNavigate();
   const [user, setUser] = useState<IUser>();
-  const [acceptedCourses, setAcceptedCourses] = useState<ICourse[]>([]);
-  const [submittedCourses, setSubmittedCourses] = useState<ICourse[]>([]);
+  const [acceptedCourses, setAcceptedCourses] = useState<ICourse[]>();
+  const [submittedCourses, setSubmittedCourses] = useState<ICourse[]>();
   const [yearSems, setYearSems] = useState<string[]>([]);
   const [yearSemOptions, setYearSemOptions] = useState<string[]>([]);
 
@@ -40,7 +40,7 @@ function MyCourses() {
   }, [user]);
 
   useEffect(() => {
-    if (typeof user === "undefined") {
+    if (typeof user === "undefined" || (typeof acceptedCourses === 'undefined' && typeof submittedCourses === undefined)) {
       return;
     }
     getYearSems();
@@ -49,13 +49,13 @@ function MyCourses() {
   function getYearSems() {
     const allCourses = (acceptedCourses ?? []).concat((submittedCourses ?? []));
     const sortedCourses = allCourses.sort((c1, c2) => {
-      const semesters = ['Spring', 'Summer', 'Fall', 'Winter'];
+      const semesters = ['Fall', 'Winter', 'Spring', 'Summer'];
       if (c1.year > c2.year) {
         return -1;
       } else if (c1.year < c2.year) {
         return 1;
       } else {
-        return semesters.indexOf(c2.semester) - semesters.indexOf(c1.semester);
+        return semesters.indexOf(c1.semester) - semesters.indexOf(c2.semester);
       }
     });
 
@@ -109,7 +109,7 @@ function MyCourses() {
         </Box>
 
         <Box sx={{ paddingLeft: 2, }}>
-          <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={3}>
+          <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={7} marginTop={3}>
             Accepted by CCC
           </Typography>
 
@@ -118,7 +118,7 @@ function MyCourses() {
               ? <CourseCard key={index} course={course} status={false} canEdit={false} canAccept={false} canNewProposal={false} /> : <></>
           ))}
 
-          <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={3} marginTop={5}>
+          <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={3}>
             Submitted
           </Typography>
 
