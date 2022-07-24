@@ -198,18 +198,19 @@ courseRouter.post("/accept-reject/:is_accept", authCheck, async (req: IGetUserAu
     }
 
     try {
-      await Course.updateOne({ _id: course._id }, { proposal_status: new_status });
+      // await Course.updateOne({ _id: course._id }, { proposal_status: new_status }, {$set: {comments: reason}});
+      await Course.updateOne({ _id: course._id }, {$set: { proposal_status: new_status , comments: reason}});
 
       // very janky with types - should be a better way to do this
       const courseDocument = await Course.findOne({ _id: course._id });
       const courseDocumentWithProfessors = await courseDocument.populate('professors');
       const profEmails = (courseDocumentWithProfessors.professors as unknown as IUser[]).map(p => p.email);
       
-      // if (isAccept) {
-      //   sendAcceptEmail(profEmails, course, reason, req.user.role !== ROLES.MANAGER);
-      // } else {
-      //   sendRejectEmail(profEmails, course, reason, req.user.role !== ROLES.MANAGER);
-      // }
+      if (isAccept) {
+        sendAcceptEmail(profEmails, course, reason, req.user.role !== ROLES.MANAGER);
+      } else {
+        sendRejectEmail(profEmails, course, reason, req.user.role !== ROLES.MANAGER);
+      }
 
       res.status(200).json({
         message: "accepting/rejected course succeeded"

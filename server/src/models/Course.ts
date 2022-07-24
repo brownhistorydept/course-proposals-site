@@ -62,6 +62,7 @@ export interface ICourse {
   course_number?: string,
   // further notes
   further_notes?: string;
+  comments?: string,
 }
 
 const courseSchema = new Schema<ICourse>({
@@ -101,6 +102,7 @@ const courseSchema = new Schema<ICourse>({
   final_time: { type: String, required: false },
   // further notes
   further_notes: { type: String, required: false },
+  comments: {type: String, required: false}
 });
 
 const Course = model<ICourse>("Course", courseSchema);

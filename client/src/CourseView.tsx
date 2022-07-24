@@ -19,7 +19,6 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, }
 
 function CourseView() {
   const [user, setUser] = useState<IUser>();
-  const [reason, setReason] = useState('');
   const [alertTitle, setAlertTitle] = useState('');
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertRedirect, setAlertRedirect] = useState(false);
@@ -62,7 +61,10 @@ function CourseView() {
   const courseLeaveSpring = course["on_leave_spring"] ? "Yes" : "No"
   const courseSyllabusLink = course["syllabus_link"]
   const courseFurtherNotes = course["further_notes"]
+  const courseComments = course["comments"]
   const courseProfessors = course["professors"]
+
+  const [reason, setReason] = useState(courseComments);
 
   if (course["is_undergrad"]) {
     courseLevel = "Undergraduate"
@@ -398,7 +400,7 @@ function CourseView() {
         
         </Grid>
         
-        <Grid container spacing={2} justifyContent="center" paddingBottom={2}>
+        <Grid container spacing={3} justifyContent="center" paddingBottom={2}>
         
         {/* purely aesthetics, just to make the buttons line up with the checkboxes and not look off */}
         <Grid item xs={1}></Grid>
