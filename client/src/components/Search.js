@@ -184,24 +184,7 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
   };
 
   const filterBySearched = (courses, searchString) => {
-    var lowerArr = searchString.split(" ").map(element => element.toLowerCase());
-    const filteredList = [];
-
-    for (var i = 0, len = courses.length; i < len; i++) {
-      var l = courses[i];
-      var courseString = l['course_title'];
-      var noPunc = courseString.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
-      var finalString = noPunc.replace(/\s{2,}/g, " ");
-      var stringArr = finalString.split(" ").map(element => element.toLowerCase())
-
-      for (var j = 0, len2 = lowerArr.length; j < len2; j++) {
-        if (stringArr.includes(lowerArr[j]) && !filteredList.includes(l)) {
-          filteredList.push(l);
-        }
-      }
-    }
-    //make hashset
-    return filteredList
+    return courses.filter(course => course.course_title.toLowerCase().includes(searchString.toLowerCase()));
   }
 
   const { is_RPP, is_WRIT, is_CBLR, is_Premodern, is_FYS, is_SYS, is_capstone, is_lecture, is_intro, is_remote } = designations;
