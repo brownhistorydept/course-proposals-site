@@ -27,16 +27,20 @@ function MyCourses() {
   }, []);
 
   useEffect(() => {
+    let isMounted = true;
     var params = {};
     if (typeof user === "undefined") {
       return;
     }
     async function getCourses() {
       params = { professors: user?._id };
-      await fetchCourses(setAcceptedCourses, params, true);
-      await fetchCourses(setSubmittedCourses, params, false);
+      await fetchCourses(setAcceptedCourses, params, true, isMounted);
+      await fetchCourses(setSubmittedCourses, params, false, isMounted);
     }
     getCourses();
+    return () => {
+      isMounted = false
+    }
   }, [user]);
 
   useEffect(() => {

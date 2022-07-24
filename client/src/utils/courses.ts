@@ -3,7 +3,8 @@ import { ICourse } from '../../../server/src/models/Course';
 export async function fetchCourses(
   setCourses: (courses: ICourse[]) => void,
   params: any,
-  finalized: boolean
+  finalized: boolean,
+  isMounted: boolean = true,
 ) {
   try {
     var url = new URL(`${process.env.REACT_APP_SERVER_URL}/courses/search/${finalized}`);
@@ -19,17 +20,21 @@ export async function fetchCourses(
           "Content-Type": "application/json",
           "Access-Control-Allow-Credentials": "true",
         },
-      }
+      }, 
     );
 
     if (res.status === 200) {
       const resJson = await res.json();
-      setCourses(resJson.result);
+      if (isMounted) {
+        setCourses(resJson.result);
+      }
     } else {
       throw new Error("Request to fetch courses was unsuccessful");
     }
   } catch (error) {
-    throw new Error("Could not make request to fetch courses");
+    console.log(error)
+    console.log(isMounted)
+    throw new Error("HEy Could not make request to fetch courses");
   }
 }
 

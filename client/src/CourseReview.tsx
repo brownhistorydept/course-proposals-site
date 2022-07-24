@@ -31,6 +31,7 @@ function CourseReview() {
 
   // get courses to review
   useEffect(() => {
+    let isMounted = true;
     var params = { proposal_status: "under review by director" };
     async function getCourses() {
       if (user?.role === "undergraduate director") {
@@ -38,22 +39,34 @@ function CourseReview() {
       } else if (user?.role === "graduate director") {
         params = Object.assign(params, { is_undergrad: false });
       }
-
-      await fetchCourses(setUnderReviewCourses, params, false);
+      if (isMounted) {
+      await fetchCourses(setUnderReviewCourses, params, false, isMounted);
+      }
     }
     getCourses();
+
+    return () => {
+      isMounted = false
+    }
   }, [user]);
 
   // get CCC accepted courses
   useEffect(() => {
+    let isMounted = true;
     async function getCourses() {
-      await fetchCourses(setCCCAcceptedCourses, {}, true);
+      if (isMounted) {
+        await fetchCourses(setCCCAcceptedCourses, {}, true, isMounted);
+      }
     }
     getCourses();
+    return () => {
+      isMounted = false
+    }
   }, [user]);
 
   // get CCC rejected courses
   useEffect(() => {
+    let isMounted = true;
     var params = { proposal_status: "rejected by CCC" };
     async function getCourses() {
       if (user?.role === "undergraduate director") {
@@ -62,14 +75,18 @@ function CourseReview() {
         params = Object.assign(params, { is_undergrad: false });
       }
 
-      await fetchCourses(setCCCRejectedCourses, params, false);
+      await fetchCourses(setCCCRejectedCourses, params, false, isMounted);
 
     }
     getCourses();
+    return () => {
+      isMounted = false
+    }
   }, [user]);
 
   // get director rejected courses
   useEffect(() => {
+    let isMounted = true;
     var params = { proposal_status: "rejected by director" };
     async function getCourses() {
       if (user?.role === "undergraduate director") {
@@ -77,15 +94,19 @@ function CourseReview() {
       } else if (user?.role === "graduate director") {
         params = Object.assign(params, { is_undergrad: false });
       }
-
-      await fetchCourses(setDirectorRejectedCourses, params, false);
-
+      if (isMounted) {
+      await fetchCourses(setDirectorRejectedCourses, params, false, isMounted);
+      }
     }
     getCourses();
+    return () => {
+      isMounted = false
+    }
   }, [user]);
 
   // get director accepted courses
   useEffect(() => {
+    let isMounted = true;
     var params = { proposal_status: "accepted by director" };
     async function getCourses() {
       if (user?.role === "undergraduate director") {
@@ -93,20 +114,23 @@ function CourseReview() {
       } else if (user?.role === "graduate director") {
         params = Object.assign(params, { is_undergrad: false });
       }
-
-      await fetchCourses(setDirectorAcceptedCourses, params, false);
-
+      if (isMounted) {
+        await fetchCourses(setDirectorAcceptedCourses, params, false, isMounted);
+      }
     }
     getCourses();
+    return () => {
+      isMounted = false
+    }
   }, [user]);
 
   useEffect(() => {
     if (typeof user === "undefined" || 
-    (typeof underReviewCourses === 'undefined' && 
-    typeof directorAcceptedCourses == 'undefined' && 
-    typeof directorRejectedCourses == 'undefined'&& 
-    typeof cccAcceptedCourses === 'undefined' && 
-    typeof cccRejectedCourses === 'undefined')) {
+    typeof underReviewCourses === 'undefined' || 
+    typeof directorAcceptedCourses == 'undefined' || 
+    typeof directorRejectedCourses == 'undefined' || 
+    typeof cccAcceptedCourses === 'undefined' || 
+    typeof cccRejectedCourses === 'undefined') {
       return;
     }
     getYearSems();

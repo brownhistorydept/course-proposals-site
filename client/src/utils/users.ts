@@ -2,7 +2,8 @@ import { IUser } from '../../../server/src/models/User';
 
 export async function fetchUsers(
   setUser: (user: IUser[]) => void,
-  justProfessors: boolean
+  justProfessors: boolean,
+  isMounted: boolean = true,
 ) {
   try {
     const res = await fetch(
@@ -20,7 +21,9 @@ export async function fetchUsers(
 
     if (res.status === 200) {
       const resJson = await res.json();
-      setUser(resJson.results);
+      if (isMounted) {
+        setUser(resJson.results);
+      }
     } else {
       throw new Error("Request to fetch users was unsuccessful");
     }

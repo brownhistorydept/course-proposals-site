@@ -20,10 +20,14 @@ export default function CourseCatalog() {
   const [courses, setCourses] = useState<ICourse[]>();
   // called once when components on page have rendered
   useEffect(() => {
+    let isMounted = true;
     async function getCourses() {
-      await fetchCourses(setCourses, null, true);
+      await fetchCourses(setCourses, null, true, isMounted);
     }
     getCourses();
+    return () => {
+      isMounted = false
+    }
   }, []);
 
   const [professors, setProfessors] = useState<IUser[]>();

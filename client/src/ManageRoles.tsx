@@ -32,8 +32,8 @@ function ManageRoles() {
   const [lastRole, setLastRole] = useState('');
 
   // called once when components on page have rendered
-  async function getAllUsers() {
-    await fetchUsers(setAllUsers, false);
+  async function getAllUsers(isMounted: boolean = true) {
+    await fetchUsers(setAllUsers, false, isMounted);
   }
 
   async function getUser() {
@@ -41,8 +41,13 @@ function ManageRoles() {
   }
 
   useEffect(() => {
+    let isMounted = true;
     getUser();
-    getAllUsers();
+    getAllUsers(isMounted);
+
+    return () => {
+      isMounted = false
+    }
   }, []);
 
   async function handleClose(isAccepted: boolean) {
