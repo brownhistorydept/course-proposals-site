@@ -62,7 +62,7 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
       }
 
       if (consider['professor']) {
-        toFilter = toFilter.filter(course => course.professors[0]['displayName'] === professorSelected);
+        toFilter = toFilter.filter(course => course.professors[0]['displayName'] === professorSelected.displayName);
       }
 
       if (consider['level']) {
@@ -70,7 +70,7 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
       }
 
       if (consider['geography']) {
-        toFilter = toFilter.filter(course => course.geography === geography);
+        toFilter = toFilter.filter(course => course.geography.includes(geography));
       }
 
       if (consider['designations']) {
