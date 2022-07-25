@@ -40,7 +40,7 @@ function CourseReview() {
         params = Object.assign(params, { is_undergrad: false });
       }
       if (isMounted) {
-      await fetchCourses(setUnderReviewCourses, params, false, isMounted);
+        await fetchCourses(setUnderReviewCourses, params, false, isMounted);
       }
     }
     getCourses();
@@ -95,7 +95,7 @@ function CourseReview() {
         params = Object.assign(params, { is_undergrad: false });
       }
       if (isMounted) {
-      await fetchCourses(setDirectorRejectedCourses, params, false, isMounted);
+        await fetchCourses(setDirectorRejectedCourses, params, false, isMounted);
       }
     }
     getCourses();
@@ -125,12 +125,12 @@ function CourseReview() {
   }, [user]);
 
   useEffect(() => {
-    if (typeof user === "undefined" || 
-    typeof underReviewCourses === 'undefined' || 
-    typeof directorAcceptedCourses == 'undefined' || 
-    typeof directorRejectedCourses == 'undefined' || 
-    typeof cccAcceptedCourses === 'undefined' || 
-    typeof cccRejectedCourses === 'undefined') {
+    if (typeof user === "undefined" ||
+      typeof underReviewCourses === 'undefined' ||
+      typeof directorAcceptedCourses == 'undefined' ||
+      typeof directorRejectedCourses == 'undefined' ||
+      typeof cccAcceptedCourses === 'undefined' ||
+      typeof cccRejectedCourses === 'undefined') {
       return;
     }
     getYearSems();
@@ -139,22 +139,22 @@ function CourseReview() {
   function getYearSems() {
     const allCourses = (underReviewCourses ?? []).concat(
       (directorAcceptedCourses ?? []), (directorRejectedCourses ?? []), (cccAcceptedCourses ?? []), (cccRejectedCourses ?? []));
-      const sortedCourses = allCourses.sort((c1, c2) => {
-        const semesters = ['Fall', 'Summer', 'Spring', 'Winter'];
-        if (c1.year > c2.year) {
-          return -1;
-        } else if (c1.year < c2.year) {
-          return 1;
-        } else {
-          return semesters.indexOf(c1.semester) - semesters.indexOf(c2.semester);
-        }
-      });
-  
-      const options = [...new Set(sortedCourses.map(course => `${course.semester} ${course.year}`))]
-      // set of every year/semester this user has a course entry; used to populate dropdown options
-      setYearSemOptions(options);
-      setYearSems([options[0]])
-    }
+    const sortedCourses = allCourses.sort((c1, c2) => {
+      const semesters = ['Fall', 'Summer', 'Spring', 'Winter'];
+      if (c1.year > c2.year) {
+        return -1;
+      } else if (c1.year < c2.year) {
+        return 1;
+      } else {
+        return semesters.indexOf(c1.semester) - semesters.indexOf(c2.semester);
+      }
+    });
+
+    const options = [...new Set(sortedCourses.map(course => `${course.semester} ${course.year}`))]
+    // set of every year/semester this user has a course entry; used to populate dropdown options
+    setYearSemOptions(options);
+    setYearSems([options[0]])
+  }
 
   if (user?.role === "default" || user?.role === "professor") {
     navigate('/course_catalog');
@@ -189,8 +189,8 @@ function CourseReview() {
                 }}
                 renderValue={(selected) => selected.join(', ')}
               >
-                {yearSemOptions.map((pair) => (
-                  <MenuItem key={pair} value={pair}>
+                {yearSemOptions.map((pair, index) => (
+                  <MenuItem key={index} value={pair}>
                     <Checkbox checked={yearSems.indexOf(pair) > -1} />
                     <ListItemText primary={pair} />
                   </MenuItem>
@@ -204,10 +204,10 @@ function CourseReview() {
           To Review
         </Typography>
 
-        {underReviewCourses?.map((course, _) => (
-            (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
-              ? <CourseCard course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role === "manager" || user?.role === "graduate director" || user?.role === "undergraduate director"} canNewProposal={false} />: <></>
-          ))}
+        {underReviewCourses?.map((course, index) => (
+          (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
+          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role === "manager" || user?.role === "graduate director" || user?.role === "undergraduate director"} canNewProposal={false} />
+        ))}
 
         <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={3}>
           Reviewed
@@ -217,38 +217,38 @@ function CourseReview() {
           Accepted by CCC:
 
         </Typography>
-        
-        {cccAcceptedCourses?.map((course, _) => (
-            (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
-              ? <CourseCard course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role === "manager"} canNewProposal={false} />: <></>
+
+        {cccAcceptedCourses?.map((course, index) => (
+          (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
+          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role === "manager"} canNewProposal={false} />
         ))}
 
         <Typography variant="h6" color="#992525" fontWeight={500} marginBottom={3}>
           Accepted by Director:
         </Typography>
 
-        {directorAcceptedCourses?.map((course, _) => (
-            (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
-              ? <CourseCard course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role !== "curriculum coordinator"} canNewProposal={false} />: <></>
-          ))}
+        {directorAcceptedCourses?.map((course, index) => (
+          (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
+          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role !== "curriculum coordinator"} canNewProposal={false} />
+        ))}
 
         <Typography variant="h6" color="#992525" fontWeight={500} marginBottom={3}>
           Rejected by Director:
         </Typography>
-        
-        {directorRejectedCourses?.map((course, _) => (
-            (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
-              ? <CourseCard course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role !== "curriculum coordinator"} canNewProposal={false} />: <></>
-          ))}
+
+        {directorRejectedCourses?.map((course, index) => (
+          (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
+          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role !== "curriculum coordinator"} canNewProposal={false} />
+        ))}
 
         <Typography variant="h6" color="#992525" fontWeight={500} marginBottom={3}>
           Rejected by CCC:
         </Typography>
 
-        {cccRejectedCourses?.map((course, _) => (
-            (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
-              ? <CourseCard course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role !== "curriculum coordinator"} canNewProposal={false} />: <></>
-          ))}
+        {cccRejectedCourses?.map((course, index) => (
+          (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
+          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role !== "curriculum coordinator"} canNewProposal={false} />
+        ))}
       </Box>
 
     </div>

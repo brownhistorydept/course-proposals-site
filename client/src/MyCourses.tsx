@@ -101,8 +101,8 @@ function MyCourses() {
                 }}
                 renderValue={(selected) => selected.join(', ')}
               >
-                {yearSemOptions.map((pair) => (
-                  <MenuItem key={pair} value={pair}>
+                {yearSemOptions.map((pair, index) => (
+                  <MenuItem key={index} value={pair}>
                     <Checkbox checked={yearSems.indexOf(pair) > -1} />
                     <ListItemText primary={pair} />
                   </MenuItem>
@@ -119,7 +119,7 @@ function MyCourses() {
 
           {acceptedCourses?.map((course, index) => (
             (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
-              ? <CourseCard key={index} course={course} status={false} canEdit={false} canAccept={false} canNewProposal={false} /> : <></>
+            && <CourseCard key={index} course={course} status={false} canEdit={false} canAccept={false} canNewProposal={false} />
           ))}
 
           <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={3}>
@@ -128,7 +128,7 @@ function MyCourses() {
 
           {submittedCourses?.map((course, index) => (
             (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
-              ? <CourseCard key={index} course={course} status={true} canEdit={true} canAccept={false} canNewProposal={false} /> : <></>
+            && <CourseCard key={index} course={course} status={true} canEdit={true} canAccept={false} canNewProposal={false} />
           ))}
         </Box>
       </Box>
