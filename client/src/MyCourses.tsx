@@ -113,7 +113,7 @@ function MyCourses() {
         </Box>
 
         <Box sx={{ paddingLeft: 2, }}>
-          <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={7} marginTop={3}>
+          <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={3}>
             Accepted by CCC
           </Typography>
 
