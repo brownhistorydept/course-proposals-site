@@ -140,7 +140,7 @@ function CourseReview() {
     const allCourses = (underReviewCourses ?? []).concat(
       (directorAcceptedCourses ?? []), (directorRejectedCourses ?? []), (cccAcceptedCourses ?? []), (cccRejectedCourses ?? []));
       const sortedCourses = allCourses.sort((c1, c2) => {
-        const semesters = ['Fall', 'Winter', 'Spring', 'Summer'];
+        const semesters = ['Fall', 'Summer', 'Spring', 'Winter'];
         if (c1.year > c2.year) {
           return -1;
         } else if (c1.year < c2.year) {

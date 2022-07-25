@@ -18,6 +18,7 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
   const [level, setLevel] = React.useState();
   const [geography, setGeography] = React.useState('');
   const [year, setYear] = React.useState(new Date().getFullYear());
+  const [semester, setSemester] = React.useState('');
   // not sure having it default to the default year makes sense, but with '' react thinks its a string so === test fails
 
   const [designations, setDesignations] = React.useState({
@@ -59,6 +60,10 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
 
       if (consider['year']) {
         toFilter = toFilter.filter(course => course.year === year);
+      }
+
+      if (consider['semester']) {
+        toFilter = toFilter.filter(course => course.semester === semester);
       }
 
       if (consider['professor']) {
@@ -116,6 +121,22 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
       });
     }
   }
+
+  const selectSemester = (event) => {
+    if (event.target.value === "All") {
+      setSemester(event.target.value);
+      setConsider({
+        ...consider,
+        'semester': false,
+      });
+    } else {
+      setSemester(event.target.value);
+      setConsider({
+        ...consider,
+        'semester': true,
+      });
+    }
+  };
 
   const selectLevel = (event) => {
     if (event.target.value === "Undergraduate") {
@@ -232,7 +253,7 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
           <Box sx={{ display: 'grid', paddingLeft: 1, width: 0.3, border: '0px solid', flexGrow: 1, gridTemplateColumns: 'repeat(10, 1fr)' }}>
 
             <div>
-              <FormControl sx={{ m: 1, minWidth: 120, marginTop:0 }} size="small">
+              <FormControl sx={{ m: 1, minWidth: 120, marginTop: 0 }} size="small">
                 <InputLabel sx={{ m: 0, margin: 0, border: 0, padding: 0, fontSize: 14 }} id="demo-simple-select-helper-label">Professor</InputLabel>
                 <Select
                   labelId="demo-simple-select-helper-label"
@@ -241,7 +262,7 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
                   value={professorSelected}
                   label="Professor"
                   onChange={selectProfessor}
-                  sx={{padding: 0, border: 0 }}
+                  sx={{ padding: 0, border: 0 }}
                 >
                   <MenuItem value="All">All</MenuItem>
                   {allProfessors?.map((prof) => (
@@ -253,7 +274,7 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
               </FormControl>
             </div>
             <div>
-              <FormControl sx={{ m: 1, minWidth: 120, marginTop:0 }} size="small">
+              <FormControl sx={{ m: 1, minWidth: 120, marginTop: 0 }} size="small">
                 <InputLabel sx={{ m: 0, margin: 0, height: 1, border: 0, padding: 0, fontSize: 14 }} id="demo-simple-select-helper-label">Level</InputLabel>
                 <Select
                   defaultValue=""
@@ -271,7 +292,7 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
               </FormControl>
             </div>
             <div>
-              <FormControl sx={{ m: 1, minWidth: 120, height: 20, marginTop:0 }} size="small">
+              <FormControl sx={{ m: 1, minWidth: 120, height: 20, marginTop: 0 }} size="small">
                 <InputLabel sx={{ m: 0, margin: 0, height: 1, border: 0, padding: 0, fontSize: 14 }} id="demo-simple-select-helper-label">Geography</InputLabel>
                 <Select
                   defaultValue="All"
@@ -302,6 +323,26 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
                 size="small"
                 style={{ minWidth: 120 }}
               />
+            </div>
+            <div>
+              <FormControl sx={{ m: 1, minWidth: 120, height: 20, marginTop: 0 }} size="small">
+                <InputLabel sx={{ m: 0, margin: 0, height: 1, border: 0, padding: 0, fontSize: 14 }} id="demo-simple-select-helper-label">Semester</InputLabel>
+                <Select
+                  defaultValue="All"
+                  labelId="demo-simple-select-helper-label"
+                  id="demo-simple-select-helper"
+                  value={semester}
+                  label="Semester"
+                  onChange={selectSemester}
+                  sx={{ padding: 0, border: 0 }}
+                >
+                  <MenuItem value="All">All</MenuItem>
+                  <MenuItem value="Winter">Winter</MenuItem>
+                  <MenuItem value="Spring">Spring</MenuItem>
+                  <MenuItem value="Summer">Summer</MenuItem>
+                  <MenuItem value="Fall">Fall</MenuItem>
+                </Select>
+              </FormControl>
             </div>
           </Box>
         </Box>
