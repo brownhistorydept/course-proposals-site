@@ -3074,9 +3074,9 @@ cosmiconfig@^7.0.0, cosmiconfig@^7.0.1:
     path-type "^4.0.0"
     yaml "^1.10.0"
 
-countup.js@^2.0.8:
-  version "2.0.8"
-  resolved "https://registry.npmjs.org/countup.js/-/countup.js-2.0.8.tgz"
+countup.js@^2.2.0:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/countup.js/-/countup.js-2.3.2.tgz#9a91d95780be1c908d1e6feb548625f353f57988"
 
 cross-env@^6.0.3:
   version "6.0.3"
@@ -6737,11 +6737,11 @@ react-copy-to-clipboard@5.1.0:
     copy-to-clipboard "^3.3.1"
     prop-types "^15.8.1"
 
-react-countup@6.1.0:
-  version "6.1.0"
-  resolved "https://registry.npmjs.org/react-countup/-/react-countup-6.1.0.tgz"
+react-countup@6.3.0:
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/react-countup/-/react-countup-6.3.0.tgz#9a345674d571f76c1046a0ded89fc86dbe52a2f0"
   dependencies:
-    countup.js "^2.0.8"
+    countup.js "^2.2.0"
 
 react-dev-utils@^12.0.0:
   version "12.0.0"
