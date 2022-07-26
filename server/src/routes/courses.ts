@@ -122,25 +122,39 @@ courseRouter.post("/submit", authCheck, async (req: IGetUserAuthInfoRequest, res
 courseRouter.post("/edit", authCheck, async (req: IGetUserAuthInfoRequest, res: Response) => {
   var course = req.body as ICourse;
 
-  if (req.user.role !== ROLES.MANAGER) {
+  if (req.user.role === ROLES.DEFAULT) {
+    res.status(403).json({
+      message: "Default users cannot edit"
+    });
+    return;
+  } else if (req.user.role !== ROLES.MANAGER) {
     // if you don't own the course
     if (!course.professors.includes((req.user._id as any).valueOf())) {
       res.status(403).json({
         message: "Do not have permission to edit another professor's course"
       });
       return;
-    } else if (
-      course.proposal_status != PROPOSAL_STATUS.CCC_REJECTED &&
-      course.proposal_status != PROPOSAL_STATUS.DIRECTOR_REJECTED &&
-      course.proposal_status != PROPOSAL_STATUS.DIRECTOR_REVIEW) {
+    }
+
+    if (course.proposal_status === PROPOSAL_STATUS.CCC_ACCEPTED) {
       res.status(403).json({
-        message: "Cannot edit a course unless proposal status is under review by a director, rejected by director, or rejected by CCC"
+        message: "Cannot edit a course that has been accepted by CCC"
       });
       return;
     }
-  }
 
-  if (req.user.role !== ROLES.MANAGER) {
+    if ((req.user.role === ROLES.PROFESSOR || req.user.role === ROLES.CURRIC_COORD) &&
+        course.proposal_status === PROPOSAL_STATUS.DIRECTOR_ACCEPTED) {
+          res.status(403).json({
+            message: "Cannot edit a course that has been accepted by director"
+          });
+        return;
+      }
+    }
+
+  // managers can always edit without going through approval process again
+  // directors already can't edit other profs' courses, so this just prevents them from having to reapprove their own course if they edit
+  if (req.user.role === ROLES.PROFESSOR || req.user.role === ROLES.CURRIC_COORD) {
     course.proposal_status = PROPOSAL_STATUS.DIRECTOR_REVIEW;
   }
 

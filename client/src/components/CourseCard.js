@@ -7,7 +7,7 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { Link } from 'react-router-dom';
 
-export default function ComplexGrid({ course, status, canEdit, canAccept, canNewProposal }) {
+export default function ComplexGrid({ course, status, canEdit, canAccept, canNewProposal, isRestrictedView}) {
   return (
     <Paper
       sx={{
@@ -24,6 +24,7 @@ export default function ComplexGrid({ course, status, canEdit, canAccept, canNew
           <Grid item xs={12} container direction="column" py={0.5} px={3} >
             {/* First row */}
             <Grid item xs container >
+              
               <Grid item xs={2} container >
                 <Typography gutterBottom variant="body1" sx={{ fontWeight: 'bold' }}>{course.course_number}</Typography>
               </Grid>
@@ -90,7 +91,7 @@ export default function ComplexGrid({ course, status, canEdit, canAccept, canNew
                 </FormGroup>
               </Grid>
             </Grid>
-
+            {!isRestrictedView && <>
             <Grid item xs container >
               <Grid item xs={5} container >
                 {status && <Typography variant="body1" fontWeight="bold" gutterBottom>Proposal Status: &nbsp;</Typography>}
@@ -102,11 +103,12 @@ export default function ComplexGrid({ course, status, canEdit, canAccept, canNew
                 {status && <Typography variant="body1" gutterBottom>{course.course_status} </Typography>}
               </Grid>
             </Grid>
+            </>}
           </Grid>
         </Grid>
-
+        
         <Grid item align="center" justify="center" my="auto" mr={2}>
-          <Link style={{ textDecoration: 'none' }} to={"/view_course"} state={{ course: course, canEdit: canEdit, canAccept: canAccept, canNewProposal: canNewProposal }}>
+          <Link style={{ textDecoration: 'none' }} to={"/view_course"} state={{ course: course, canEdit: canEdit, canAccept: canAccept, canNewProposal: canNewProposal, isRestrictedView: isRestrictedView}}>
             <Button variant="contained" sx={{ textTransform: "none", backgroundColor: "#992525" }}>
               <Typography
                 gutterBottom

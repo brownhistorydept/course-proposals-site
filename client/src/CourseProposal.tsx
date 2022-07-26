@@ -198,7 +198,7 @@ function CourseProposal() {
     }
 
     async function hasError() {
-      if (courseTitle === "" || description === "" || year === 0 || professors.length === 0) {
+      if (courseTitle === "" || description === "" || semester === "" || year === 0 || professors.length === 0) {
         openAlert("Please fill in all required fields")
         return true;
       } else if (isNaN(year)) {
@@ -222,11 +222,11 @@ function CourseProposal() {
     }
 
     let profMap = new Map<string, string>();
-    allProfessors?.map((prof) => {
+    allProfessors?.forEach((prof) => {
       profMap.set(prof.displayName!, prof._id!)
     })
     var profId: string[] = []
-    professors.map((prof) => {
+    professors.forEach((prof) => {
       profId.push(profMap.get(prof)!)
     })
     if (isUndergrad === 1) {
@@ -308,11 +308,11 @@ function CourseProposal() {
     }
     
     let profMap = new Map<string, string>();
-    allProfessors?.map((prof) => {
+    allProfessors?.forEach((prof) => {
       profMap.set(prof.displayName!, prof._id!)
     })
     var profId: string[] = []
-    professors.map((prof) => {
+    professors.forEach((prof) => {
       profId.push(profMap.get(prof)!)
     })
     
@@ -375,7 +375,7 @@ function CourseProposal() {
         course_number: `HIST ${courseNumber}`,
         further_notes: notes,
       }
-      var success = false;
+      success = false;
       if (isNewProposal) {
         success = await submitCourse({original: originalCourse!, proposed: proposedGradCourse});
       } else {

@@ -15,7 +15,7 @@ import { useLocation } from 'react-router'
 import { Link } from 'react-router-dom';
 import { acceptRejectCourse } from './utils/courses';
 import { useNavigate } from 'react-router-dom';
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, } from '@mui/material';
+import { Dialog, DialogActions, DialogTitle, } from '@mui/material';
 
 function CourseView() {
   const [user, setUser] = useState<IUser>();
@@ -36,7 +36,8 @@ function CourseView() {
     course: any,
     canAccept: boolean,
     canEdit: boolean,
-    canNewProposal: boolean
+    canNewProposal: boolean,
+    isRestrictedView: boolean
   }
 
   const location = useLocation();
@@ -47,6 +48,7 @@ function CourseView() {
   const canAccept = myState.canAccept;
   const canEdit = myState.canEdit;
   const canNewProposal = myState.canNewProposal;
+  const isRestrictedView = myState.isRestrictedView;
 
   const courseNumber = course["course_number"].split(" ")[1]
   const courseTitle = course["course_title"]
@@ -105,6 +107,8 @@ function CourseView() {
     setAlertRedirect(redirect);
   }
 
+  // const finalView = user?.role === 'default' || (user?.role === 'professor' && course.proposal_status === 'accepted by CCC')
+
   return (
     <div className="CourseView">
 
@@ -128,7 +132,8 @@ function CourseView() {
       </Box>
 
       <Grid container spacing={2} maxWidth={1000} mx="auto" marginBottom='20px'>
-
+        
+        {!isRestrictedView && <>
         <Grid item xs={2}>
           <Typography variant="body1" fontWeight="bold" align='right'>Regular Professor?</Typography>
         </Grid>
@@ -192,6 +197,7 @@ function CourseView() {
             sx={{ border: 0 }}
           />
         </Grid>
+        </>}
 
         <Grid item xs={2}>
           <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Title</Typography>
@@ -278,6 +284,7 @@ function CourseView() {
           </TextField>
         </Grid>
 
+        {!isRestrictedView && <>
         <Grid item xs={2}>
           <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Time Ranking</Typography>
         </Grid>
@@ -293,8 +300,8 @@ function CourseView() {
             sx={{ marginRight: 1 }}
           >
           </TextField>
-
         </Grid>
+        </>}
 
         <Grid item xs={2}>
           <Typography variant="body1" fontWeight="bold" align='right'>Final Time</Typography>
@@ -311,7 +318,6 @@ function CourseView() {
             }}
           />
         </Grid>
-
 
         <Grid item xs={2}>
           <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Description</Typography>
@@ -365,7 +371,8 @@ function CourseView() {
             }}
           />
         </Grid>
-
+        
+        {!isRestrictedView && <>
         <Grid item xs={2}>
           <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Further Notes</Typography>
         </Grid>
@@ -382,6 +389,7 @@ function CourseView() {
             value={courseFurtherNotes}
           />
         </Grid>
+        </>}
 
         {canAccept && <>
 
@@ -399,7 +407,7 @@ function CourseView() {
         </Grid> </>}
         
         </Grid>
-        
+
         <Grid container spacing={3} justifyContent="center" paddingBottom={2}>
         
         {/* purely aesthetics, just to make the buttons line up with the checkboxes and not look off */}

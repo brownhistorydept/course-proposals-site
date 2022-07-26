@@ -44,7 +44,7 @@ function MyCourses() {
   }, [user]);
 
   useEffect(() => {
-    if (typeof user === "undefined" || (typeof acceptedCourses === 'undefined' && typeof submittedCourses === undefined)) {
+    if (typeof user === "undefined" || (typeof acceptedCourses === 'undefined' && typeof submittedCourses === 'undefined')) {
       return;
     }
     getYearSems();
@@ -85,7 +85,7 @@ function MyCourses() {
             My Courses
           </Typography>
 
-          <Grid item xs={8} marginBottom='10px'>
+          <Grid item xs={8} paddingBottom='30px'>
             <FormControl fullWidth>
               <Select
                 size='small'
@@ -112,23 +112,23 @@ function MyCourses() {
           </Grid>
         </Box>
 
-        <Box sx={{ paddingLeft: 2, }}>
+        <Box sx={{ paddingLeft: 2, paddingBottom: '30px'}}>
           <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={3}>
             Accepted by CCC
           </Typography>
 
           {acceptedCourses?.map((course, index) => (
             (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
-            && <CourseCard key={index} course={course} status={false} canEdit={false} canAccept={false} canNewProposal={false} />
+            && <CourseCard key={index} course={course} status={false} canEdit={false} canAccept={false} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'}/>
           ))}
 
-          <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={3}>
+          <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={3} paddingTop='30px'>
             Submitted
           </Typography>
 
           {submittedCourses?.map((course, index) => (
             (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
-            && <CourseCard key={index} course={course} status={true} canEdit={true} canAccept={false} canNewProposal={false} />
+            && <CourseCard key={index} course={course} status={true} canEdit={course.proposal_status !== 'accepted by director' || user?.role === 'undergraduate director' || user?.role === 'graduate director'} canAccept={false} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'}/>
           ))}
         </Box>
       </Box>

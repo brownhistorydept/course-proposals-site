@@ -33,12 +33,13 @@ function CourseReview() {
   useEffect(() => {
     let isMounted = true;
     var params = { proposal_status: "under review by director" };
+    if (user?.role === "undergraduate director") {
+      params = Object.assign(params, { is_undergrad: true });
+    } else if (user?.role === "graduate director") {
+      params = Object.assign(params, { is_undergrad: false });
+    }
+
     async function getCourses() {
-      if (user?.role === "undergraduate director") {
-        params = Object.assign(params, { is_undergrad: true });
-      } else if (user?.role === "graduate director") {
-        params = Object.assign(params, { is_undergrad: false });
-      }
       if (isMounted) {
         await fetchCourses(setUnderReviewCourses, params, false, isMounted);
       }
@@ -53,9 +54,16 @@ function CourseReview() {
   // get CCC accepted courses
   useEffect(() => {
     let isMounted = true;
+    var params = {}
+    if (user?.role === "undergraduate director") {
+      params = Object.assign(params, {is_undergrad: true});
+    } else if (user?.role === "graduate director") {
+      params = Object.assign(params, { is_undergrad: false });
+    }
+
     async function getCourses() {
       if (isMounted) {
-        await fetchCourses(setCCCAcceptedCourses, {}, true, isMounted);
+        await fetchCourses(setCCCAcceptedCourses, params, true, isMounted);
       }
     }
     getCourses();
@@ -68,15 +76,14 @@ function CourseReview() {
   useEffect(() => {
     let isMounted = true;
     var params = { proposal_status: "rejected by CCC" };
+    if (user?.role === "undergraduate director") {
+      params = Object.assign(params, { is_undergrad: true });
+    } else if (user?.role === "graduate director") {
+      params = Object.assign(params, { is_undergrad: false });
+    }
+
     async function getCourses() {
-      if (user?.role === "undergraduate director") {
-        params = Object.assign(params, { is_undergrad: true });
-      } else if (user?.role === "graduate director") {
-        params = Object.assign(params, { is_undergrad: false });
-      }
-
       await fetchCourses(setCCCRejectedCourses, params, false, isMounted);
-
     }
     getCourses();
     return () => {
@@ -88,12 +95,12 @@ function CourseReview() {
   useEffect(() => {
     let isMounted = true;
     var params = { proposal_status: "rejected by director" };
+    if (user?.role === "undergraduate director") {
+      params = Object.assign(params, { is_undergrad: true });
+    } else if (user?.role === "graduate director") {
+      params = Object.assign(params, { is_undergrad: false });
+    }
     async function getCourses() {
-      if (user?.role === "undergraduate director") {
-        params = Object.assign(params, { is_undergrad: true });
-      } else if (user?.role === "graduate director") {
-        params = Object.assign(params, { is_undergrad: false });
-      }
       if (isMounted) {
         await fetchCourses(setDirectorRejectedCourses, params, false, isMounted);
       }
@@ -108,12 +115,12 @@ function CourseReview() {
   useEffect(() => {
     let isMounted = true;
     var params = { proposal_status: "accepted by director" };
+    if (user?.role === "undergraduate director") {
+      params = Object.assign(params, { is_undergrad: true });
+    } else if (user?.role === "graduate director") {
+      params = Object.assign(params, { is_undergrad: false });
+    }
     async function getCourses() {
-      if (user?.role === "undergraduate director") {
-        params = Object.assign(params, { is_undergrad: true });
-      } else if (user?.role === "graduate director") {
-        params = Object.assign(params, { is_undergrad: false });
-      }
       if (isMounted) {
         await fetchCourses(setDirectorAcceptedCourses, params, false, isMounted);
       }
@@ -173,7 +180,7 @@ function CourseReview() {
             Review Courses
           </Typography>
 
-          <Grid item xs={8} marginBottom='10px'>
+          <Grid item xs={8} paddingBottom='30px'>
             <FormControl fullWidth>
               <Select
                 size='small'
@@ -206,21 +213,21 @@ function CourseReview() {
 
         {underReviewCourses?.map((course, index) => (
           (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
-          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role === "manager" || user?.role === "graduate director" || user?.role === "undergraduate director"} canNewProposal={false} />
+          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role === "manager" || user?.role === "graduate director" || user?.role === "undergraduate director"} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'}/>
         ))}
 
-        <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={3}>
+        <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={3} paddingTop='30px'>
           Reviewed
         </Typography>
 
-        <Typography variant="h6" color="#992525" fontWeight={500} marginBottom={3}>
+        <Typography variant="h6" color="#992525" fontWeight={500} marginBottom={3} paddingTop='10px'>
           Accepted by CCC:
 
         </Typography>
 
         {cccAcceptedCourses?.map((course, index) => (
           (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
-          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role === "manager"} canNewProposal={false} />
+          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role === "manager"} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'}/>
         ))}
 
         <Typography variant="h6" color="#992525" fontWeight={500} marginBottom={3}>
@@ -229,7 +236,7 @@ function CourseReview() {
 
         {directorAcceptedCourses?.map((course, index) => (
           (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
-          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role !== "curriculum coordinator"} canNewProposal={false} />
+          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role !== "curriculum coordinator"} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'}/>
         ))}
 
         <Typography variant="h6" color="#992525" fontWeight={500} marginBottom={3}>
@@ -238,7 +245,7 @@ function CourseReview() {
 
         {directorRejectedCourses?.map((course, index) => (
           (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
-          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role !== "curriculum coordinator"} canNewProposal={false} />
+          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role !== "curriculum coordinator"} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'}/>
         ))}
 
         <Typography variant="h6" color="#992525" fontWeight={500} marginBottom={3}>
@@ -247,7 +254,7 @@ function CourseReview() {
 
         {cccRejectedCourses?.map((course, index) => (
           (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
-          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role !== "curriculum coordinator"} canNewProposal={false} />
+          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role !== "curriculum coordinator"} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'}/>
         ))}
       </Box>
 

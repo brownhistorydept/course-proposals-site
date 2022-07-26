@@ -28,8 +28,7 @@ export function sendAcceptEmail(to: string[], course: ICourse, reason: string, i
     to,
     "Course Proposal Accepted",
     `Hello,
-    \nYour course proposal titled "${course.course_title}" has been accepted by ${isDirector ? 'a director' : 'the CCC'} and received the following comments:
-    \n${reason}
+    \nYour course proposal titled "${course.course_title}" has been accepted by ${isDirector ? 'a director' : 'the CCC'} ${typeof reason === 'undefined' ? '.' : 'and received the following comments:\n'} ${reason}"
     \n${isDirector ? 'Please email your director once you have addressed these changes.' : ''}
     \nGo to ${process.env.CLIENT_URL} for more information.
     \n--\nDepartment of History Course Proposals Automated Message`
@@ -42,8 +41,7 @@ export function sendRejectEmail(to: string[], course: ICourse, reason: string, i
     to,
     "Course Proposal Rejected",
     `Hello,
-    \nYour course proposal titled "${course.course_title}" has been rejected by ${isDirector ? 'a director' : 'the CCC'} for the following reason:
-    \n${reason}
+    \nYour course proposal titled "${course.course_title}" has been rejected by ${isDirector ? 'a director' : 'the CCC'} ${typeof reason === 'undefined' ? '.' : 'and received the following comments:\n'} ${reason}"
     \n${isDirector ? 'Please email your director once you have addressed these changes.' : ''}
     \nGo to ${process.env.CLIENT_URL} for more information.
     \n--\nDepartment of History Course Proposals Automated Message`
