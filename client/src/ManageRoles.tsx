@@ -88,8 +88,8 @@ function ManageRoles() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {allUsers?.map(u => (
-              <TableRow key={u.displayName}>
+            {allUsers?.map((u, index) => (
+              <TableRow key={index}>
                 <TableCell>{u.displayName}</TableCell>
                 <TableCell>{u.email}</TableCell>
                 <TableCell>
@@ -100,8 +100,8 @@ function ManageRoles() {
                     onChange={(e) => handleDropdownChange(u, e.target.value)}
                     sx={{ marginRight: 1 }}
                   >
-                    {allRoles.map(role =>
-                      <MenuItem value={role}>{role}</MenuItem>)}
+                    {allRoles.map((role, index) =>
+                      <MenuItem key={index} value={role}>{role}</MenuItem>)}
                   </Select>
                 </TableCell>
               </TableRow>

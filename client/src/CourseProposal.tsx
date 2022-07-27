@@ -453,7 +453,7 @@ function CourseProposal() {
                   onChange={(e) => { setFinalTime(e.target.value) }}
                 >
                   {timeValues.map((time, index) =>
-                    <MenuItem value={time}>{timeStrings[index]}</MenuItem>
+                    <MenuItem key={index} value={time}>{timeStrings[index]}</MenuItem>
                   )}
                 </Select>
               </FormControl>
@@ -542,8 +542,8 @@ function CourseProposal() {
               }}
               renderValue={(selected) => selected.join(', ')}
             >
-              {allProfessors?.map((prof) => (
-                <MenuItem key={prof.displayName} value={prof.displayName}>
+              {allProfessors?.map((prof, index) => (
+                <MenuItem key={index} value={prof.displayName}>
                   <Checkbox checked={professors.indexOf(prof.displayName) > -1} />
                   <ListItemText primary={`${prof.displayName} (${prof.email})`} />
                 </MenuItem>
@@ -617,8 +617,8 @@ function CourseProposal() {
               }}
               renderValue={(selected) => selected.join(', ')}
             >
-              {geographyValues.map((name) => (
-                <MenuItem key={name} value={name}>
+              {geographyValues.map((name, index) => (
+                <MenuItem key={index} value={name}>
                   <Checkbox checked={geography.indexOf(name) > -1} />
                   <ListItemText primary={name} />
                 </MenuItem>
@@ -642,7 +642,7 @@ function CourseProposal() {
               onChange={(e) => { setTime1(e.target.value) }}
             >
               {timeValues.map((time, index) =>
-                <MenuItem value={time}>{timeStrings[index]}</MenuItem>
+                <MenuItem key={index} value={time}>{timeStrings[index]}</MenuItem>
               )}
             </Select>
           </FormControl>
@@ -658,7 +658,7 @@ function CourseProposal() {
               onChange={(e) => { setTime2(e.target.value) }}
             >
               {timeValues.map((time, index) =>
-                <MenuItem value={time}>{timeStrings[index]}</MenuItem>
+                <MenuItem key={index} value={time}>{timeStrings[index]}</MenuItem>
               )}
             </Select>
           </FormControl>
@@ -674,7 +674,7 @@ function CourseProposal() {
               onChange={(e) => { setTime3(e.target.value) }}
             >
               {timeValues.map((time, index) =>
-                <MenuItem value={time}>{timeStrings[index]}</MenuItem>
+                <MenuItem key={index} value={time}>{timeStrings[index]}</MenuItem>
               )}
             </Select>
           </FormControl>
