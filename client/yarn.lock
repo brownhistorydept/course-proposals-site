@@ -2876,11 +2876,9 @@ chokidar@^3.4.2, chokidar@^3.5.3:
   optionalDependencies:
     fsevents "~2.3.2"
 
-chroma-js@2.1.2:
-  version "2.1.2"
-  resolved "https://registry.npmjs.org/chroma-js/-/chroma-js-2.1.2.tgz"
-  dependencies:
-    cross-env "^6.0.3"
+chroma-js@2.4.2:
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/chroma-js/-/chroma-js-2.4.2.tgz#dffc214ed0c11fa8eefca2c36651d8e57cbfb2b0"
 
 chrome-trace-event@^1.0.2:
   version "1.0.3"
@@ -3101,13 +3099,7 @@ countup.js@^2.2.0:
   version "2.3.2"
   resolved "https://registry.npmjs.org/countup.js/-/countup.js-2.3.2.tgz"
 
-cross-env@^6.0.3:
-  version "6.0.3"
-  resolved "https://registry.npmjs.org/cross-env/-/cross-env-6.0.3.tgz"
-  dependencies:
-    cross-spawn "^7.0.0"
-
-cross-spawn@^7.0.0, cross-spawn@^7.0.2, cross-spawn@^7.0.3:
+cross-spawn@^7.0.2, cross-spawn@^7.0.3:
   version "7.0.3"
   resolved "https://registry.npmjs.org/cross-spawn/-/cross-spawn-7.0.3.tgz"
   dependencies:
