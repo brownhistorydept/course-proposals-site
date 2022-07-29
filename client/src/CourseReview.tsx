@@ -8,7 +8,10 @@ import { ICourse } from "../../server/src/models/Course";
 import { fetchCourses } from "./utils/courses";
 import CourseCard from './components/CourseCard';
 import { useNavigate } from 'react-router-dom';
-import { Checkbox, FormControl, Grid, ListItemText, MenuItem, Select } from '@mui/material';
+import { Button, Checkbox, FormControl, Grid, IconButton, ListItemText, MenuItem, Select } from '@mui/material';
+import Papa from 'papaparse';
+import { downloadFile } from './utils/files';
+import FileDownloadIcon from '@mui/icons-material/FileDownloadOutlined';
 
 function CourseReview() {
   const navigate = useNavigate();
@@ -56,7 +59,7 @@ function CourseReview() {
     let isMounted = true;
     var params = {}
     if (user?.role === "undergraduate director") {
-      params = Object.assign(params, {is_undergrad: true});
+      params = Object.assign(params, { is_undergrad: true });
     } else if (user?.role === "graduate director") {
       params = Object.assign(params, { is_undergrad: false });
     }
@@ -167,6 +170,25 @@ function CourseReview() {
     navigate('/course_catalog');
   }
 
+  const onDownload = () => {
+    if (!cccAcceptedCourses || cccAcceptedCourses.length === 0) return;
+
+    const rows = cccAcceptedCourses.map((course) => {
+      const newRow: Record<string, unknown> = {};
+      return (Object.keys(course) as (keyof ICourse)[]).reduce((prev, cur) => {
+        if (course[cur] !== null && typeof course[cur] === 'object') {
+          prev[cur] = JSON.stringify(course[cur]);
+        } else {
+          prev[cur] = course[cur];
+        }
+        return prev;
+      }, newRow);
+    });
+
+    const csvContent = Papa.unparse({ fields: Object.keys(cccAcceptedCourses[0]), data: rows });
+    downloadFile('ccc-accepted-courses', csvContent, 'text/csv');
+  };
+
   return (
     <div className="CourseReview">
 
@@ -179,6 +201,8 @@ function CourseReview() {
           <Typography variant="h2" paddingBottom={5}>
             Review Courses
           </Typography>
+
+          <Button variant='contained' onClick={onDownload}>Download</Button>
 
           <Grid item xs={8} paddingBottom='30px'>
             <FormControl fullWidth>
@@ -213,7 +237,7 @@ function CourseReview() {
 
         {underReviewCourses?.map((course, index) => (
           (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
-          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role === "manager" || user?.role === "graduate director" || user?.role === "undergraduate director"} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'}/>
+          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role === "manager" || user?.role === "graduate director" || user?.role === "undergraduate director"} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'} />
         ))}
 
         <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={3} paddingTop='30px'>
@@ -227,7 +251,7 @@ function CourseReview() {
 
         {cccAcceptedCourses?.map((course, index) => (
           (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
-          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role === "manager"} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'}/>
+          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role === "manager"} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'} />
         ))}
 
         <Typography variant="h6" color="#992525" fontWeight={500} marginBottom={3}>
@@ -236,7 +260,7 @@ function CourseReview() {
 
         {directorAcceptedCourses?.map((course, index) => (
           (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
-          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role !== "curriculum coordinator"} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'}/>
+          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role !== "curriculum coordinator"} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'} />
         ))}
 
         <Typography variant="h6" color="#992525" fontWeight={500} marginBottom={3}>
@@ -245,7 +269,7 @@ function CourseReview() {
 
         {directorRejectedCourses?.map((course, index) => (
           (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
-          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role !== "curriculum coordinator"} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'}/>
+          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role !== "curriculum coordinator"} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'} />
         ))}
 
         <Typography variant="h6" color="#992525" fontWeight={500} marginBottom={3}>
@@ -254,7 +278,7 @@ function CourseReview() {
 
         {cccRejectedCourses?.map((course, index) => (
           (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
-          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role !== "curriculum coordinator"} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'}/>
+          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role !== "curriculum coordinator"} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'} />
         ))}
       </Box>
 
