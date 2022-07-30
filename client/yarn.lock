@@ -1168,17 +1168,16 @@
     "@emotion/hash" "^0.8.0"
     "@emotion/memoize" "^0.7.5"
     "@emotion/serialize" "^1.0.2"
-    "babel-plugin-macros" "^2.6.1"
-    "convert-source-map" "^1.5.0"
-    "escape-string-regexp" "^4.0.0"
-    "find-root" "^1.1.0"
-    "source-map" "^0.5.7"
-    "stylis" "4.0.13"
+    babel-plugin-macros "^3.1.0"
+    convert-source-map "^1.5.0"
+    escape-string-regexp "^4.0.0"
+    find-root "^1.1.0"
+    source-map "^0.5.7"
+    stylis "4.0.13"
 
-"@emotion/cache@^11.6.0", "@emotion/cache@^11.9.3", "@emotion/cache@11.9.3":
-  "integrity" "sha512-0dgkI/JKlCXa+lEXviaMtGBL0ynpx4osh7rjOXE71q9bIF8G+XhJgvi+wDu0B0IdCVx37BffiwXlN9I3UuzFvg=="
-  "resolved" "https://registry.npmjs.org/@emotion/cache/-/cache-11.9.3.tgz"
-  "version" "11.9.3"
+"@emotion/cache@11.9.3", "@emotion/cache@^11.9.3":
+  version "11.9.3"
+  resolved "https://registry.yarnpkg.com/@emotion/cache/-/cache-11.9.3.tgz#96638449f6929fd18062cfe04d79b29b44c0d6cb"
   dependencies:
     "@emotion/memoize" "^0.7.4"
     "@emotion/sheet" "^1.1.1"
@@ -1700,14 +1699,14 @@
     "csstype" "^3.1.0"
     "prop-types" "15.8.1"
 
-"@mui/styled-engine@5.2.0":
-  "integrity" "sha512-NZ4pWYQcM5wreUfiXRd7IMFRF+Nq1vMzsIdXtXNjgctJTKHunrofasoBqv+cqevO+hqT75ezSbNHyaXzOXp6Mg=="
-  "resolved" "https://registry.npmjs.org/@mui/styled-engine/-/styled-engine-5.2.0.tgz"
-  "version" "5.2.0"
+"@mui/styled-engine@5.8.7", "@mui/styled-engine@^5.8.7":
+  version "5.8.7"
+  resolved "https://registry.yarnpkg.com/@mui/styled-engine/-/styled-engine-5.8.7.tgz#63d0779c07677fe76d4705a02c7ae99f89b50780"
   dependencies:
-    "@babel/runtime" "^7.16.3"
-    "@emotion/cache" "^11.6.0"
-    "prop-types" "^15.7.2"
+    "@babel/runtime" "^7.17.2"
+    "@emotion/cache" "^11.9.3"
+    csstype "^3.1.0"
+    prop-types "^15.8.1"
 
 "@mui/system@^5.9.2":
   "integrity" "sha512-iOvt9tVeFapHL7f7M6BSIiKGMx6RTRvAmc8ipMnQ/MR5Qsxwnyv7qKtNC/K11Rk13Xx0VPaPAhyvBcsr3KdpHA=="
