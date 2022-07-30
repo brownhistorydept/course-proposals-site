@@ -8,7 +8,7 @@ import { ICourse } from "../../server/src/models/Course";
 import { fetchCourses } from "./utils/courses";
 import CourseCard from './components/CourseCard';
 import { Navigate } from 'react-router-dom';
-import { Button, Checkbox, FormControl, Grid, IconButton, ListItemText, MenuItem, Select } from '@mui/material';
+import { Button, Checkbox, FormControl, Grid, ListItemText, MenuItem, Select } from '@mui/material';
 import Papa from 'papaparse';
 import { downloadFile } from './utils/files';
 

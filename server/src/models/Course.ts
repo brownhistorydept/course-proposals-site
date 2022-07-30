@@ -48,7 +48,7 @@ export interface ICourse {
   is_capstone?: boolean,
   is_lecture?: boolean,
   is_intro?: boolean,
-  is_remote?: boolean,
+  is_remote_accessible?: boolean,
   // enumerated designations
   semester: string,
   year: number,
@@ -88,7 +88,7 @@ const courseSchema = new Schema<ICourse>({
   is_capstone: { type: Boolean, required: false },
   is_lecture: { type: Boolean, required: false },
   is_intro: { type: Boolean, required: false },
-  is_remote: { type: Boolean, required: false },
+  is_remote_accessible: { type: Boolean, required: false },
   // enumerated designations
   semester: { type: String, enum: SEMESTERS, required: true },
   year: { type: Number, required: true },

@@ -74,8 +74,6 @@ export async function editCourse(course: any) {
       }
     );
 
-    var message = await res.json();
-
     if (res.status === 200) {
       return true;
     } else {

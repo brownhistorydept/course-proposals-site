@@ -130,8 +130,8 @@ function CourseProposal() {
       if (typeof originalCourse.is_RPP != "undefined") {
         setRPP(originalCourse.is_RPP)
       }
-      if (typeof originalCourse.is_remote != "undefined") {
-        setRemote(originalCourse.is_remote)
+      if (typeof originalCourse.is_remote_accessible != "undefined") {
+        setRemote(originalCourse.is_remote_accessible)
       }
       if (typeof originalCourse.is_Premodern != "undefined") {
         setPremodern(originalCourse.is_Premodern)
@@ -247,7 +247,7 @@ function CourseProposal() {
         is_capstone: capstone,
         is_lecture: lecture,
         is_intro: intro,
-        is_remote: remote,
+        is_remote_accessible: remote,
         semester: semester,
         year: year,
         time_ranking: [time1, time2, time3],
@@ -334,7 +334,7 @@ function CourseProposal() {
         is_capstone: capstone,
         is_lecture: lecture,
         is_intro: intro,
-        is_remote: remote,
+        is_remote_accessible: remote,
         semester: semester,
         year: year,
         time_ranking: [time1, time2, time3],

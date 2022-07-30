@@ -350,7 +350,7 @@ function CourseView() {
           <FormGroup>
             <FormControlLabel control={<Checkbox disabled checked={course.is_WRIT} />} label="WRIT" />
             <FormControlLabel control={<Checkbox disabled checked={course.is_RPP} />} label="RPP" />
-            <FormControlLabel control={<Checkbox disabled checked={course.is_remote} />} label="Remote" />
+            <FormControlLabel control={<Checkbox disabled checked={course.is_remote_accessible} />} label="Remote" />
             <FormControlLabel control={<Checkbox disabled checked={course.is_FYS} />} label="Premodern" />
           </FormGroup>
         </Grid>

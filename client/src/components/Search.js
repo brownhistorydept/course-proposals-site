@@ -31,7 +31,7 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
     is_capstone: false,
     is_lecture: false,
     is_intro: false,
-    is_remote: false,
+    is_remote_accessible: false,
   })
 
   const [consider, setConsider] = React.useState({
@@ -208,7 +208,7 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
     return courses.filter(course => course.course_title.toLowerCase().includes(searchString.toLowerCase()));
   }
 
-  const { is_RPP, is_WRIT, is_CBLR, is_Premodern, is_FYS, is_SYS, is_capstone, is_lecture, is_intro, is_remote } = designations;
+  const { is_RPP, is_WRIT, is_CBLR, is_Premodern, is_FYS, is_SYS, is_capstone, is_lecture, is_intro, is_remote_accessible } = designations;
 
   return (
     <div align='left'>
@@ -315,16 +315,6 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
               </FormControl>
             </div>
             <div>
-              <TextField
-                label="Year"
-                id="outlined-size-small"
-                onChange={selectYear}
-                defaultValue={year}
-                size="small"
-                style={{ minWidth: 120 }}
-              />
-            </div>
-            <div>
               <FormControl sx={{ m: 1, minWidth: 120, height: 20, marginTop: 0 }} size="small">
                 <InputLabel sx={{ m: 0, margin: 0, height: 1, border: 0, padding: 0, fontSize: 14 }} id="demo-simple-select-helper-label">Semester</InputLabel>
                 <Select
@@ -344,23 +334,33 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
                 </Select>
               </FormControl>
             </div>
+            <div>
+              <TextField
+                label="Year"
+                id="outlined-size-small"
+                onChange={selectYear}
+                defaultValue={year}
+                size="small"
+                style={{ minWidth: 120, marginLeft: 8}}
+              />
+            </div>
           </Box>
         </Box>
         <Box sx={{ display: 'flex', paddingLeft: 3, width: 1, gap: 0, border: '0px solid', flexGrow: 1, gridTemplateColumns: 'repeat(10, 1fr)' }}>
           <Box sx={{ display: 'flex', height: 50, }}>
             <FormControl sx={{ m: 0 }} component="fieldset" variant="standard">
               <FormGroup row={true}>
-                <FormControlLabel
+              <FormControlLabel
                   control={
-                    <Checkbox checked={is_RPP} onChange={selectFilters} name="is_RPP" />
+                    <Checkbox checked={is_remote_accessible} onChange={selectFilters} name="is_remote_accessible" />
                   }
-                  label="Race, Power, & Privilege (RPP)"
+                  label="Accessible to Remote Students (REM)"
                 />
-                <FormControlLabel
+              <FormControlLabel
                   control={
-                    <Checkbox checked={is_WRIT} onChange={selectFilters} name="is_WRIT" />
+                    <Checkbox checked={is_capstone} onChange={selectFilters} name="is_capstone" />
                   }
-                  label="WRIT"
+                  label="Capstone"
                 />
                 <FormControlLabel
                   control={
@@ -370,33 +370,9 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={is_Premodern} onChange={selectFilters} name="is_Premodern" />
-                  }
-                  label="Premodern"
-                />
-                <FormControlLabel
-                  control={
                     <Checkbox checked={is_FYS} onChange={selectFilters} name="is_FYS" />
                   }
                   label="First-Year Seminar"
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox checked={is_SYS} onChange={selectFilters} name="is_SYS" />
-                  }
-                  label="Second-Year Seminar"
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox checked={is_capstone} onChange={selectFilters} name="is_capstone" />
-                  }
-                  label="Capstone"
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox checked={is_lecture} onChange={selectFilters} name="is_lecture" />
-                  }
-                  label="Lecture"
                 />
                 <FormControlLabel
                   control={
@@ -406,9 +382,33 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={is_remote} onChange={selectFilters} name="is_remote" />
+                    <Checkbox checked={is_lecture} onChange={selectFilters} name="is_lecture" />
                   }
-                  label="Remote"
+                  label="Lecture"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox checked={is_Premodern} onChange={selectFilters} name="is_Premodern" />
+                  }
+                  label="Premodern"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox checked={is_RPP} onChange={selectFilters} name="is_RPP" />
+                  }
+                  label="Race, Power, & Privilege (RPP)"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox checked={is_SYS} onChange={selectFilters} name="is_SYS" />
+                  }
+                  label="Second-Year Seminar"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox checked={is_WRIT} onChange={selectFilters} name="is_WRIT" />
+                  }
+                  label="WRIT"
                 />
               </FormGroup>
             </FormControl>
