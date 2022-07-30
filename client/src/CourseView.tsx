@@ -101,7 +101,7 @@ function CourseView() {
   var profString = profList.join(", ")
   var geoString = courseGeography.length === 0 ? "" : courseGeography.join(", ")
 
-  const openAlert = (title: string, redirect: boolean)  => {
+  const openAlert = (title: string, redirect: boolean) => {
     setAlertTitle(title);
     setAlertOpen(true);
     setAlertRedirect(redirect);
@@ -132,71 +132,71 @@ function CourseView() {
       </Box>
 
       <Grid container spacing={2} maxWidth={1000} mx="auto" marginBottom='20px'>
-        
+
         {!isRestrictedView && <>
-        <Grid item xs={2}>
-          <Typography variant="body1" fontWeight="bold" align='right'>Regular Professor?</Typography>
-        </Grid>
-        <Grid item xs={10}>
-          <TextField
-            fullWidth
-            size='small'
-            value={courseIsRegular}
-            variant="standard"
-            InputProps={{
-              disableUnderline: true,
-              readOnly: true,
-            }}
-          />
-        </Grid>
+          <Grid item xs={2}>
+            <Typography variant="body1" fontWeight="bold" align='right'>Regular Professor?</Typography>
+          </Grid>
+          <Grid item xs={10}>
+            <TextField
+              fullWidth
+              size='small'
+              value={courseIsRegular}
+              variant="standard"
+              InputProps={{
+                disableUnderline: true,
+                readOnly: true,
+              }}
+            />
+          </Grid>
 
-        <Grid item xs={2}>
-          <Typography variant="body1" fontWeight="bold" align='right'>Planning to take leave in fall?</Typography>
-        </Grid>
-        <Grid item xs={10}>
-          <TextField
-            fullWidth
-            size='small'
-            value={courseLeaveFall}
-            variant="standard"
-            InputProps={{
-              disableUnderline: true,
-              readOnly: true,
-            }}
-          />
-        </Grid>
+          <Grid item xs={2}>
+            <Typography variant="body1" fontWeight="bold" align='right'>Planning to take leave in fall?</Typography>
+          </Grid>
+          <Grid item xs={10}>
+            <TextField
+              fullWidth
+              size='small'
+              value={courseLeaveFall}
+              variant="standard"
+              InputProps={{
+                disableUnderline: true,
+                readOnly: true,
+              }}
+            />
+          </Grid>
 
-        <Grid item xs={2}>
-          <Typography variant="body1" fontWeight="bold" align='right'>Planning to take leave in spring?</Typography>
-        </Grid>
-        <Grid item xs={10}>
-          <TextField
-            fullWidth
-            size='small'
-            value={courseLeaveSpring}
-            variant="standard"
-            InputProps={{
-              disableUnderline: true,
-              readOnly: true,
-            }}
-          />
-        </Grid>
+          <Grid item xs={2}>
+            <Typography variant="body1" fontWeight="bold" align='right'>Planning to take leave in spring?</Typography>
+          </Grid>
+          <Grid item xs={10}>
+            <TextField
+              fullWidth
+              size='small'
+              value={courseLeaveSpring}
+              variant="standard"
+              InputProps={{
+                disableUnderline: true,
+                readOnly: true,
+              }}
+            />
+          </Grid>
 
-        <Grid item xs={2}>
-          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Number</Typography>
-        </Grid>
-        <Grid item xs={9.5}>
-          <TextField
-            variant="standard"
-            InputProps={{
-              disableUnderline: true,
-              readOnly: true,
-            }}
-            size='small'
-            value={courseNumber ? "HIST " + courseNumber : courseNumber}
-            sx={{ border: 0 }}
-          />
-        </Grid>
+          <Grid item xs={2}>
+            <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Number</Typography>
+          </Grid>
+          <Grid item xs={9.5}>
+            <TextField
+              variant="standard"
+              InputProps={{
+                disableUnderline: true,
+                readOnly: true,
+              }}
+              size='small'
+              value={courseNumber ? "HIST " + courseNumber : courseNumber}
+              sx={{ border: 0 }}
+            />
+          </Grid>
         </>}
 
         <Grid item xs={2}>
@@ -285,22 +285,22 @@ function CourseView() {
         </Grid>
 
         {!isRestrictedView && <>
-        <Grid item xs={2}>
-          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Time Ranking</Typography>
-        </Grid>
-        <Grid item xs={10}>
-          <TextField
-            size='small'
-            variant="standard"
-            InputProps={{
-              disableUnderline: true,
-              readOnly: true,
-            }}
-            value={course.time_ranking.join(", ")}
-            sx={{ marginRight: 1 }}
-          >
-          </TextField>
-        </Grid>
+          <Grid item xs={2}>
+            <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Time Ranking</Typography>
+          </Grid>
+          <Grid item xs={10}>
+            <TextField
+              size='small'
+              variant="standard"
+              InputProps={{
+                disableUnderline: true,
+                readOnly: true,
+              }}
+              value={course.time_ranking.join(", ")}
+              sx={{ marginRight: 1 }}
+            >
+            </TextField>
+          </Grid>
         </>}
 
         <Grid item xs={2}>
@@ -371,82 +371,82 @@ function CourseView() {
             }}
           />
         </Grid>
-        
+
         {!isRestrictedView && <>
-        <Grid item xs={2}>
-          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Further Notes</Typography>
-        </Grid>
-        <Grid item xs={10}>
-          <TextField
-            variant="standard"
-            InputProps={{
-              disableUnderline: true,
-              readOnly: true,
-            }}
-            fullWidth
-            multiline={true}
-            rows={courseFurtherNotes ? Math.floor(courseFurtherNotes.split(" ").length / 13) : 1}
-            value={courseFurtherNotes}
-          />
-        </Grid>
+          <Grid item xs={2}>
+            <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Further Notes</Typography>
+          </Grid>
+          <Grid item xs={10}>
+            <TextField
+              variant="standard"
+              InputProps={{
+                disableUnderline: true,
+                readOnly: true,
+              }}
+              fullWidth
+              multiline={true}
+              rows={courseFurtherNotes ? Math.floor(courseFurtherNotes.split(" ").length / 13) : 1}
+              value={courseFurtherNotes}
+            />
+          </Grid>
         </>}
 
         {canAccept && <>
 
-        <Grid item xs={2}>
-          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Comments for Professor</Typography>
-        </Grid>
-        <Grid item xs={10}>
-          <TextField
-            style={{ width: 800 }}
-            value={reason}
-            multiline={true}
-            rows={5}
-            onChange={(e) => setReason(e.target.value)}
-          />
-        </Grid> </>}
-        
-        </Grid>
+          <Grid item xs={2}>
+            <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Comments for Professor</Typography>
+          </Grid>
+          <Grid item xs={10}>
+            <TextField
+              style={{ width: 800 }}
+              value={reason}
+              multiline={true}
+              rows={5}
+              onChange={(e) => setReason(e.target.value)}
+            />
+          </Grid> </>}
 
-        <Grid container spacing={3} justifyContent="center" paddingBottom={2}>
-        
+      </Grid>
+
+      <Grid container spacing={3} justifyContent="center" paddingBottom={2}>
+
         {/* purely aesthetics, just to make the buttons line up with the checkboxes and not look off */}
         <Grid item xs={1}></Grid>
 
         {canAccept && <>
           <Button
-              style={{ textDecoration: 'none', marginTop: "20px" }}
-              variant="contained"
-              sx={{ textTransform: "none", backgroundColor: "#992525", mx: 1 }}
-              onClick={async () => {
-                const success = await acceptRejectCourse(course, true, reason);
-                if (success) {
-                  openAlert('Course successfully accepted', true);
-                } else {
-                  openAlert('Error accepting course', false);
-                }
-              }}>
-              <Typography gutterBottom variant="body1">
-                Accept
-              </Typography>
-            </Button>
-            <Button
-              style={{ textDecoration: 'none', marginTop: "20px" }}
-              variant="contained"
-              sx={{ textTransform: "none", backgroundColor: "#992525", mx: 1 }}
-              onClick={async () => {
-                const success = await acceptRejectCourse(course, false, reason);
-                if (success) {
-                  openAlert('Course successfully rejected', true);
-                } else {
-                  openAlert('Error rejecting course', false);
-                }
-              }}>
-              <Typography gutterBottom variant="body1">
-                Reject
-              </Typography>
-            </Button>
-          </>}
+            style={{ textDecoration: 'none', marginTop: "20px" }}
+            variant="contained"
+            sx={{ textTransform: "none", backgroundColor: "#992525", mx: 1 }}
+            onClick={async () => {
+              const success = await acceptRejectCourse(course, true, reason);
+              if (success) {
+                openAlert('Course successfully accepted', true);
+              } else {
+                openAlert('Error accepting course', false);
+              }
+            }}>
+            <Typography gutterBottom variant="body1">
+              Accept
+            </Typography>
+          </Button>
+          <Button
+            style={{ textDecoration: 'none', marginTop: "20px" }}
+            variant="contained"
+            sx={{ textTransform: "none", backgroundColor: "#992525", mx: 1 }}
+            onClick={async () => {
+              const success = await acceptRejectCourse(course, false, reason);
+              if (success) {
+                openAlert('Course successfully rejected', true);
+              } else {
+                openAlert('Error rejecting course', false);
+              }
+            }}>
+            <Typography gutterBottom variant="body1">
+              Reject
+            </Typography>
+          </Button>
+        </>}
 
         {canEdit && <>
           <Link style={{ textDecoration: 'none', marginTop: "20px" }} to={"/course_proposal"} state={{ course: editCourse, isEditing: true, isNewProposal: false }}>
@@ -459,25 +459,25 @@ function CourseView() {
               </Typography>
             </Button>
           </Link>
-          </>}
-        
+        </>}
+
 
         {canNewProposal && <>
           <Grid item marginX="auto" >
-          <Link style={{ textDecoration: 'none' }} to={"/course_proposal"} state={{ course: proposalCourse, isEditing: false, isNewProposal: true }}>
-            <Button
-              variant="contained"
-              sx={{ textTransform: "none", backgroundColor: "#992525", mx: 1 }}
-            >
-              <Typography gutterBottom variant="body1">
-                New Proposal
-              </Typography>
-            </Button>
-          </Link>
-        </Grid>
+            <Link style={{ textDecoration: 'none' }} to={"/course_proposal"} state={{ course: proposalCourse, isEditing: false, isNewProposal: true }}>
+              <Button
+                variant="contained"
+                sx={{ textTransform: "none", backgroundColor: "#992525", mx: 1 }}
+              >
+                <Typography gutterBottom variant="body1">
+                  New Proposal
+                </Typography>
+              </Button>
+            </Link>
+          </Grid>
         </>}
 
-        </Grid>
+      </Grid>
 
       <Dialog open={alertOpen}>
         <DialogTitle>{alertTitle}</DialogTitle>

@@ -7,14 +7,12 @@ import Box from '@mui/material/Box';
 import { ICourse } from "../../server/src/models/Course";
 import { fetchCourses } from "./utils/courses";
 import CourseCard from './components/CourseCard';
-import { useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { Button, Checkbox, FormControl, Grid, IconButton, ListItemText, MenuItem, Select } from '@mui/material';
 import Papa from 'papaparse';
 import { downloadFile } from './utils/files';
-import FileDownloadIcon from '@mui/icons-material/FileDownloadOutlined';
 
 function CourseReview() {
-  const navigate = useNavigate();
   const [user, setUser] = useState<IUser>();
   const [underReviewCourses, setUnderReviewCourses] = useState<ICourse[]>();
   const [cccAcceptedCourses, setCCCAcceptedCourses] = useState<ICourse[]>();
@@ -167,7 +165,7 @@ function CourseReview() {
   }
 
   if (user?.role === "default" || user?.role === "professor") {
-    navigate('/course_catalog');
+    return <Navigate to="/course_catalog" />;
   }
 
   const onDownload = () => {

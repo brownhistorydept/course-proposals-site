@@ -8,10 +8,9 @@ import { ICourse } from "../../server/src/models/Course";
 import { fetchCourses } from "./utils/courses";
 import CourseCard from './components/CourseCard';
 import { Checkbox, FormControl, Grid, ListItemText, MenuItem, Select } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 function MyCourses() {
-  const navigate = useNavigate();
   const [user, setUser] = useState<IUser>();
   const [acceptedCourses, setAcceptedCourses] = useState<ICourse[]>();
   const [submittedCourses, setSubmittedCourses] = useState<ICourse[]>();
@@ -70,7 +69,7 @@ function MyCourses() {
   }
 
   if (user?.role === "default" || user?.role === "manager") {
-    navigate('/course_catalog');
+    return <Navigate to="/course_catalog" />;
   }
   return (
     <div className="MyCourses">
@@ -112,14 +111,14 @@ function MyCourses() {
           </Grid>
         </Box>
 
-        <Box sx={{ paddingLeft: 2, paddingBottom: '30px'}}>
+        <Box sx={{ paddingLeft: 2, paddingBottom: '30px' }}>
           <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={3}>
             Accepted by CCC
           </Typography>
 
           {acceptedCourses?.map((course, index) => (
             (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
-            && <CourseCard key={index} course={course} status={false} canEdit={false} canAccept={false} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'}/>
+            && <CourseCard key={index} course={course} status={false} canEdit={false} canAccept={false} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'} />
           ))}
 
           <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={3} paddingTop='30px'>
@@ -128,7 +127,7 @@ function MyCourses() {
 
           {submittedCourses?.map((course, index) => (
             (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
-            && <CourseCard key={index} course={course} status={true} canEdit={course.proposal_status !== 'accepted by director' || user?.role === 'undergraduate director' || user?.role === 'graduate director'} canAccept={false} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'}/>
+            && <CourseCard key={index} course={course} status={true} canEdit={course.proposal_status !== 'accepted by director' || user?.role === 'undergraduate director' || user?.role === 'graduate director'} canAccept={false} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'} />
           ))}
         </Box>
       </Box>

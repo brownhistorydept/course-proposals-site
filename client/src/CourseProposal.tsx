@@ -18,7 +18,7 @@ import FormControl from '@mui/material/FormControl';
 import ListItemText from '@mui/material/ListItemText';
 import { fetchUsers } from "./utils/users";
 import InputLabel from '@mui/material/InputLabel';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router'
 import { ICourse } from "../../server/src/models/Course";
 import { Dialog, DialogActions, DialogTitle } from '@mui/material';
@@ -29,7 +29,7 @@ function CourseProposal() {
   const [alertTitle, setAlertTitle] = useState('');
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertPath, setAlertPath] = useState<string | undefined>();
-  
+
   // called once when components on page have rendered
   useEffect(() => {
     async function getUser() {
@@ -187,33 +187,33 @@ function CourseProposal() {
     "L: TTh 6:40-8", "M: M 3-5:30", "N: W 3-5:30", "O: F 3-5:30",
     "P: T 4-6:30", "Q: Th 4-6:30", "T: MW 3-4:20"]
 
-    if (user?.role === "default") {
-      navigate('/course_catalog');
+  if (user?.role === "default") {
+    return <Navigate to="/course_catalog" />;
+  }
+
+  const openAlert = (title: string, path?: string) => {
+    setAlertTitle(title);
+    setAlertOpen(true);
+    setAlertPath(path);
+  }
+
+  async function hasError() {
+    if (courseTitle === "" || description === "" || semester === "" || year === 0 || professors.length === 0) {
+      openAlert("Please fill in all required fields")
+      return true;
+    } else if (isNaN(year)) {
+      openAlert("Year has to be a numerical value")
+      return true;
+    } else if (time1 === time2 || time2 === time3 || time1 === time3) {
+      openAlert("Please enter three different times for Time Ranking")
+      return true;
+    } else if (isUndergrad === 1 && geography.length === 0) {
+      openAlert("Please select geography")
+      return true;
     }
 
-    const openAlert = (title: string, path?: string)  => {
-      setAlertTitle(title);
-      setAlertOpen(true);
-      setAlertPath(path);
-    }
-
-    async function hasError() {
-      if (courseTitle === "" || description === "" || semester === "" || year === 0 || professors.length === 0) {
-        openAlert("Please fill in all required fields")
-        return true;
-      } else if (isNaN(year)) {
-        openAlert("Year has to be a numerical value")
-        return true;
-      } else if (time1 === time2 || time2 === time3 || time1 === time3) {
-        openAlert("Please enter three different times for Time Ranking")
-        return true;
-      } else if (isUndergrad === 1 && geography.length === 0) {
-        openAlert("Please select geography")
-        return true;
-      }
-    
-      return false;
-    }
+    return false;
+  }
 
   async function edit() {
     const error = await hasError()
@@ -263,7 +263,7 @@ function CourseProposal() {
           openAlert("Course successfully edited", '/review_courses');
         } else {
           openAlert("Course successfully edited", '/my_courses')
-        } 
+        }
       } else {
         openAlert("Error editing course")
         return;
@@ -301,12 +301,12 @@ function CourseProposal() {
   }
 
   async function submit() {
-    
+
     const error = await hasError()
     if (error) {
       return;
     }
-    
+
     let profMap = new Map<string, string>();
     allProfessors?.forEach((prof) => {
       profMap.set(prof.displayName!, prof._id!)
@@ -315,7 +315,7 @@ function CourseProposal() {
     professors.forEach((prof) => {
       profId.push(profMap.get(prof)!)
     })
-    
+
     if (isUndergrad === 1) {
       var proposedUndergradCourse = {
         on_leave_fall: leaveFall,
@@ -344,11 +344,11 @@ function CourseProposal() {
       }
       var success = false;
       if (isNewProposal) {
-        success = await submitCourse({original: originalCourse!, proposed: proposedUndergradCourse});
+        success = await submitCourse({ original: originalCourse!, proposed: proposedUndergradCourse });
       } else {
-        success = await submitCourse({proposed: proposedUndergradCourse});
+        success = await submitCourse({ proposed: proposedUndergradCourse });
       }
-      
+
       if (success) {
         if (user?.role === "manager") {
           openAlert("Course successfully submitted", '/review_courses')
@@ -377,9 +377,9 @@ function CourseProposal() {
       }
       success = false;
       if (isNewProposal) {
-        success = await submitCourse({original: originalCourse!, proposed: proposedGradCourse});
+        success = await submitCourse({ original: originalCourse!, proposed: proposedGradCourse });
       } else {
-        success = await submitCourse({proposed: proposedGradCourse});
+        success = await submitCourse({ proposed: proposedGradCourse });
       }
       if (success) {
         if (user?.role === "manager") {
@@ -394,7 +394,7 @@ function CourseProposal() {
     }
   }
 
-    return (
+  return (
     <div className="CourseProposal">
 
       <NavBar user={user} />
@@ -749,23 +749,19 @@ function CourseProposal() {
             variant="contained"
             sx={{ textTransform: "none", backgroundColor: "#992525", mx: 1 }}
             onClick={() => {
-              console.log(courseTitle)
-              console.log(description)
-              console.log(year)
-              console.log(professors.length)
-
               if (isEditing) {
                 edit()
               } else {
                 submit()
-              }}}>
+              }
+            }}>
             <Typography gutterBottom variant="body1">
               Submit
             </Typography>
           </Button>
         </Grid>
       </Grid>
-    
+
       <Dialog open={alertOpen}>
         <DialogTitle>{alertTitle}</DialogTitle>
         <DialogActions>

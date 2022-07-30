@@ -20,7 +20,7 @@ export async function fetchCourses(
           "Content-Type": "application/json",
           "Access-Control-Allow-Credentials": "true",
         },
-      }, 
+      },
     );
 
     if (res.status === 200) {
@@ -32,9 +32,7 @@ export async function fetchCourses(
       throw new Error("Request to fetch courses was unsuccessful");
     }
   } catch (error) {
-    console.log(error)
-    console.log(isMounted)
-    throw new Error("HEy Could not make request to fetch courses");
+    throw new Error("Could not make request to fetch courses");
   }
 }
 
