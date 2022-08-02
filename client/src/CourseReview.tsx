@@ -169,22 +169,35 @@ function CourseReview() {
   }
 
   const onDownload = () => {
-    if (!cccAcceptedCourses || cccAcceptedCourses.length === 0) return;
+    if (!directorAcceptedCourses || directorAcceptedCourses.length === 0) return;
 
-    const rows = cccAcceptedCourses.map((course) => {
-      const newRow: Record<string, unknown> = {};
-      return (Object.keys(course) as (keyof ICourse)[]).reduce((prev, cur) => {
-        if (course[cur] !== null && typeof course[cur] === 'object') {
-          prev[cur] = JSON.stringify(course[cur]);
-        } else {
-          prev[cur] = course[cur];
-        }
-        return prev;
-      }, newRow);
+    const rows = directorAcceptedCourses.map((course) => {
+      return [
+        course.course_number,
+        course.course_title,
+        course.professors.map((professor) => (professor as unknown as IUser).displayName).join(', '),
+        course.description,
+        course.time_ranking.length >= 1 ? course.time_ranking[0] : '',
+        course.time_ranking.length >= 2 ? course.time_ranking[1] : '',
+        course.time_ranking.length >= 3 ? course.time_ranking[2] : '',
+        course.geography?.join(', '),
+        course.is_undergrad,
+        course.is_Premodern,
+        course.is_RPP,
+        course.is_remote_accessible,
+        course.is_WRIT,
+        course.is_intro,
+        course.is_FYS,
+        course.is_SYS,
+        course.is_capstone,
+        course.is_lecture,
+      ];
     });
 
-    const csvContent = Papa.unparse({ fields: Object.keys(cccAcceptedCourses[0]), data: rows });
-    downloadFile('ccc-accepted-courses', csvContent, 'text/csv');
+    const columns = ['Course Number', 'Course Title', 'Instructor(s)', 'Course Description', 'Time Choice 1', 'Time Choice 2', 'Time Choice 3',
+      'Geography', 'Undergrad', 'Premodern', 'RPP', 'REM', 'WRIT', 'Intro (0150)', 'FYS', 'SYS', 'Capstone', 'Lecture'];
+    const csvContent = Papa.unparse({ fields: columns, data: rows }, );
+    downloadFile('director-accepted-courses', csvContent, 'text/csv');
   };
 
   return (
