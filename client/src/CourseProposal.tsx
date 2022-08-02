@@ -18,6 +18,7 @@ import FormControl from '@mui/material/FormControl';
 import ListItemText from '@mui/material/ListItemText';
 import { fetchUsers } from "./utils/users";
 import InputLabel from '@mui/material/InputLabel';
+import Tooltip from '@mui/material/Tooltip';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router'
 import { ICourse } from "../../server/src/models/Course";
@@ -151,7 +152,7 @@ function CourseProposal() {
       }
 
       if (typeof originalCourse.course_number != "undefined") {
-        setCourseNumber(originalCourse.course_number.split(" ")[1])
+        setCourseNumber(originalCourse.course_number)
       }
 
       if (typeof originalCourse.is_regular_prof != "undefined") {
@@ -252,7 +253,7 @@ function CourseProposal() {
         year: year,
         time_ranking: [time1, time2, time3],
         geography: geography,
-        course_number: `HIST ${courseNumber}`,
+        course_number: courseNumber,
         further_notes: notes,
         proposal_status: originalCourse!.proposal_status!,
         _id: originalCourse!._id!
@@ -281,7 +282,7 @@ function CourseProposal() {
         semester: semester,
         year: year,
         time_ranking: [time1, time2, time3],
-        course_number: `HIST ${courseNumber}`,
+        course_number: courseNumber,
         further_notes: notes,
         proposal_status: originalCourse!.proposal_status!,
         _id: originalCourse!._id!
@@ -339,7 +340,7 @@ function CourseProposal() {
         year: year,
         time_ranking: [time1, time2, time3],
         geography: geography,
-        course_number: `HIST ${courseNumber}`,
+        course_number: courseNumber,
         further_notes: notes,
       }
       var success = false;
@@ -372,7 +373,7 @@ function CourseProposal() {
         semester: semester,
         year: year,
         time_ranking: [time1, time2, time3],
-        course_number: `HIST ${courseNumber}`,
+        course_number: courseNumber,
         further_notes: notes,
       }
       success = false;
@@ -411,8 +412,8 @@ function CourseProposal() {
           }}>
           <Typography variant="h3" paddingBottom={5}>
             Course Proposal
+            <Typography variant="body2" my={"8px"} mx="auto">Hover over field labels to see descriptions. Fields marked with * are required.</Typography>
           </Typography>
-
         </Box>
       </Box>
 
@@ -421,13 +422,11 @@ function CourseProposal() {
         {user?.role === "manager" &&
           <Grid item xs={11} container spacing={2}>
             <Grid item xs={2.2}>
-              <Typography variant="body1" fontWeight="bold" align='right'>Course Number</Typography>
+              <Tooltip title="Full course number, including department abbreviation (e.g. HIST0150A), entered by the manager" placement="bottom-end" arrow>
+                <Typography variant="body1" fontWeight="bold" align='right'>Course Number</Typography>
+              </Tooltip>
             </Grid>
-
-            <Grid item xs={.6}>
-              <Typography variant="body1" width="2">HIST</Typography>
-            </Grid>
-            <Grid item xs={2}>
+            <Grid item xs={8}>
               <TextField
                 size='small'
                 value={courseNumber}
@@ -439,7 +438,9 @@ function CourseProposal() {
         {user?.role === "manager" &&
           <Grid item xs={11} container spacing={2}>
             <Grid item xs={2.2}>
-              <Typography variant="body1" fontWeight="bold" align='right'>Final Time</Typography>
+              <Tooltip title="Time slot for the course, entered by the manager" placement="bottom-end" arrow>
+                <Typography variant="body1" fontWeight="bold" align='right'>Final Time</Typography>
+              </Tooltip>
             </Grid>
 
             <Grid marginLeft={1.8} marginTop={2}>
@@ -472,7 +473,9 @@ function CourseProposal() {
           </Grid>}
 
         <Grid item xs={2}>
-          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Regular Professor? *</Typography>
+          <Tooltip title="Are you a regular tenure-track/tenured HIST faculty member, or not?" placement="bottom-end" arrow>
+            <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Regular Professor? *</Typography>
+          </Tooltip>
         </Grid>
         <Grid item xs={9.5}>
           <Select
@@ -485,27 +488,29 @@ function CourseProposal() {
             }
             }
           >
-            <MenuItem value={1}>Regular</MenuItem>
-            <MenuItem value={0}>Non Regular</MenuItem>
+            <MenuItem value={1}>Yes</MenuItem>
+            <MenuItem value={0}>No</MenuItem>
           </Select>
         </Grid>
 
         <Grid item xs={2}>
-          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Planning to take leave in fall?</Typography>
+          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Planning to take leave in fall? *</Typography>
         </Grid>
         <Grid item xs={9.5}>
           <FormControlLabel control={<Checkbox checked={leaveFall} onClick={(e) => { setleaveFall((e.target as HTMLInputElement).checked) }} />} label="" />
         </Grid>
 
         <Grid item xs={2}>
-          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Planning to take leave in spring?</Typography>
+          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Planning to take leave in spring? *</Typography>
         </Grid>
         <Grid item xs={9.5}>
           <FormControlLabel control={<Checkbox checked={leaveSpring} onClick={(e) => { setleaveSpring((e.target as HTMLInputElement).checked) }} />} label="" />
         </Grid>
 
         <Grid item xs={2}>
-          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Title *</Typography>
+          <Tooltip title="Title of the course (e.g. War, Tyranny, and Peace in Modern Europe)" placement="bottom-end" arrow>
+            <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Title *</Typography>
+          </Tooltip>
         </Grid>
         <Grid item xs={10}>
           {myState === null && <TextField
@@ -598,9 +603,12 @@ function CourseProposal() {
           </Select>
         </Grid>
 
-        {isUndergrad === 1 && <Grid item xs={2}>
-          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Geography *</Typography>
-        </Grid>}
+        {isUndergrad === 1 &&
+          <Grid item xs={2}>
+            <Tooltip title="The geographic region(s) that best fit the content of the course" placement="bottom-end" arrow>
+              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Geography *</Typography>
+            </Tooltip>
+          </Grid>}
         {isUndergrad === 1 && <Grid item xs={10}>
           <FormControl fullWidth>
             <Select
@@ -629,7 +637,9 @@ function CourseProposal() {
         </Grid>}
 
         <Grid item xs={2}>
-          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Time Ranking *</Typography>
+          <Tooltip title="Your preference ranking for course time slots, which will inform the final time choice" placement="bottom-end" arrow>
+            <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Time Ranking *</Typography>
+          </Tooltip>
         </Grid>
         <Grid item xs={3.33}>
           <FormControl fullWidth>
@@ -681,7 +691,9 @@ function CourseProposal() {
         </Grid>
 
         <Grid item xs={2}>
-          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Description* </Typography>
+          <Tooltip title="A short paragraph describing the course content, which will end up on CAB" placement="bottom-end" arrow>
+            <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Description *</Typography>
+          </Tooltip>
         </Grid>
         <Grid item xs={10}>
           <TextField
@@ -692,7 +704,6 @@ function CourseProposal() {
             onChange={(e) => setDescription(e.target.value)}
           />
         </Grid>
-
 
         {isUndergrad === 1 && <Grid item xs={4.5}></Grid>}
         {isUndergrad === 1 && <Grid item xs={3}>
@@ -717,7 +728,9 @@ function CourseProposal() {
         {isUndergrad === 1 && <Grid item xs={1.5}></Grid>}
 
         <Grid item xs={2}>
-          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Further Notes </Typography>
+          <Tooltip title="Any extra notes by professor or director/manager that don't fit into the other fields" placement="bottom-end" arrow>
+            <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Further Notes</Typography>
+          </Tooltip>
         </Grid>
         <Grid item xs={10}>
           <TextField
@@ -730,7 +743,7 @@ function CourseProposal() {
         </Grid>
 
         <Grid item xs={2}>
-          <Typography variant="body1" fontWeight="bold" my="auto" align='right'> Syllabus Link </Typography>
+          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Syllabus Link</Typography>
         </Grid>
         <Grid item xs={10}>
           <TextField
@@ -739,8 +752,7 @@ function CourseProposal() {
             value={syllabusLink}
             onChange={(e) => setSyllabusLink(e.target.value)}
           />
-          <Typography variant="body2" mx="auto"> If you are regular faculty teaching this course for the first time, please add a syllabus link. </Typography>
-          <Typography variant="body2" my={"8px"} mx="auto">* are required fields </Typography>
+          <Typography variant="body2" mx="auto">If you are regular professor teaching this course for the first time, please add a syllabus link.</Typography>
         </Grid>
 
         <Grid item xs={6}></Grid>
