@@ -25,7 +25,7 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
     is_RPP: false,
     is_WRIT: false,
     is_CBLR: false,
-    is_Premodern: false,
+    is_premodern: false,
     is_FYS: false,
     is_SYS: false,
     is_capstone: false,
@@ -208,7 +208,7 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
     return courses.filter(course => course.course_title.toLowerCase().includes(searchString.toLowerCase()));
   }
 
-  const { is_RPP, is_WRIT, is_CBLR, is_Premodern, is_FYS, is_SYS, is_capstone, is_lecture, is_intro, is_remote_accessible } = designations;
+  const { is_RPP, is_WRIT, is_CBLR, is_premodern, is_FYS, is_SYS, is_capstone, is_lecture, is_intro, is_remote_accessible } = designations;
 
   return (
     <div align='left'>
@@ -388,7 +388,7 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={is_Premodern} onChange={selectFilters} name="is_Premodern" />
+                    <Checkbox checked={is_premodern} onChange={selectFilters} name="is_premodern" />
                   }
                   label="Premodern"
                 />

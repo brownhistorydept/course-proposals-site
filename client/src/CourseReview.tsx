@@ -182,7 +182,7 @@ function CourseReview() {
         course.time_ranking.length >= 3 ? course.time_ranking[2] : '',
         course.geography?.join(', '),
         course.is_undergrad,
-        course.is_Premodern,
+        course.is_premodern,
         course.is_RPP,
         course.is_remote_accessible,
         course.is_WRIT,

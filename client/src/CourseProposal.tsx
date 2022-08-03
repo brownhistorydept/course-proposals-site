@@ -134,8 +134,8 @@ function CourseProposal() {
       if (typeof originalCourse.is_remote_accessible != "undefined") {
         setRemote(originalCourse.is_remote_accessible)
       }
-      if (typeof originalCourse.is_Premodern != "undefined") {
-        setPremodern(originalCourse.is_Premodern)
+      if (typeof originalCourse.is_premodern != "undefined") {
+        setPremodern(originalCourse.is_premodern)
       }
       if (typeof originalCourse.is_CBLR != "undefined") {
         setCBLR(originalCourse.is_CBLR)
@@ -242,7 +242,7 @@ function CourseProposal() {
         is_undergrad: true,
         is_RPP: rpp,
         is_WRIT: writ,
-        is_Premodern: premodern,
+        is_premodern: premodern,
         is_FYS: fys,
         is_SYS: sys,
         is_capstone: capstone,
@@ -329,7 +329,7 @@ function CourseProposal() {
         is_undergrad: true,
         is_RPP: rpp,
         is_WRIT: writ,
-        is_Premodern: premodern,
+        is_premodern: premodern,
         is_FYS: fys,
         is_SYS: sys,
         is_capstone: capstone,

@@ -71,8 +71,8 @@ export default function ComplexGrid({ course, status, canEdit, canAccept, canNew
                   {course.is_remote_accessible && <FormControlLabel disabled checked control={<Checkbox />} label="REM" key="REM" />}
                   {!course.is_remote_accessible && <FormControlLabel disabled control={<Checkbox />} label="REM" key="REM1" />}
 
-                  {course.is_Premodern && <FormControlLabel disabled checked control={<Checkbox />} label="Premodern" key="P" />}
-                  {!course.is_Premodern && <FormControlLabel disabled control={<Checkbox />} label="Premodern" key="P1" />}
+                  {course.is_premodern && <FormControlLabel disabled checked control={<Checkbox />} label="Premodern" key="P" />}
+                  {!course.is_premodern && <FormControlLabel disabled control={<Checkbox />} label="Premodern" key="P1" />}
 
                   {course.is_intro && <FormControlLabel disabled checked control={<Checkbox />} label="Intro" key="Intro" />}
                   {!course.is_intro && <FormControlLabel disabled control={<Checkbox />} label="Intro" key="Intro1" />}
