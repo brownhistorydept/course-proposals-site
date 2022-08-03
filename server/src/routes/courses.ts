@@ -1,8 +1,8 @@
 import { Response, Router } from "express";
 import Course, { ICourse, PROPOSAL_STATUS, COURSE_STATUS } from "../models/Course"
 import { IGetUserAuthInfoRequest, authCheck } from "../middleware/auth";
-import { ROLES, IUser } from "../models/User";
-import { sendAcceptEmail, sendRejectEmail } from "../config/mailer";
+import User, { ROLES, IUser } from "../models/User";
+import { sendAcceptEmail, sendRejectEmail, sendRevisionEmail } from "../config/mailer";
 
 const courseRouter = Router();
 
@@ -121,6 +121,8 @@ courseRouter.post("/submit", authCheck, async (req: IGetUserAuthInfoRequest, res
 // edit a course
 courseRouter.post("/edit", authCheck, async (req: IGetUserAuthInfoRequest, res: Response) => {
   var course = req.body as ICourse;
+  var profIds = [];
+  var recipient_roles = [];
 
   if (req.user.role === ROLES.DEFAULT) {
     res.status(403).json({
@@ -135,6 +137,7 @@ courseRouter.post("/edit", authCheck, async (req: IGetUserAuthInfoRequest, res: 
       });
       return;
     }
+  }
 
     if (course.proposal_status === PROPOSAL_STATUS.CCC_ACCEPTED) {
       res.status(403).json({
@@ -143,13 +146,47 @@ courseRouter.post("/edit", authCheck, async (req: IGetUserAuthInfoRequest, res: 
       return;
     }
 
-    if ((req.user.role === ROLES.PROFESSOR || req.user.role === ROLES.CURRIC_COORD) &&
-        course.proposal_status === PROPOSAL_STATUS.DIRECTOR_ACCEPTED) {
-          res.status(403).json({
-            message: "Cannot edit a course that has been accepted by director"
-          });
+    if (req.user.role === ROLES.PROFESSOR || req.user.role === ROLES.CURRIC_COORD &&
+      course.proposal_status === PROPOSAL_STATUS.DIRECTOR_ACCEPTED) {
+        res.status(403).json({
+          message: "Cannot edit a course that has been accepted by director"
+        });
         return;
+    }
+
+    // if mary beth is editing:
+    //    - send profs and directors an email
+    // if director is editing
+    //    - they would only be editing their own course. if the status was rejected by CCC, let mary beth know
+    //    - otherwise, don't need to send an email --> director isn't going to reject their own course and doesn't need an email about it
+    // if prof/CC is editing
+    //    - send an email if status was rejected by director/CCC
+    
+    if (req.user.role === ROLES.MANAGER) {
+      profIds = [course.professors.flat()]
+      if (course.is_undergrad) {
+        recipient_roles = [ROLES.UG_DIRECTOR]
+      } else {
+        recipient_roles = [ROLES.GRAD_DIRECTOR]
       }
+    } else if (req.user.role === ROLES.UG_DIRECTOR || req.user.role === ROLES.GRAD_DIRECTOR) {
+        if (course.proposal_status === PROPOSAL_STATUS.CCC_REJECTED) {
+          recipient_roles = [ROLES.MANAGER]
+        }
+    } else if (req.user.role === ROLES.CURRIC_COORD || req.user.role === ROLES.PROFESSOR) {
+        if (course.proposal_status === PROPOSAL_STATUS.CCC_REJECTED) {
+          if (course.is_undergrad) {
+            recipient_roles = [ROLES.UG_DIRECTOR, ROLES.MANAGER]
+          } else {
+            recipient_roles = [ROLES.GRAD_DIRECTOR, ROLES.MANAGER]
+          }
+        } else if (course.proposal_status === PROPOSAL_STATUS.DIRECTOR_REJECTED) {
+            if (course.is_undergrad) {
+              recipient_roles = [ROLES.UG_DIRECTOR]
+            } else {
+              recipient_roles = [ROLES.GRAD_DIRECTOR]
+            }
+        }
     }
 
   // managers can always edit without going through approval process again
@@ -160,6 +197,23 @@ courseRouter.post("/edit", authCheck, async (req: IGetUserAuthInfoRequest, res: 
 
   try {
     await Course.updateOne({ _id: course._id }, course);
+
+    var to = []
+
+    for (let recipient_role in recipient_roles) {
+      let matches = await User.find({role: recipient_role}, {email: true})
+      matches.forEach(match => to.push(match.email))
+    }
+
+    for (let profId in profIds) {
+      let match = await User.findOne({_id: profId}, {email: true})
+      if (match !== null) {
+        to.push(match.email)
+      }
+    }
+
+    sendRevisionEmail(to, course, req.user.displayName);
+
     res.status(200).json({
       message: "editing course succeeded"
     });

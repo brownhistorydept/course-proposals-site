@@ -52,9 +52,9 @@ function CourseView() {
 
   const courseNumber = course["course_number"].split(" ")[1]
   const courseTitle = course["course_title"]
-  const courseYear = course["year"]
+  const courseYear = course["year"]? course["year"] : ''
   const courseDescription = course["description"]
-  const courseSemester = course["semester"]
+  const courseSemester = course["semester"]? course["semester"] : ''
   var courseLevel = ""
   const courseGeography = course["geography"]
   const courseFinalTime = course["final_time"]

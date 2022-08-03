@@ -97,7 +97,7 @@ function CourseProposal() {
   const [time1, setTime1] = useState('A');
   const [time2, setTime2] = useState('B');
   const [time3, setTime3] = useState('C');
-  const [finalTime, setFinalTime] = useState('A');
+  const [finalTime, setFinalTime] = useState('');
 
   useEffect(() => {
     if (myState != null) {
@@ -242,6 +242,7 @@ function CourseProposal() {
         is_undergrad: true,
         is_RPP: rpp,
         is_WRIT: writ,
+        is_CBLR: cblr,
         is_premodern: premodern,
         is_FYS: fys,
         is_SYS: sys,
@@ -255,7 +256,7 @@ function CourseProposal() {
         geography: geography,
         course_number: courseNumber,
         further_notes: notes,
-        proposal_status: originalCourse!.proposal_status!,
+        final_time: finalTime,
         _id: originalCourse!._id!
       }
       const success = await editCourse(proposedUndergradCourse);
@@ -282,9 +283,9 @@ function CourseProposal() {
         semester: semester,
         year: year,
         time_ranking: [time1, time2, time3],
+        final_time: finalTime,
         course_number: courseNumber,
         further_notes: notes,
-        proposal_status: originalCourse!.proposal_status!,
         _id: originalCourse!._id!
       }
       const success = await editCourse(proposedGradCourse);
@@ -329,6 +330,7 @@ function CourseProposal() {
         is_undergrad: true,
         is_RPP: rpp,
         is_WRIT: writ,
+        is_CBLR: cblr,
         is_premodern: premodern,
         is_FYS: fys,
         is_SYS: sys,
@@ -340,6 +342,7 @@ function CourseProposal() {
         year: year,
         time_ranking: [time1, time2, time3],
         geography: geography,
+        final_time: finalTime,
         course_number: courseNumber,
         further_notes: notes,
       }
@@ -373,6 +376,7 @@ function CourseProposal() {
         semester: semester,
         year: year,
         time_ranking: [time1, time2, time3],
+        final_time: finalTime,
         course_number: courseNumber,
         further_notes: notes,
       }

@@ -53,25 +53,25 @@ function CourseReview() {
   }, [user]);
 
   // get CCC accepted courses
-  useEffect(() => {
-    let isMounted = true;
-    var params = {}
-    if (user?.role === "undergraduate director") {
-      params = Object.assign(params, { is_undergrad: true });
-    } else if (user?.role === "graduate director") {
-      params = Object.assign(params, { is_undergrad: false });
-    }
+  // useEffect(() => {
+  //   let isMounted = true;
+  //   var params = {}
+  //   if (user?.role === "undergraduate director") {
+  //     params = Object.assign(params, { is_undergrad: true });
+  //   } else if (user?.role === "graduate director") {
+  //     params = Object.assign(params, { is_undergrad: false });
+  //   }
 
-    async function getCourses() {
-      if (isMounted) {
-        await fetchCourses(setCCCAcceptedCourses, params, true, isMounted);
-      }
-    }
-    getCourses();
-    return () => {
-      isMounted = false
-    }
-  }, [user]);
+  //   async function getCourses() {
+  //     if (isMounted) {
+  //       await fetchCourses(setCCCAcceptedCourses, params, true, isMounted);
+  //     }
+  //   }
+  //   getCourses();
+  //   return () => {
+  //     isMounted = false
+  //   }
+  // }, [user]);
 
   // get CCC rejected courses
   useEffect(() => {
@@ -260,10 +260,10 @@ function CourseReview() {
 
         </Typography>
 
-        {cccAcceptedCourses?.map((course, index) => (
+        {/* {cccAcceptedCourses?.map((course, index) => (
           (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
           && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role === "manager"} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'} />
-        ))}
+        ))} */}
 
         <Typography variant="h6" color="#992525" fontWeight={500} marginBottom={3}>
           Accepted by Director:
