@@ -12,7 +12,6 @@ import { Navigate } from 'react-router-dom';
 
 function MyCourses() {
   const [user, setUser] = useState<IUser>();
-  const [acceptedCourses, setAcceptedCourses] = useState<ICourse[]>();
   const [submittedCourses, setSubmittedCourses] = useState<ICourse[]>();
   const [yearSems, setYearSems] = useState<string[]>([]);
   const [yearSemOptions, setYearSemOptions] = useState<string[]>([]);
@@ -33,7 +32,6 @@ function MyCourses() {
     }
     async function getCourses() {
       params = { professors: user?._id };
-      await fetchCourses(setAcceptedCourses, params, true, isMounted);
       await fetchCourses(setSubmittedCourses, params, false, isMounted);
     }
     getCourses();
@@ -43,14 +41,14 @@ function MyCourses() {
   }, [user]);
 
   useEffect(() => {
-    if (typeof user === "undefined" || (typeof acceptedCourses === 'undefined' && typeof submittedCourses === 'undefined')) {
+    if (typeof user === "undefined" || typeof submittedCourses === 'undefined') {
       return;
     }
     getYearSems();
-  }, [acceptedCourses, submittedCourses])
+  }, [submittedCourses])
 
   function getYearSems() {
-    const allCourses = (acceptedCourses ?? []).concat((submittedCourses ?? []));
+    const allCourses = (submittedCourses ?? [])
     const sortedCourses = allCourses.sort((c1, c2) => {
       const semesters = ['Fall', 'Summer', 'Spring', 'Winter'];
       if (c1.year > c2.year) {
@@ -112,15 +110,8 @@ function MyCourses() {
         </Box>
 
         <Box sx={{ paddingLeft: 2, paddingBottom: '30px' }}>
-          <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={3}>
-            Accepted by CCC
-          </Typography>
 
-          {acceptedCourses?.map((course, index) => (
-            (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
-            && <CourseCard key={index} course={course} status={false} canEdit={false} canAccept={false} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'} />
-          ))}
-
+        <Typography variant="body2" my={"8px"} mx="auto">To see Accepted by CCC courses, please see the Course Catalog.</Typography>
           <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={3} paddingTop='30px'>
             Submitted
           </Typography>

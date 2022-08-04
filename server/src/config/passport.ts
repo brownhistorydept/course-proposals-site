@@ -59,15 +59,6 @@ export function passportInit() {
           displayPicURL = profile.photos[0].value;
         }
 
-        // creates a new user object
-        const newUser: IUser = {
-          googleId: profile.id,
-          displayName: profile.displayName,
-          email: profile._json.email,
-          displayPictureURL: displayPicURL,
-          role: ROLES.DEFAULT,
-        };
-
         try {
           // searches for user in mongoDB collection by googleId
           let user = await User.findOne({ googleId: profile.id });
@@ -75,9 +66,26 @@ export function passportInit() {
             // gets user if user exists in mongoDB collection
             done(null, user);
           } else {
-            // creates new user if not in mongoDB collection
-            user = await User.create(newUser);
-            done(null, user);
+            // if no google id, try email
+            // this will be how all prefilled professors log in for the first time
+            user = await User.findOne({email: profile._json.email});
+            if (user) {
+              // update user to have googleId so they can log in normally next time
+              await User.updateOne({_id: user._id}, {googleId: profile.id})
+              done(null, user)
+            } else {
+              // creates a new user object
+              const newUser: IUser = {
+                googleId: profile.id,
+                displayName: profile.displayName,
+                email: profile._json.email,
+                displayPictureURL: displayPicURL,
+                role: ROLES.DEFAULT,
+              };
+              // creates new user if not in mongoDB collection
+              user = await User.create(newUser);
+              done(null, user);
+            }
           }
         } catch (err) {
           console.error(err);

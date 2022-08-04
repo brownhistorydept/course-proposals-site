@@ -15,7 +15,6 @@ import { downloadFile } from './utils/files';
 function CourseReview() {
   const [user, setUser] = useState<IUser>();
   const [underReviewCourses, setUnderReviewCourses] = useState<ICourse[]>();
-  const [cccAcceptedCourses, setCCCAcceptedCourses] = useState<ICourse[]>();
   const [cccRejectedCourses, setCCCRejectedCourses] = useState<ICourse[]>();
   const [directorRejectedCourses, setDirectorRejectedCourses] = useState<ICourse[]>();
   const [directorAcceptedCourses, setDirectorAcceptedCourses] = useState<ICourse[]>();
@@ -51,27 +50,6 @@ function CourseReview() {
       isMounted = false
     }
   }, [user]);
-
-  // get CCC accepted courses
-  // useEffect(() => {
-  //   let isMounted = true;
-  //   var params = {}
-  //   if (user?.role === "undergraduate director") {
-  //     params = Object.assign(params, { is_undergrad: true });
-  //   } else if (user?.role === "graduate director") {
-  //     params = Object.assign(params, { is_undergrad: false });
-  //   }
-
-  //   async function getCourses() {
-  //     if (isMounted) {
-  //       await fetchCourses(setCCCAcceptedCourses, params, true, isMounted);
-  //     }
-  //   }
-  //   getCourses();
-  //   return () => {
-  //     isMounted = false
-  //   }
-  // }, [user]);
 
   // get CCC rejected courses
   useEffect(() => {
@@ -137,17 +115,16 @@ function CourseReview() {
       typeof underReviewCourses === 'undefined' ||
       typeof directorAcceptedCourses == 'undefined' ||
       typeof directorRejectedCourses == 'undefined' ||
-      typeof cccAcceptedCourses === 'undefined' ||
       typeof cccRejectedCourses === 'undefined') {
       return;
     }
     getYearSems();
-  }, [underReviewCourses, directorAcceptedCourses, directorRejectedCourses, cccAcceptedCourses, cccRejectedCourses]);
+  }, [underReviewCourses, directorAcceptedCourses, directorRejectedCourses, cccRejectedCourses]);
 
   function getYearSems() {
     const allCourses = (underReviewCourses ?? []).concat(
-      (directorAcceptedCourses ?? []), (directorRejectedCourses ?? []), (cccAcceptedCourses ?? []), (cccRejectedCourses ?? []));
-    const sortedCourses = allCourses.sort((c1, c2) => {
+      (directorAcceptedCourses ?? []), (directorRejectedCourses ?? []), (cccRejectedCourses ?? []));
+      const sortedCourses = allCourses.sort((c1, c2) => {
       const semesters = ['Fall', 'Summer', 'Spring', 'Winter'];
       if (c1.year > c2.year) {
         return -1;
@@ -213,9 +190,9 @@ function CourseReview() {
             Review Courses
           </Typography>
 
-          <Button variant='contained' onClick={onDownload}>Download</Button>
+          <Button variant='contained' onClick={onDownload}>Download Spreadsheet</Button>
 
-          <Grid item xs={8} paddingBottom='30px'>
+          <Grid item xs={8} paddingBottom='30px' paddingTop='15px'>
             <FormControl fullWidth>
               <Select
                 size='small'
@@ -255,15 +232,7 @@ function CourseReview() {
           Reviewed
         </Typography>
 
-        <Typography variant="h6" color="#992525" fontWeight={500} marginBottom={3} paddingTop='10px'>
-          Accepted by CCC:
-
-        </Typography>
-
-        {/* {cccAcceptedCourses?.map((course, index) => (
-          (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
-          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role === "manager"} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'} />
-        ))} */}
+        <Typography variant="body2" my={"12px"} mx="auto">To see Accepted by CCC courses, please see the Course Catalog.</Typography>
 
         <Typography variant="h6" color="#992525" fontWeight={500} marginBottom={3}>
           Accepted by Director:

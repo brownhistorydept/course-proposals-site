@@ -67,6 +67,8 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
       }
 
       if (consider['professor']) {
+        // should be something like this (not this exactly) -- the professor shouldn't have to be the first one listed for the course to be included
+        // toFilter = toFilter.filter(course => course.professors.any(prof => prof.displayName === professorSelected.displayName));
         toFilter = toFilter.filter(course => course.professors[0]['displayName'] === professorSelected.displayName);
       }
 
@@ -266,7 +268,7 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
                 >
                   <MenuItem value="All">All</MenuItem>
                   {allProfessors?.map((prof) => (
-                    <MenuItem value={prof} key={prof}>
+                    <MenuItem value={prof} key={prof._id}>
                       {prof.displayName}
                     </MenuItem>
                   ))}
