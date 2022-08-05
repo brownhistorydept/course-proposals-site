@@ -46,10 +46,11 @@ interface ILogoutRequest extends Request {
   logout: any;
 }
 
-// when logout, redirect to client
-authRouter.get("/logout", (req: ILogoutRequest, res: Response) => {
-  req.logout();
-  res.redirect(process.env.CLIENT_URL || "/");
+authRouter.get('/logout', function(req: ILogoutRequest, res, next) {
+  req.logout(function(err) {
+    if (err) { return next(err); }
+    res.redirect(process.env.CLIENT_URL || "/");
+  });
 });
 
 // just to test if authCheck actually works

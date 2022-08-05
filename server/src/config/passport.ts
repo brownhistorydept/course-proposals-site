@@ -64,12 +64,15 @@ export function passportInit() {
           let user = await User.findOne({ googleId: profile.id });
           if (user) {
             // gets user if user exists in mongoDB collection
+            console.log('found user by googleid')
             done(null, user);
           } else {
             // if no google id, try email
             // this will be how all prefilled professors log in for the first time
             user = await User.findOne({email: profile._json.email});
             if (user) {
+              console.log('found user by email')
+              console.log(user)
               // update user to have googleId so they can log in normally next time
               await User.updateOne({_id: user._id}, {googleId: profile.id})
               done(null, user)

@@ -109,8 +109,6 @@ courseRouter.post("/submit", authCheck, async (req: IGetUserAuthInfoRequest, res
       course_status: status
     });
     res.status(200).json({ newCourse });
-
-    // TODO: notify relevant parties via email
   } else {
     res.status(400).json({
       message: "submission failed",
@@ -121,8 +119,6 @@ courseRouter.post("/submit", authCheck, async (req: IGetUserAuthInfoRequest, res
 // edit a course
 courseRouter.post("/edit", authCheck, async (req: IGetUserAuthInfoRequest, res: Response) => {
   var course = req.body as ICourse;
-  var profIds = [];
-  var recipient_roles = [];
 
   if (req.user.role === ROLES.DEFAULT) {
     res.status(403).json({
@@ -154,25 +150,23 @@ courseRouter.post("/edit", authCheck, async (req: IGetUserAuthInfoRequest, res: 
         return;
     }
 
-    // if mary beth is editing:
-    //    - send profs and directors an email
-    // if director is editing
-    //    - they would only be editing their own course. if the status was rejected by CCC, let mary beth know
-    //    - otherwise, don't need to send an email --> director isn't going to reject their own course and doesn't need an email about it
-    // if prof/CC is editing
-    //    - send an email if status was rejected by director/CCC
+    var profIds = [];
+    var recipient_roles = [];
     
+    // if manager is editing a course, notify course profs and relevant director
     if (req.user.role === ROLES.MANAGER) {
-      profIds = [course.professors.flat()]
+      profIds = course.professors 
       if (course.is_undergrad) {
         recipient_roles = [ROLES.UG_DIRECTOR]
       } else {
         recipient_roles = [ROLES.GRAD_DIRECTOR]
       }
+      // a director can only edit their own course, so only notify manager if course was previously rejected by CCC so she needs to review again
     } else if (req.user.role === ROLES.UG_DIRECTOR || req.user.role === ROLES.GRAD_DIRECTOR) {
         if (course.proposal_status === PROPOSAL_STATUS.CCC_REJECTED) {
           recipient_roles = [ROLES.MANAGER]
         }
+      // if profs and curriculum coordinators edit a rejected course, notify manager and their director
     } else if (req.user.role === ROLES.CURRIC_COORD || req.user.role === ROLES.PROFESSOR) {
         if (course.proposal_status === PROPOSAL_STATUS.CCC_REJECTED) {
           if (course.is_undergrad) {
@@ -199,20 +193,21 @@ courseRouter.post("/edit", authCheck, async (req: IGetUserAuthInfoRequest, res: 
     await Course.updateOne({ _id: course._id }, course);
 
     var to = []
-
-    for (let recipient_role in recipient_roles) {
+    for (const recipient_role of recipient_roles) {
       let matches = await User.find({role: recipient_role}, {email: true})
       matches.forEach(match => to.push(match.email))
     }
 
-    for (let profId in profIds) {
+    for (const profId of profIds) {
       let match = await User.findOne({_id: profId}, {email: true})
       if (match !== null) {
         to.push(match.email)
       }
     }
 
-    sendRevisionEmail(to, course, req.user.displayName);
+    if (to.length > 0) {
+      sendRevisionEmail(to, course, req.user.displayName);
+    }
 
     res.status(200).json({
       message: "editing course succeeded"

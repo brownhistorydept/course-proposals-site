@@ -58,7 +58,7 @@ function CourseProposal() {
 
   const location = useLocation();
   const state = location.state as CustomizedState; // Type Casting, then you can get the params passed via router
-  window.history.replaceState(null, "")
+  // window.history.replaceState(null, "")
   const myState = state;
 
   var originalCourse = {} as ICourse;
@@ -255,6 +255,7 @@ function CourseProposal() {
         time_ranking: [time1, time2, time3],
         geography: geography,
         course_number: courseNumber,
+        proposal_status: originalCourse!.proposal_status!,
         further_notes: notes,
         final_time: finalTime,
         _id: originalCourse!._id!
@@ -285,6 +286,7 @@ function CourseProposal() {
         time_ranking: [time1, time2, time3],
         final_time: finalTime,
         course_number: courseNumber,
+        proposal_status: originalCourse!.proposal_status!,
         further_notes: notes,
         _id: originalCourse!._id!
       }
@@ -760,7 +762,7 @@ function CourseProposal() {
         </Grid>
 
         <Grid item xs={6}></Grid>
-        <Grid marginBottom={2}>
+        <Grid marginY={2}>
           <Button
             variant="contained"
             sx={{ textTransform: "none", backgroundColor: "#992525", mx: 1 }}

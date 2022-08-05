@@ -22,7 +22,7 @@ export interface IUser {
 }
 
 const userSchema = new Schema<IUser>({
-  googleId: { type: String, required: true },
+  googleId: { type: String, required: false },
   displayName: { type: String, required: true },
   email: { type: String, required: true },
   role: { type: String, enum: Object.values(ROLES), required: true },

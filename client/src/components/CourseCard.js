@@ -25,10 +25,10 @@ export default function ComplexGrid({ course, status, canEdit, canAccept, canNew
             {/* First row */}
             <Grid item xs container >
 
-              <Grid item xs={2} container >
+            <Grid item xs='auto' container >
                 <Typography gutterBottom variant="body1" sx={{ fontWeight: 'bold' }}>{course.course_number}</Typography>
               </Grid>
-              <Grid item xs container >
+              <Grid item xs container paddingLeft={4}>
                 <Typography variant="body1" gutterBottom>{course.course_title}</Typography>
               </Grid>
             </Grid>

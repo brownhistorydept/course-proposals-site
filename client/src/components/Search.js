@@ -15,7 +15,7 @@ import CourseCard from './CourseCard'
 export default function Search({ allProfessors, courses: allCourses, user }) {
   const [searched, setSearched] = React.useState('');
   const [professorSelected, setProfessor] = React.useState('');
-  const [level, setLevel] = React.useState();
+  const [level, setLevel] = React.useState(2);
   const [geography, setGeography] = React.useState('');
   const [year, setYear] = React.useState(new Date().getFullYear());
   const [semester, setSemester] = React.useState('');
@@ -67,13 +67,12 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
       }
 
       if (consider['professor']) {
-        // should be something like this (not this exactly) -- the professor shouldn't have to be the first one listed for the course to be included
-        // toFilter = toFilter.filter(course => course.professors.any(prof => prof.displayName === professorSelected.displayName));
-        toFilter = toFilter.filter(course => course.professors[0]['displayName'] === professorSelected.displayName);
+        toFilter = toFilter.filter(course => course.professors.some(prof => prof.displayName === professorSelected.displayName))
       }
 
       if (consider['level']) {
-        toFilter = toFilter.filter(course => course.is_undergrad === level);
+        const boolLevel = level === 1
+        toFilter = toFilter.filter(course => course.is_undergrad === boolLevel);
       }
 
       if (consider['geography']) {
@@ -141,21 +140,22 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
   };
 
   const selectLevel = (event) => {
-    if (event.target.value === "Undergraduate") {
-      setLevel(true);
+    if (event.target.value === 1) {
+      setLevel(1);
       setConsider({
         ...consider,
         'level': true,
       });
     }
-    else if (event.target.value === "Graduate") {
-      setLevel(false);
+    else if (event.target.value === 0) {
+      setLevel(0);
       setConsider({
         ...consider,
         'level': true,
       });
     }
-    else if (event.target.value === "All") {
+    else if (event.target.value === 2) {
+      setLevel(2)
       setConsider({
         ...consider,
         'level': false,
@@ -279,7 +279,7 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
               <FormControl sx={{ m: 1, minWidth: 120, marginTop: 0 }} size="small">
                 <InputLabel sx={{ m: 0, margin: 0, height: 1, border: 0, padding: 0, fontSize: 14 }} id="demo-simple-select-helper-label">Level</InputLabel>
                 <Select
-                  defaultValue=""
+                  defaultValue="All"
                   labelId="demo-simple-select-helper-label"
                   id="demo-simple-select-helper"
                   value={level}
@@ -287,9 +287,9 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
                   onChange={selectLevel}
                   sx={{ padding: 0, border: 0 }}
                 >
-                  <MenuItem value="All">All</MenuItem>
-                  <MenuItem value="Undergraduate">Undergraduate</MenuItem>
-                  <MenuItem value="Graduate">Graduate</MenuItem>
+                  <MenuItem value={2}>All</MenuItem>
+                  <MenuItem value={1}>Undergraduate</MenuItem>
+                  <MenuItem value={0}>Graduate</MenuItem>
                 </Select>
               </FormControl>
             </div>
