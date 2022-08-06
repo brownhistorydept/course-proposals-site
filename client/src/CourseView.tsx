@@ -50,7 +50,7 @@ function CourseView() {
   const canNewProposal = myState.canNewProposal;
   const isRestrictedView = myState.isRestrictedView;
 
-  const courseNumber = course["course_number"].split(" ")[1]
+  const courseNumber = course["course_number"]
   const courseTitle = course["course_title"]
   const courseYear = course["year"]? course["year"] : ''
   const courseDescription = course["description"]
@@ -193,7 +193,7 @@ function CourseView() {
                 readOnly: true,
               }}
               size='small'
-              value={courseNumber ? "HIST " + courseNumber : courseNumber}
+              value={courseNumber}
               sx={{ border: 0 }}
             />
           </Grid>
@@ -304,7 +304,7 @@ function CourseView() {
         </>}
 
         <Grid item xs={2}>
-          <Typography variant="body1" fontWeight="bold" align='right'>Final Time</Typography>
+          <Typography variant="body1" fontWeight="bold" align='right'>Time</Typography>
         </Grid>
         <Grid item xs={10}>
           <TextField
@@ -331,7 +331,7 @@ function CourseView() {
             }}
             fullWidth
             multiline={true}
-            rows={Math.floor(courseDescription.split(" ").length / 13)}
+            rows={courseDescription ? Math.floor(courseDescription.split(" ").length / 13) : 0}
             value={courseDescription}
           />
         </Grid>

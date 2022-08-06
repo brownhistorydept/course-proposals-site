@@ -39,9 +39,19 @@ export default function CourseCatalog() {
     getProfessors();
   }, []);
 
+  function sortProfessors() {
+    professors?.sort((prof1, prof2) => {
+      const prof1_surname = prof1.displayName.split(' ')[1]
+      const prof2_surname = prof2.displayName.split(' ')[1]
+      return prof1_surname.localeCompare(prof2_surname)
+    }
+    )
+  }
+
   return (
     <div>
       <NavBar user={user} />
+      {typeof professors !== "undefined" && sortProfessors()}
       {typeof user !== "undefined" && typeof professors !== "undefined" && typeof courses !== "undefined"
         && <Search allProfessors={professors} courses={courses} user={user} />}
     </div>

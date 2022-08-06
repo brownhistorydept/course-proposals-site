@@ -47,8 +47,16 @@ function CourseProposal() {
       await fetchUsers(setAllProfessors, true);
     }
     getProfessors();
-
   }, []);
+
+  function sortProfessors() {
+    allProfessors?.sort((prof1, prof2) => {
+      const prof1_surname = prof1.displayName.split(' ')[1]
+      const prof2_surname = prof2.displayName.split(' ')[1]
+      return prof1_surname.localeCompare(prof2_surname)
+    }
+    )
+  }
 
   interface CustomizedState {
     course: any,
@@ -553,6 +561,7 @@ function CourseProposal() {
               }}
               renderValue={(selected) => selected.join(', ')}
             >
+              {sortProfessors()}
               {allProfessors?.map((prof, index) => (
                 <MenuItem key={index} value={prof.displayName}>
                   <Checkbox checked={professors.indexOf(prof.displayName) > -1} />

@@ -7,8 +7,8 @@ import Box from '@mui/material/Box';
 import { ICourse } from "../../server/src/models/Course";
 import { fetchCourses } from "./utils/courses";
 import CourseCard from './components/CourseCard';
-import { Navigate } from 'react-router-dom';
-import { Button, Checkbox, FormControl, Grid, ListItemText, MenuItem, Select } from '@mui/material';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { Button, Checkbox, Dialog, DialogActions, DialogTitle, FormControl, Grid, ListItemText, MenuItem, Select } from '@mui/material';
 import Papa from 'papaparse';
 import { downloadFile } from './utils/files';
 
@@ -20,6 +20,10 @@ function CourseReview() {
   const [directorAcceptedCourses, setDirectorAcceptedCourses] = useState<ICourse[]>();
   const [yearSems, setYearSems] = useState<string[]>([]);
   const [yearSemOptions, setYearSemOptions] = useState<string[]>([]);
+  const [alertTitle, setAlertTitle] = useState('');
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertPath, setAlertPath] = useState<string | undefined>();
+  const navigate = useNavigate();
 
   // called once when components on page have rendered
   useEffect(() => {
@@ -145,8 +149,17 @@ function CourseReview() {
     return <Navigate to="/course_catalog" />;
   }
 
+  const openAlert = (title: string, path?: string) => {
+    setAlertTitle(title);
+    setAlertOpen(true);
+    setAlertPath(path);
+  }
+
   const onDownload = () => {
-    if (!directorAcceptedCourses || directorAcceptedCourses.length === 0) return;
+    if (!directorAcceptedCourses || directorAcceptedCourses.length === 0) {
+      openAlert('No director accepted courses to download', '/review_courses')
+      return;
+    }
 
     const rows = directorAcceptedCourses.map((course) => {
       return [
@@ -261,6 +274,20 @@ function CourseReview() {
           && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role !== "curriculum coordinator"} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'} />
         ))}
       </Box>
+
+      <Dialog open={alertOpen}>
+        <DialogTitle>{alertTitle}</DialogTitle>
+        <DialogActions>
+          <Button autoFocus onClick={() => {
+            setAlertOpen(false);
+            if (alertPath) {
+              navigate(alertPath);
+            }
+          }}>
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
 
     </div>
   );
