@@ -12,7 +12,7 @@
     "@mui/material": "5.9.2",
     "@mui/utils": "5.9.1",
     "@mui/styled-engine": "5.8.7",
-    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^12.1.5",
     "@testing-library/user-event": "^14.3.0",
     "@types/jest": "^28.1.6",
