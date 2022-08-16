@@ -176,11 +176,11 @@ function CourseReview() {
         course.is_RPP,
         course.is_remote_accessible,
         course.is_WRIT,
-        course.is_intro,
-        course.is_FYS,
-        course.is_SYS,
-        course.is_capstone,
-        course.is_lecture,
+        // course.is_intro,
+        // course.is_FYS,
+        // course.is_SYS,
+        // course.is_capstone,
+        // course.is_lecture,
       ];
     });
 

@@ -90,15 +90,12 @@ function CourseProposal() {
   const [isUndergrad, setIsUndergrad] = useState(1);
   const [geography, setGeography] = useState<string[]>([]);
   const [description, setDescription] = useState('');
-  const [capstone, setCapstone] = useState(false);
-  const [fys, setFys] = useState(false);
-  const [sys, setSys] = useState(false);
-  const [intro, setIntro] = useState(false);
-  const [lecture, setLecture] = useState(false);
+  const [courseType, setCourseType] = useState('0150 Lecture Course');
   const [writ, setWrit] = useState(false);
   const [rpp, setRPP] = useState(false);
   const [cblr, setCBLR] = useState(false);
-  const [remote, setRemote] = useState(false);
+  const [remoteOnly, setRemoteOnly] = useState(false);
+  const [remoteAccessible, setRemoteAccessible] = useState(false);
   const [premodern, setPremodern] = useState(false);
   const [semester, setSemester] = useState('Fall');
   const [year, setYear] = useState(new Date().getFullYear());
@@ -108,30 +105,36 @@ function CourseProposal() {
   const [finalTime, setFinalTime] = useState('');
 
   useEffect(() => {
+    // if creating a new proposal, prefill values w/ original course values
     if (myState != null) {
-      setCourseTitle(originalCourse.course_title)
-      setProfessors(originalCourse.professors);
-
-      setIsUndergrad(originalCourse.is_undergrad ? 1 : 0)
+      if (typeof originalCourse.course_title !== "undefined") {
+        setCourseTitle(originalCourse.course_title)
+      }
+      if (typeof originalCourse.professors !== "undefined") {
+        setProfessors(originalCourse.professors)
+      }
+      if (typeof originalCourse.is_undergrad !== "undefined") {
+        setIsUndergrad(originalCourse.is_undergrad ? 1 : 0)
+      }
+      if (typeof originalCourse.semester !== "undefined") {
+        setSemester(originalCourse.semester)
+      }
+      if (typeof originalCourse.year !== "undefined") {
+        setYear(originalCourse.year)
+      }
+      if (typeof originalCourse.time_ranking !== "undefined") {
+        setTime1(originalCourse.time_ranking[0])
+        setTime2(originalCourse.time_ranking[1])
+        setTime3(originalCourse.time_ranking[2])
+      }
       if (typeof originalCourse.geography !== "undefined") {
         setGeography(originalCourse.geography)
       }
-
-      setDescription(originalCourse.description)
-      if (typeof originalCourse.is_capstone != "undefined") {
-        setCapstone(originalCourse.is_capstone)
+      if (typeof originalCourse.description !== "undefined") {
+        setDescription(originalCourse.description)
       }
-      if (typeof originalCourse.is_FYS != "undefined") {
-        setSys(originalCourse.is_FYS)
-      }
-      if (typeof originalCourse.is_SYS != "undefined") {
-        setSys(originalCourse.is_SYS)
-      }
-      if (typeof originalCourse.is_intro != "undefined") {
-        setIntro(originalCourse.is_intro)
-      }
-      if (typeof originalCourse.is_lecture != "undefined") {
-        setLecture(originalCourse.is_lecture)
+      if (typeof originalCourse.course_type !== 'undefined') {
+        setCourseType(originalCourse.course_type)
       }
       if (typeof originalCourse.is_WRIT != "undefined") {
         setWrit(originalCourse.is_WRIT)
@@ -140,7 +143,7 @@ function CourseProposal() {
         setRPP(originalCourse.is_RPP)
       }
       if (typeof originalCourse.is_remote_accessible != "undefined") {
-        setRemote(originalCourse.is_remote_accessible)
+        setRemoteAccessible(originalCourse.is_remote_accessible)
       }
       if (typeof originalCourse.is_premodern != "undefined") {
         setPremodern(originalCourse.is_premodern)
@@ -148,13 +151,6 @@ function CourseProposal() {
       if (typeof originalCourse.is_CBLR != "undefined") {
         setCBLR(originalCourse.is_CBLR)
       }
-
-      setSemester(originalCourse.semester)
-      setYear(originalCourse.year)
-      setTime1(originalCourse.time_ranking[0])
-      setTime2(originalCourse.time_ranking[1])
-      setTime3(originalCourse.time_ranking[2])
-
       if (typeof originalCourse.final_time != "undefined") {
         setFinalTime(originalCourse.final_time)
       }
@@ -252,12 +248,8 @@ function CourseProposal() {
         is_WRIT: writ,
         is_CBLR: cblr,
         is_premodern: premodern,
-        is_FYS: fys,
-        is_SYS: sys,
-        is_capstone: capstone,
-        is_lecture: lecture,
-        is_intro: intro,
-        is_remote_accessible: remote,
+        course_type: courseType,
+        is_remote_accessible: remoteAccessible,
         semester: semester,
         year: year,
         time_ranking: [time1, time2, time3],
@@ -289,6 +281,7 @@ function CourseProposal() {
         professors: profId,
         syllabus_link: syllabusLink,
         is_undergrad: false,
+        course_type: courseType,
         semester: semester,
         year: year,
         time_ranking: [time1, time2, time3],
@@ -342,12 +335,8 @@ function CourseProposal() {
         is_WRIT: writ,
         is_CBLR: cblr,
         is_premodern: premodern,
-        is_FYS: fys,
-        is_SYS: sys,
-        is_capstone: capstone,
-        is_lecture: lecture,
-        is_intro: intro,
-        is_remote_accessible: remote,
+        course_type: courseType,
+        is_remote_accessible: remoteAccessible,
         semester: semester,
         year: year,
         time_ranking: [time1, time2, time3],
@@ -383,6 +372,7 @@ function CourseProposal() {
         professors: profId,
         syllabus_link: syllabusLink,
         is_undergrad: false,
+        course_type: courseType,
         semester: semester,
         year: year,
         time_ranking: [time1, time2, time3],
@@ -618,6 +608,29 @@ function CourseProposal() {
           </Select>
         </Grid>
 
+        <Grid item xs={2}>
+            <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Type *</Typography>
+        </Grid>
+        <Grid item xs={10}>
+          <Select
+            size='small'
+            autoWidth
+            value={courseType}
+            onChange={(e) => { setCourseType(e.target.value) }}
+            >
+              <MenuItem value='0150 Lecture Course'>0150 Lecture Course</MenuItem>
+              <MenuItem value='Gateway Intro Lecture Course'>"Gateway" Intro Lecture Course</MenuItem>
+              <MenuItem value='Other (1000-level) Lecture Course'>Other (1000-level) Lecture Course</MenuItem>
+              <MenuItem value='First-Year Seminar'>First-Year Seminar</MenuItem>
+              <MenuItem value='Second-Year Seminar'>Second-Year Seminar</MenuItem>
+              <MenuItem value='Non-Capstone Seminar'>Non-Capstone Seminar</MenuItem>
+              <MenuItem value='Capstone Seminar'>Capstone Seminar</MenuItem>
+              <MenuItem value='Honors Series Course'>Honors Series Course</MenuItem>
+              <MenuItem value='Grad Course'>Grad Course</MenuItem>
+              <MenuItem value='Grad/Undergrad Course'>Grad/Undergrad Course</MenuItem>
+            </Select>
+        </Grid>
+
         {isUndergrad === 1 &&
           <Grid item xs={2}>
             <Tooltip title="The geographic region(s) that best fit the content of the course" placement="bottom-end" arrow>
@@ -719,27 +732,22 @@ function CourseProposal() {
             onChange={(e) => setDescription(e.target.value)}
           />
         </Grid>
-
+        
         {isUndergrad === 1 && <Grid item xs={4.5}></Grid>}
-        {isUndergrad === 1 && <Grid item xs={3}>
-          <FormGroup>
-            <FormControlLabel control={<Checkbox checked={capstone} onClick={(e) => { setCapstone((e.target as HTMLInputElement).checked) }} />} label="Capstone" />
-            <FormControlLabel control={<Checkbox checked={fys} onClick={(e) => { setFys((e.target as HTMLInputElement).checked) }} />} label="First-Year Seminar" />
-            <FormControlLabel control={<Checkbox checked={sys} onClick={(e) => { setSys((e.target as HTMLInputElement).checked) }} />} label="Second-Year Seminar" />
-            <FormControlLabel control={<Checkbox checked={intro} onClick={(e) => { setIntro((e.target as HTMLInputElement).checked) }} />} label="Intro" />
-            <FormControlLabel control={<Checkbox checked={lecture} onClick={(e) => { setLecture((e.target as HTMLInputElement).checked) }} />} label="Lecture" />
-          </FormGroup>
-        </Grid>}
-
         {isUndergrad === 1 && <Grid item xs={3}>
           <FormGroup>
             <FormControlLabel control={<Checkbox checked={writ} onClick={(e) => { setWrit((e.target as HTMLInputElement).checked) }} />} label="WRIT" />
             <FormControlLabel control={<Checkbox checked={rpp} onClick={(e) => { setRPP((e.target as HTMLInputElement).checked) }} />} label="RPP" />
-            <FormControlLabel control={<Checkbox checked={remote} onClick={(e) => { setRemote((e.target as HTMLInputElement).checked) }} />} label="Accessible to Remote Students (REM)" />
+            <FormControlLabel control={<Checkbox checked={remoteOnly} onClick={(e) => { setRemoteOnly((e.target as HTMLInputElement).checked) }} />} label="Remote Only" />
+          </FormGroup>
+          </Grid>}
+          {isUndergrad === 1 && <Grid item xs={3}>
+          <FormGroup>
+            <FormControlLabel control={<Checkbox checked={remoteAccessible} onClick={(e) => { setRemoteAccessible((e.target as HTMLInputElement).checked) }} />} label="Remote Accessible" />
             <FormControlLabel control={<Checkbox checked={premodern} onClick={(e) => { setPremodern((e.target as HTMLInputElement).checked) }} />} label="Premodern" />
             <FormControlLabel control={<Checkbox checked={cblr} onClick={(e) => { setCBLR((e.target as HTMLInputElement).checked) }} />} label="CBLR" />
           </FormGroup>
-        </Grid>}
+          </Grid>}
         {isUndergrad === 1 && <Grid item xs={1.5}></Grid>}
 
         <Grid item xs={2}>
