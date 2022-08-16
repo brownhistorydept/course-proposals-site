@@ -1478,6 +1478,16 @@
     prop-types "^15.8.1"
     react-is "^18.2.0"
 
+"@mui/utils@5.9.3":
+  version "5.9.3"
+  resolved "https://registry.yarnpkg.com/@mui/utils/-/utils-5.9.3.tgz#a11e0824f00b7ea40257b390060ce167fe861d02"
+  dependencies:
+    "@babel/runtime" "^7.17.2"
+    "@types/prop-types" "^15.7.5"
+    "@types/react-is" "^16.7.1 || ^17.0.0"
+    prop-types "^15.8.1"
+    react-is "^18.2.0"
+
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
   resolved "https://registry.npmjs.org/@nodelib/fs.scandir/-/fs.scandir-2.1.5.tgz"
