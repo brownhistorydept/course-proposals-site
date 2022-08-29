@@ -1468,6 +1468,16 @@
   version "7.1.5"
   resolved "https://registry.npmjs.org/@mui/types/-/types-7.1.5.tgz"
 
+"@mui/utils@5.10.3":
+  version "5.10.3"
+  resolved "https://registry.yarnpkg.com/@mui/utils/-/utils-5.10.3.tgz#ce2a96f31de2a5e717f507b5383dbabbddbc4dfc"
+  dependencies:
+    "@babel/runtime" "^7.18.9"
+    "@types/prop-types" "^15.7.5"
+    "@types/react-is" "^16.7.1 || ^17.0.0"
+    prop-types "^15.8.1"
+    react-is "^18.2.0"
+
 "@mui/utils@5.9.1":
   version "5.9.1"
   resolved "https://registry.npmjs.org/@mui/utils/-/utils-5.9.1.tgz"
