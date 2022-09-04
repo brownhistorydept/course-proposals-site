@@ -270,11 +270,11 @@ courseRouter.post("/accept-reject/:is_accept", authCheck, async (req: IGetUserAu
       const courseDocumentWithProfessors = await courseDocument.populate('professors');
       const profEmails = (courseDocumentWithProfessors.professors as unknown as IUser[]).map(p => p.email);
       
-      if (isAccept) {
-        sendAcceptEmail(profEmails, course, reason, req.user.role !== ROLES.MANAGER);
-      } else {
-        sendRejectEmail(profEmails, course, reason, req.user.role !== ROLES.MANAGER);
-      }
+      // if (isAccept) {
+      //   sendAcceptEmail(profEmails, course, reason, req.user.role !== ROLES.MANAGER);
+      // } else {
+      //   sendRejectEmail(profEmails, course, reason, req.user.role !== ROLES.MANAGER);
+      // }
 
       res.status(200).json({
         message: "accepting/rejected course succeeded"
