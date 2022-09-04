@@ -55,7 +55,7 @@ function CourseView() {
   const courseYear = course["year"]? course["year"] : ''
   const courseDescription = course["description"]
   const courseSemester = course["semester"]? course["semester"] : ''
-  var courseLevel = ""
+  const courseLevels = course["levels"]?.join(', ') ?? ''
   const courseGeography = course["geography"]
   const courseFinalTime = course["final_time"]
   const courseIsRegular = course["is_regular_prof"] ? "Yes" : "No"
@@ -67,12 +67,6 @@ function CourseView() {
   const courseProfessors = course["professors"]
 
   const [reason, setReason] = useState(courseComments);
-
-  if (course["is_undergrad"]) {
-    courseLevel = "Undergraduate"
-  } else {
-    courseLevel = "Graduate"
-  }
 
   var profList = []
 
@@ -255,15 +249,14 @@ function CourseView() {
         <Grid item xs={10}>
           <TextField
             size='small'
+            fullWidth
             variant="standard"
             InputProps={{
               disableUnderline: true,
               readOnly: true,
             }}
-            value={courseLevel}
+            value={courseLevels}
           >
-            <MenuItem value={1}>Undergraduate</MenuItem>
-            <MenuItem value={0}>Graduate</MenuItem>
           </TextField>
         </Grid>
 

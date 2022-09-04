@@ -37,6 +37,7 @@ export interface ICourse {
   description: string,
   professors: string[], // professors is an array of strings, where each string is the professor's Object ID
   syllabus_link?: string,
+  levels: string[],
   // boolean designations
   is_undergrad: boolean, // if false, then grad
   is_RPP?: boolean,
@@ -74,6 +75,7 @@ const courseSchema = new Schema<ICourse>({
   description: { type: String, required: true },
   professors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   syllabus_link: { type: String, required: false },
+  levels: [{ type: String, required: false }],
   // boolean designations
   is_undergrad: { type: Boolean, required: true },
   is_RPP: { type: Boolean, required: false },

@@ -146,6 +146,9 @@ function CourseProposal() {
       if (typeof originalCourse.is_remote_accessible != "undefined") {
         setRemoteAccessible(originalCourse.is_remote_accessible)
       }
+      if (typeof originalCourse.is_remote_only != "undefined") {
+        setRemoteOnly(originalCourse.is_remote_only)
+      }
       if (typeof originalCourse.is_premodern != "undefined") {
         setPremodern(originalCourse.is_premodern)
       }
@@ -204,7 +207,7 @@ function CourseProposal() {
   }
 
   async function hasError() {
-    if (courseTitle === "" || description === "" || semester === "" || year === 0 || professors.length === 0) {
+    if (courseTitle === "" || description === "" || semester === "" || year === 0 || professors.length === 0 || levels.length === 0) {
       openAlert("Please fill in all required fields")
       return true;
     } else if (isNaN(year)) {
@@ -235,74 +238,43 @@ function CourseProposal() {
     professors.forEach((prof) => {
       profId.push(profMap.get(prof)!)
     })
-    if (isUndergrad) {
-      var proposedUndergradCourse = {
-        on_leave_fall: leaveFall,
-        on_leave_spring: leaveSpring,
-        is_regular_prof: isRegular === 1,
-        course_title: courseTitle,
-        description: description,
-        professors: profId,
-        syllabus_link: syllabusLink,
-        is_undergrad: true,
-        is_RPP: rpp,
-        is_WRIT: writ,
-        is_CBLR: cblr,
-        is_premodern: premodern,
-        course_type: courseType,
-        is_remote_accessible: remoteAccessible,
-        semester: semester,
-        year: year,
-        time_ranking: [time1, time2, time3],
-        geography: geography,
-        course_number: courseNumber,
-        proposal_status: originalCourse!.proposal_status!,
-        further_notes: notes,
-        final_time: finalTime,
-        _id: originalCourse!._id!
-      }
-      const success = await editCourse(proposedUndergradCourse);
-      if (success) {
-        if (user?.role === "manager") {
-          openAlert("Course successfully edited", '/review_courses');
-        } else {
-          openAlert("Course successfully edited", '/my_courses')
-        }
+    var proposedCourse = {
+      on_leave_fall: leaveFall,
+      on_leave_spring: leaveSpring,
+      is_regular_prof: isRegular === 1,
+      course_title: courseTitle,
+      description: description,
+      professors: profId,
+      syllabus_link: syllabusLink,
+      levels: levels,
+      is_undergrad: isUndergrad,
+      is_RPP: rpp,
+      is_WRIT: writ,
+      is_CBLR: cblr,
+      is_premodern: premodern,
+      course_type: courseType,
+      is_remote_accessible: remoteAccessible,
+      is_remote_only: remoteOnly,
+      semester: semester,
+      year: year,
+      time_ranking: [time1, time2, time3],
+      geography: geography,
+      course_number: courseNumber,
+      proposal_status: originalCourse!.proposal_status!,
+      further_notes: notes,
+      final_time: finalTime,
+      _id: originalCourse!._id!
+    }
+    const success = await editCourse(proposedCourse);
+    if (success) {
+      if (user?.role === "manager") {
+        openAlert("Course successfully edited", '/review_courses');
       } else {
-        openAlert("Error editing course")
-        return;
+        openAlert("Course successfully edited", '/my_courses')
       }
     } else {
-      var proposedGradCourse = {
-        on_leave_fall: leaveFall,
-        on_leave_spring: leaveSpring,
-        is_regular_prof: isRegular === 1,
-        course_title: courseTitle,
-        description: description,
-        professors: profId,
-        syllabus_link: syllabusLink,
-        is_undergrad: false,
-        course_type: courseType,
-        semester: semester,
-        year: year,
-        time_ranking: [time1, time2, time3],
-        final_time: finalTime,
-        course_number: courseNumber,
-        proposal_status: originalCourse!.proposal_status!,
-        further_notes: notes,
-        _id: originalCourse!._id!
-      }
-      const success = await editCourse(proposedGradCourse);
-      if (success) {
-        if (user?.role === "manager") {
-          openAlert("Course successfully submitted", '/review_courses')
-        } else {
-          openAlert("Course successfully submitted", '/my_courses')
-        }
-      } else {
-        openAlert("Error editing course")
-        return;
-      }
+      openAlert("Error editing course")
+      return;
     }
   }
 
@@ -322,81 +294,47 @@ function CourseProposal() {
       profId.push(profMap.get(prof)!)
     })
 
-    if (isUndergrad) {
-      var proposedUndergradCourse = {
-        on_leave_fall: leaveFall,
-        on_leave_spring: leaveSpring,
-        is_regular_prof: isRegular === 1,
-        course_title: courseTitle,
-        description: description,
-        professors: profId,
-        syllabus_link: syllabusLink,
-        is_undergrad: true,
-        is_RPP: rpp,
-        is_WRIT: writ,
-        is_CBLR: cblr,
-        is_premodern: premodern,
-        course_type: courseType,
-        is_remote_accessible: remoteAccessible,
-        semester: semester,
-        year: year,
-        time_ranking: [time1, time2, time3],
-        geography: geography,
-        final_time: finalTime,
-        course_number: courseNumber,
-        further_notes: notes,
-      }
-      var success = false;
-      if (isNewProposal) {
-        success = await submitCourse({ original: originalCourse!, proposed: proposedUndergradCourse });
-      } else {
-        success = await submitCourse({ proposed: proposedUndergradCourse });
-      }
+    var proposedCourse = {
+      on_leave_fall: leaveFall,
+      on_leave_spring: leaveSpring,
+      is_regular_prof: isRegular === 1,
+      course_title: courseTitle,
+      description: description,
+      professors: profId,
+      syllabus_link: syllabusLink,
+      levels: levels,
+      is_undergrad: isUndergrad,
+      is_RPP: rpp,
+      is_WRIT: writ,
+      is_CBLR: cblr,
+      is_premodern: premodern,
+      course_type: courseType,
+      is_remote_accessible: remoteAccessible,
+      is_remote_only: remoteOnly,
+      semester: semester,
+      year: year,
+      time_ranking: [time1, time2, time3],
+      geography: geography,
+      final_time: finalTime,
+      course_number: courseNumber,
+      further_notes: notes,
+    }
+    var success = false;
+    if (isNewProposal) {
+      success = await submitCourse({ original: originalCourse!, proposed: proposedCourse });
+    } else {
+      success = await submitCourse({ proposed: proposedCourse });
+    }
 
-      if (success) {
-        if (user?.role === "manager") {
-          openAlert("Course successfully submitted", '/review_courses')
-        } else {
-          openAlert("Course successfully submitted", '/my_courses')
-        }
+    if (success) {
+      if (user?.role === "manager") {
+        openAlert("Course successfully submitted", '/review_courses')
       } else {
-        openAlert("Error submitting course")
-        return;
+        openAlert("Course successfully submitted", '/my_courses')
       }
     } else {
-      var proposedGradCourse = {
-        on_leave_fall: leaveFall,
-        on_leave_spring: leaveSpring,
-        is_regular_prof: isRegular === 1,
-        course_title: courseTitle,
-        description: description,
-        professors: profId,
-        syllabus_link: syllabusLink,
-        is_undergrad: false,
-        course_type: courseType,
-        semester: semester,
-        year: year,
-        time_ranking: [time1, time2, time3],
-        final_time: finalTime,
-        course_number: courseNumber,
-        further_notes: notes,
-      }
-      success = false;
-      if (isNewProposal) {
-        success = await submitCourse({ original: originalCourse!, proposed: proposedGradCourse });
-      } else {
-        success = await submitCourse({ proposed: proposedGradCourse });
-      }
-      if (success) {
-        if (user?.role === "manager") {
-          openAlert("Course successfully submitted", '/review_courses')
-        } else {
-          openAlert("Course successfully submitted", '/my_courses')
-        }
-      } else {
-        openAlert("Error submitting course")
-        return;
-      }
+      openAlert("Error submitting course")
+      return;
     }
   }
 
@@ -585,7 +523,7 @@ function CourseProposal() {
             size='small'
             onChange={(e) => { setYear(parseInt(e.target.value)) }}
             label="Year"
-            value={year.toString()}
+            value={year.toString() !== 'NaN' ? year.toString() : ''}
           />
         </Grid>
 
@@ -643,13 +581,12 @@ function CourseProposal() {
             </Select>
         </Grid>
 
-        {isUndergrad &&
-          <Grid item xs={2}>
-            <Tooltip title="The geographic region(s) that best fit the content of the course" placement="bottom-end" arrow>
-              <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Geography *</Typography>
-            </Tooltip>
-          </Grid>}
-        {isUndergrad && <Grid item xs={10}>
+        <Grid item xs={2}>
+          <Tooltip title="The geographic region(s) that best fit the content of the course (required for undergraduate courses)" placement="bottom-end" arrow>
+            <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Geography (undergrad *)</Typography>
+          </Tooltip>
+        </Grid>
+        <Grid item xs={10}>
           <FormControl fullWidth>
             <Select
               size='small'
@@ -674,7 +611,7 @@ function CourseProposal() {
             </Select>
           </FormControl>
 
-        </Grid>}
+        </Grid>
 
         <Grid item xs={2}>
           <Tooltip title="Your preference ranking for course time slots, which will inform the final time choice" placement="bottom-end" arrow>
@@ -745,22 +682,22 @@ function CourseProposal() {
           />
         </Grid>
         
-        {isUndergrad && <Grid item xs={4.5}></Grid>}
-        {isUndergrad && <Grid item xs={3}>
+        <Grid item xs={4.5}></Grid>
+          <Grid item xs={3}>
           <FormGroup>
             <FormControlLabel control={<Checkbox checked={writ} onClick={(e) => { setWrit((e.target as HTMLInputElement).checked) }} />} label="WRIT" />
             <FormControlLabel control={<Checkbox checked={rpp} onClick={(e) => { setRPP((e.target as HTMLInputElement).checked) }} />} label="RPP" />
             <FormControlLabel control={<Checkbox checked={remoteOnly} onClick={(e) => { setRemoteOnly((e.target as HTMLInputElement).checked) }} />} label="Remote Only" />
           </FormGroup>
-          </Grid>}
-          {isUndergrad && <Grid item xs={3}>
+          </Grid>
+          <Grid item xs={3}>
           <FormGroup>
             <FormControlLabel control={<Checkbox checked={remoteAccessible} onClick={(e) => { setRemoteAccessible((e.target as HTMLInputElement).checked) }} />} label="Remote Accessible" />
             <FormControlLabel control={<Checkbox checked={premodern} onClick={(e) => { setPremodern((e.target as HTMLInputElement).checked) }} />} label="Premodern" />
             <FormControlLabel control={<Checkbox checked={cblr} onClick={(e) => { setCBLR((e.target as HTMLInputElement).checked) }} />} label="CBLR" />
           </FormGroup>
-          </Grid>}
-        {isUndergrad && <Grid item xs={1.5}></Grid>}
+          </Grid>
+        <Grid item xs={1.5}></Grid>
 
         <Grid item xs={2}>
           <Tooltip title="Any extra notes by professor or director/manager that don't fit into the other fields" placement="bottom-end" arrow>

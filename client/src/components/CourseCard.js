@@ -51,7 +51,7 @@ export default function ComplexGrid({ course, status, canEdit, canAccept, canNew
                 <Typography gutterBottom variant="body1">{course.final_time}</Typography>
               </Grid>
               <Grid item xs={2} container >
-                <Typography gutterBottom variant="body1" sx={{ pr: 8 }}>{course.is_undergrad ? "Undergraduate" : "Graduate"}</Typography>
+                <Typography gutterBottom variant="body1" sx={{ pr: 8 }}>{course.levels?.join(', ') ?? ''}</Typography>
               </Grid>
             </Grid>
 
