@@ -8,9 +8,10 @@ import { ICourse } from "../../server/src/models/Course";
 import { fetchCourses } from "./utils/courses";
 import CourseCard from './components/CourseCard';
 import { Checkbox, FormControl, Grid, ListItemText, MenuItem, Select } from '@mui/material';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function MyCourses() {
+  const navigate = useNavigate();
   const [user, setUser] = useState<IUser>();
   const [submittedCourses, setSubmittedCourses] = useState<ICourse[]>();
   const [yearSems, setYearSems] = useState<string[]>([]);
@@ -67,7 +68,7 @@ function MyCourses() {
   }
 
   if (user?.role === "default" || user?.role === "manager") {
-    return <Navigate to="/course_catalog" />;
+    navigate('/course_catalog');
   }
   return (
     <div className="MyCourses">

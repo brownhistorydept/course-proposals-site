@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 import { ICourse } from "../../server/src/models/Course";
 import { fetchCourses } from "./utils/courses";
 import CourseCard from './components/CourseCard';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button, Checkbox, Dialog, DialogActions, DialogTitle, FormControl, Grid, ListItemText, MenuItem, Select } from '@mui/material';
 import Papa from 'papaparse';
 import { downloadFile } from './utils/files';
@@ -146,7 +146,7 @@ function CourseReview() {
   }
 
   if (user?.role === "default" || user?.role === "professor") {
-    return <Navigate to="/course_catalog" />;
+    navigate('/course_catalog');
   }
 
   const openAlert = (title: string, path?: string) => {

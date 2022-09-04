@@ -19,7 +19,7 @@ import ListItemText from '@mui/material/ListItemText';
 import { fetchUsers } from "./utils/users";
 import InputLabel from '@mui/material/InputLabel';
 import Tooltip from '@mui/material/Tooltip';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router'
 import { ICourse } from "../../server/src/models/Course";
 import { Dialog, DialogActions, DialogTitle } from '@mui/material';
@@ -193,9 +193,9 @@ function CourseProposal() {
     "L: TTh 6:40-8", "M: M 3-5:30", "N: W 3-5:30", "O: F 3-5:30",
     "P: T 4-6:30", "Q: Th 4-6:30", "T: MW 3-4:20"]
 
-  if (user?.role === "default") {
-    return <Navigate to="/course_catalog" />;
-  }
+    if (user?.role === "default") {
+      navigate('/course_catalog');
+    }
 
   const openAlert = (title: string, path?: string) => {
     setAlertTitle(title);

@@ -5,11 +5,12 @@ import Typography from '@mui/material/Typography';
 import { useEffect, useState } from "react";
 import { IUser } from "../../server/src/models/User";
 import { handleLoginClick, setAuthenticatedUser } from "./utils/auth";
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import GoogleButton from "react-google-button";
 
 function App() {
   const [user, setUser] = useState<IUser>();
+  const navigate = useNavigate();
   // called once when components on page have rendered
   useEffect(() => {
     async function getUser() {
@@ -20,7 +21,10 @@ function App() {
 
   return (
     (user) ?
-      <Navigate to="/course_catalog" />
+      <div><NavBar user={user} />
+        {navigate('./course_catalog')}
+      </div>
+
       : <div className="App">
         <NavBar user={user} />
         <Box
