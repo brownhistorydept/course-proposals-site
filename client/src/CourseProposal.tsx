@@ -87,7 +87,8 @@ function CourseProposal() {
   const [courseNumber, setCourseNumber] = useState('');
   const [courseTitle, setCourseTitle] = useState('');
   const [professors, setProfessors] = useState<string[]>([]);
-  const [isUndergrad, setIsUndergrad] = useState(1);
+  const [levels, setLevels] = useState<string[]>([]);
+  const [isUndergrad, setIsUndergrad] = useState(true);
   const [geography, setGeography] = useState<string[]>([]);
   const [description, setDescription] = useState('');
   const [courseType, setCourseType] = useState('0150 Lecture Course');
@@ -114,7 +115,7 @@ function CourseProposal() {
         setProfessors(originalCourse.professors)
       }
       if (typeof originalCourse.is_undergrad !== "undefined") {
-        setIsUndergrad(originalCourse.is_undergrad ? 1 : 0)
+        setIsUndergrad(originalCourse.is_undergrad)
       }
       if (typeof originalCourse.semester !== "undefined") {
         setSemester(originalCourse.semester)
@@ -212,7 +213,7 @@ function CourseProposal() {
     } else if (time1 === time2 || time2 === time3 || time1 === time3) {
       openAlert("Please enter three different times for Time Ranking")
       return true;
-    } else if (isUndergrad === 1 && geography.length === 0) {
+    } else if (isUndergrad && geography.length === 0) {
       openAlert("Please select geography")
       return true;
     }
@@ -234,7 +235,7 @@ function CourseProposal() {
     professors.forEach((prof) => {
       profId.push(profMap.get(prof)!)
     })
-    if (isUndergrad === 1) {
+    if (isUndergrad) {
       var proposedUndergradCourse = {
         on_leave_fall: leaveFall,
         on_leave_spring: leaveSpring,
@@ -321,7 +322,7 @@ function CourseProposal() {
       profId.push(profMap.get(prof)!)
     })
 
-    if (isUndergrad === 1) {
+    if (isUndergrad) {
       var proposedUndergradCourse = {
         on_leave_fall: leaveFall,
         on_leave_spring: leaveSpring,
@@ -595,16 +596,27 @@ function CourseProposal() {
         <Grid item xs={10}>
           <Select
             size='small'
+            multiple
             autoWidth
-            value={isUndergrad}
-            onChange={(e) => {
-              let val = e.target.value as number
-              setIsUndergrad(val)
-            }
-            }
+            value={levels}
+            onChange={(event) => {
+              const {
+                target: { value },
+              } = event;
+              const val = typeof value === 'string' ? value.split(',') : value as unknown as string[];
+              setLevels(val);
+              setIsUndergrad(val.includes('Undergraduate'));
+            }}
+            renderValue={(selected) => selected.join(', ')}
           >
-            <MenuItem value={1}>Undergraduate</MenuItem>
-            <MenuItem value={0}>Graduate</MenuItem>
+            <MenuItem value={'Undergraduate'}>
+              <Checkbox checked={levels.includes('Undergraduate')} />
+              Undergraduate
+            </MenuItem>
+            <MenuItem value={'Graduate'}>
+              <Checkbox checked={levels.includes('Graduate')} />
+              Graduate
+            </MenuItem>
           </Select>
         </Grid>
 
@@ -631,13 +643,13 @@ function CourseProposal() {
             </Select>
         </Grid>
 
-        {isUndergrad === 1 &&
+        {isUndergrad &&
           <Grid item xs={2}>
             <Tooltip title="The geographic region(s) that best fit the content of the course" placement="bottom-end" arrow>
               <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Geography *</Typography>
             </Tooltip>
           </Grid>}
-        {isUndergrad === 1 && <Grid item xs={10}>
+        {isUndergrad && <Grid item xs={10}>
           <FormControl fullWidth>
             <Select
               size='small'
@@ -733,22 +745,22 @@ function CourseProposal() {
           />
         </Grid>
         
-        {isUndergrad === 1 && <Grid item xs={4.5}></Grid>}
-        {isUndergrad === 1 && <Grid item xs={3}>
+        {isUndergrad && <Grid item xs={4.5}></Grid>}
+        {isUndergrad && <Grid item xs={3}>
           <FormGroup>
             <FormControlLabel control={<Checkbox checked={writ} onClick={(e) => { setWrit((e.target as HTMLInputElement).checked) }} />} label="WRIT" />
             <FormControlLabel control={<Checkbox checked={rpp} onClick={(e) => { setRPP((e.target as HTMLInputElement).checked) }} />} label="RPP" />
             <FormControlLabel control={<Checkbox checked={remoteOnly} onClick={(e) => { setRemoteOnly((e.target as HTMLInputElement).checked) }} />} label="Remote Only" />
           </FormGroup>
           </Grid>}
-          {isUndergrad === 1 && <Grid item xs={3}>
+          {isUndergrad && <Grid item xs={3}>
           <FormGroup>
             <FormControlLabel control={<Checkbox checked={remoteAccessible} onClick={(e) => { setRemoteAccessible((e.target as HTMLInputElement).checked) }} />} label="Remote Accessible" />
             <FormControlLabel control={<Checkbox checked={premodern} onClick={(e) => { setPremodern((e.target as HTMLInputElement).checked) }} />} label="Premodern" />
             <FormControlLabel control={<Checkbox checked={cblr} onClick={(e) => { setCBLR((e.target as HTMLInputElement).checked) }} />} label="CBLR" />
           </FormGroup>
           </Grid>}
-        {isUndergrad === 1 && <Grid item xs={1.5}></Grid>}
+        {isUndergrad && <Grid item xs={1.5}></Grid>}
 
         <Grid item xs={2}>
           <Tooltip title="Any extra notes by professor or director/manager that don't fit into the other fields" placement="bottom-end" arrow>

@@ -78,6 +78,7 @@ function getCourseStatus(proposed_course, original_course) {
     original_course.description === proposed_course.description &&
     original_course.is_RPP === proposed_course.is_RPP &&
     original_course.is_remote_accessible === proposed_course.is_remote_accessible &&
+    original_course.is_remote_only === proposed_course.is_remote_only &&
     original_course.is_WRIT === proposed_course.is_WRIT) {
     return COURSE_STATUS.EXISTING;
   } else {
