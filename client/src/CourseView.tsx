@@ -52,6 +52,7 @@ function CourseView() {
 
   const courseNumber = course["course_number"]
   const courseTitle = course["course_title"]
+  const courseType = course["course_type"]
   const courseYear = course["year"]? course["year"] : ''
   const courseDescription = course["description"]
   const courseSemester = course["semester"]? course["semester"] : ''
@@ -261,6 +262,23 @@ function CourseView() {
         </Grid>
 
         <Grid item xs={2}>
+          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Type</Typography>
+        </Grid>
+        <Grid item xs={10}>
+          <TextField
+            size='small'
+            fullWidth
+            variant="standard"
+            InputProps={{
+              disableUnderline: true,
+              readOnly: true,
+            }}
+            value={courseType}
+          >
+          </TextField>
+        </Grid>
+
+        <Grid item xs={2}>
           <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Geography</Typography>
         </Grid>
         <Grid item xs={10}>
@@ -331,21 +349,18 @@ function CourseView() {
 
         <Grid item xs={4.5}></Grid>
         <Grid item xs={3}>
-          <FormGroup>
-            <FormControlLabel control={<Checkbox disabled checked={course.is_capstone} />} label="Capstone" />
-            <FormControlLabel control={<Checkbox disabled checked={course.is_FYS} />} label="First-Year Seminar" />
-            <FormControlLabel control={<Checkbox disabled checked={course.is_SYS} />} label="Second-Year Seminar" />
-            <FormControlLabel control={<Checkbox disabled checked={course.is_intro} />} label="Intro" />
-            <FormControlLabel control={<Checkbox disabled checked={course.is_lecture} />} label="Lecture" />
-          </FormGroup>
+        <FormGroup>
+          <FormControlLabel control={<Checkbox disabled checked={course.is_WRIT} />} label="WRIT" />
+          <FormControlLabel control={<Checkbox disabled checked={course.is_RPP} />} label="RPP" />
+          <FormControlLabel control={<Checkbox disabled checked={course.is_remote_only} />} label="Remote Only" />
+        </FormGroup>
         </Grid>
         <Grid item xs={3}>
-          <FormGroup>
-            <FormControlLabel control={<Checkbox disabled checked={course.is_WRIT} />} label="WRIT" />
-            <FormControlLabel control={<Checkbox disabled checked={course.is_RPP} />} label="RPP" />
-            <FormControlLabel control={<Checkbox disabled checked={course.is_remote_accessible} />} label="Remote" />
-            <FormControlLabel control={<Checkbox disabled checked={course.is_FYS} />} label="Premodern" />
-          </FormGroup>
+        <FormGroup>
+          <FormControlLabel control={<Checkbox disabled checked={course.is_remote_accessible} />} label="Remote Accessible" />
+          <FormControlLabel control={<Checkbox disabled checked={course.is_premodern} />} label="Premodern" />
+          <FormControlLabel control={<Checkbox disabled checked={course.is_CBLR} />} label="CBLR" />
+        </FormGroup>
         </Grid>
         <Grid item xs={1.5}></Grid>
 

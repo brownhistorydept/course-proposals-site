@@ -25,11 +25,14 @@ export default function ComplexGrid({ course, status, canEdit, canAccept, canNew
             {/* First row */}
             <Grid item xs container >
 
-            <Grid item xs='auto' container >
-                <Typography gutterBottom variant="body1" sx={{ fontWeight: 'bold' }}>{course.course_number}</Typography>
+              <Grid item xs='auto' container >
+                  <Typography gutterBottom variant="body1" sx={{ fontWeight: 'bold' }}>{course.course_number}</Typography>
               </Grid>
-              <Grid item xs container paddingLeft={4}>
-                <Typography variant="body1" gutterBottom>{course.course_title}</Typography>
+              <Grid item xs={9} container>
+                  <Typography variant="body1" gutterBottom>{course.course_title}</Typography>
+              </Grid>
+              <Grid item xs={3} container>
+                <Typography variant="body1" gutterBottom>{course.course_type}</Typography>
               </Grid>
             </Grid>
 
@@ -44,13 +47,13 @@ export default function ComplexGrid({ course, status, canEdit, canAccept, canNew
                   }
                 })}
               </Grid>
-              <Grid item xs={2} container >
+              <Grid item xs={1} container >
                 <Typography gutterBottom variant="body1">{course.semester} {course.year}</Typography>
               </Grid>
-              <Grid item xs={2} container >
+              <Grid item xs={3} container >
                 <Typography gutterBottom variant="body1">{course.final_time}</Typography>
               </Grid>
-              <Grid item xs={2} container >
+              <Grid item xs={3} container >
                 <Typography gutterBottom variant="body1" sx={{ pr: 8 }}>{course.levels?.join(', ') ?? ''}</Typography>
               </Grid>
             </Grid>
@@ -59,35 +62,12 @@ export default function ComplexGrid({ course, status, canEdit, canAccept, canNew
             <Grid item xs container >
               <Grid item xs container >
                 <FormGroup row>
-                  {course.is_RPP && <FormControlLabel disabled checked control={<Checkbox />} label="RPP" key="RPP" />}
-                  {!course.is_RPP && <FormControlLabel disabled control={<Checkbox />} label="RPP" key="RPP1" />}
-
-                  {course.is_WRIT && <FormControlLabel disabled checked control={<Checkbox />} label="WRIT" key="WRIT" />}
-                  {!course.is_WRIT && <FormControlLabel disabled control={<Checkbox />} label="WRIT" key="WRIT1" />}
-
-                  {course.is_CBLR && <FormControlLabel disabled checked control={<Checkbox />} label="CBLR" key="CBLR" />}
-                  {!course.is_CBLR && <FormControlLabel disabled control={<Checkbox />} label="CBLR" key="CBLR1" />}
-
-                  {course.is_remote_accessible && <FormControlLabel disabled checked control={<Checkbox />} label="REM" key="REM" />}
-                  {!course.is_remote_accessible && <FormControlLabel disabled control={<Checkbox />} label="REM" key="REM1" />}
-
-                  {course.is_premodern && <FormControlLabel disabled checked control={<Checkbox />} label="Premodern" key="P" />}
-                  {!course.is_premodern && <FormControlLabel disabled control={<Checkbox />} label="Premodern" key="P1" />}
-
-                  {course.is_intro && <FormControlLabel disabled checked control={<Checkbox />} label="Intro" key="Intro" />}
-                  {!course.is_intro && <FormControlLabel disabled control={<Checkbox />} label="Intro" key="Intro1" />}
-
-                  {course.is_FYS && <FormControlLabel disabled checked control={<Checkbox />} label="FYS" key="FYS" />}
-                  {!course.is_FYS && <FormControlLabel disabled control={<Checkbox />} label="FYS" key="FYS1" />}
-
-                  {course.is_SYS && <FormControlLabel disabled checked control={<Checkbox />} label="SYS" key="SYS" />}
-                  {!course.is_SYS && <FormControlLabel disabled control={<Checkbox />} label="SYS" key="SYS1" />}
-
-                  {course.is_capstone && <FormControlLabel disabled checked control={<Checkbox />} label="Capstone" key="Capstone" />}
-                  {!course.is_capstone && <FormControlLabel disabled control={<Checkbox />} label="Capstone" key="Capstone1" />}
-
-                  {course.is_lecture && <FormControlLabel disabled checked control={<Checkbox />} label="Lecture" key="Lecture" />}
-                  {!course.is_lecture && <FormControlLabel disabled control={<Checkbox />} label="Lecture" key="Lecture1" />}
+                  <FormControlLabel control={<Checkbox disabled checked={course.is_WRIT} />} label="WRIT" />
+                  <FormControlLabel control={<Checkbox disabled checked={course.is_RPP} />} label="RPP" />
+                  <FormControlLabel control={<Checkbox disabled checked={course.is_remote_only} />} label="Remote Only" />
+                  <FormControlLabel control={<Checkbox disabled checked={course.is_remote_accessible} />} label="Remote Accessible" />
+                  <FormControlLabel control={<Checkbox disabled checked={course.is_premodern} />} label="Premodern" />
+                  <FormControlLabel control={<Checkbox disabled checked={course.is_CBLR} />} label="CBLR" />
                 </FormGroup>
               </Grid>
             </Grid>

@@ -14,11 +14,11 @@ import CourseCard from './CourseCard'
 
 export default function Search({ allProfessors, courses: allCourses, user }) {
   const [searched, setSearched] = React.useState('');
-  const [professorSelected, setProfessor] = React.useState('');
-  const [level, setLevel] = React.useState(2);
-  const [geography, setGeography] = React.useState('');
+  const [professors, setProfessors] = React.useState([]);
+  const [levels, setLevels] = React.useState([]);
+  const [geographies, setGeographies] = React.useState([]);
   const [year, setYear] = React.useState(new Date().getFullYear());
-  const [semester, setSemester] = React.useState('');
+  const [semesters, setSemesters] = React.useState([]);
   // not sure having it default to the default year makes sense, but with '' react thinks its a string so === test fails
 
   const [designations, setDesignations] = React.useState({
@@ -26,12 +26,8 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
     is_WRIT: false,
     is_CBLR: false,
     is_premodern: false,
-    is_FYS: false,
-    is_SYS: false,
-    is_capstone: false,
-    is_lecture: false,
-    is_intro: false,
     is_remote_accessible: false,
+    is_remote_only: false,
   })
 
   const [consider, setConsider] = React.useState({
@@ -63,20 +59,19 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
       }
 
       if (consider['semester']) {
-        toFilter = toFilter.filter(course => course.semester === semester);
+        toFilter = toFilter.filter(course => semesters.some(sem => sem === course.semester));
       }
 
       if (consider['professor']) {
-        toFilter = toFilter.filter(course => course.professors.some(prof => prof.displayName === professorSelected.displayName))
+        toFilter = toFilter.filter(course => professors.every(profName => course.professors.some(p => p.displayName === profName)))
       }
 
       if (consider['level']) {
-        const boolLevel = level === 1
-        toFilter = toFilter.filter(course => course.is_undergrad === boolLevel);
+        toFilter = toFilter.filter(course => levels.every(level => course.levels.includes(level)));
       }
 
       if (consider['geography']) {
-        toFilter = toFilter.filter(course => course.geography.includes(geography));
+        toFilter = toFilter.filter(course => geographies.every(geo => course.geography.includes(geo)));
       }
 
       if (consider['designations']) {
@@ -93,18 +88,17 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
   }
 
   const selectProfessor = (event) => {
-    if (event.target.value === "All") {
-      setProfessor(event.target.value);
+    setProfessors(typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value);
+    if (event.target.value.length === 0) {
       setConsider({
         ...consider,
         'professor': false,
       });
     } else {
-      setProfessor(event.target.value);
       setConsider({
         ...consider,
         'professor': true,
-      });
+      })
     }
   };
 
@@ -124,58 +118,47 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
   }
 
   const selectSemester = (event) => {
-    if (event.target.value === "All") {
-      setSemester(event.target.value);
+    setSemesters(typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value);
+    if (event.target.value.length === 0) {
       setConsider({
         ...consider,
         'semester': false,
       });
     } else {
-      setSemester(event.target.value);
       setConsider({
         ...consider,
         'semester': true,
-      });
+      })
     }
   };
 
   const selectLevel = (event) => {
-    if (event.target.value === 1) {
-      setLevel(1);
+    setLevels(typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value);
+    if (event.target.value.length === 0) {
       setConsider({
         ...consider,
-        'level': true,
+        'levels': false,
       });
-    }
-    else if (event.target.value === 0) {
-      setLevel(0);
+    } else {
       setConsider({
         ...consider,
-        'level': true,
-      });
-    }
-    else if (event.target.value === 2) {
-      setLevel(2)
-      setConsider({
-        ...consider,
-        'level': false,
-      });
+        'levels': true,
+      })
     }
   };
 
   const selectGeography = (event) => {
-    if (event.target.value === "All") {
-      setGeography(event.target.value);
+    setGeographies(typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value);
+    if (event.target.value.length === 0) {
       setConsider({
         ...consider,
         'geography': false,
       });
     } else {
-      setGeography(event.target.value);
       setConsider({
         ...consider,
         'geography': true,
-      });
+      })
     }
   };
 
@@ -210,7 +193,7 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
     return courses.filter(course => course.course_title.toLowerCase().includes(searchString.toLowerCase()));
   }
 
-  const { is_RPP, is_WRIT, is_CBLR, is_premodern, is_FYS, is_SYS, is_capstone, is_lecture, is_intro, is_remote_accessible } = designations;
+  const { is_RPP, is_WRIT, is_CBLR, is_premodern, is_remote_accessible, is_remote_only } = designations;
 
   return (
     <div align='left'>
@@ -258,18 +241,21 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
               <FormControl sx={{ m: 1, minWidth: 120, marginTop: 0 }} size="small">
                 <InputLabel sx={{ m: 0, margin: 0, border: 0, padding: 0, fontSize: 14 }} id="demo-simple-select-helper-label">Professor</InputLabel>
                 <Select
-                  labelId="demo-simple-select-helper-label"
-                  id="demo-simple-select-helper"
-                  defaultValue="All"
-                  value={professorSelected}
+                  multiple
+                  autoWidth
+                  value={professors}
                   label="Professor"
                   onChange={selectProfessor}
+                  renderValue={(selected) => selected.join(', ')}
                   sx={{ padding: 0, border: 0 }}
                 >
-                  <MenuItem value="All">All</MenuItem>
-                  {allProfessors?.map((prof) => (
-                    <MenuItem value={prof} key={prof._id}>
-                      {prof.displayName}
+                  {allProfessors
+                    ?.map(prof => prof.displayName)
+                    ?.sort()
+                    ?.map((profName, idx) => (
+                    <MenuItem value={profName} key={idx}>
+                      <Checkbox checked={professors.some(pName => pName === profName)} />
+                      {profName}
                     </MenuItem>
                   ))}
                 </Select>
@@ -277,62 +263,65 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
             </div>
             <div>
               <FormControl sx={{ m: 1, minWidth: 120, marginTop: 0 }} size="small">
-                <InputLabel sx={{ m: 0, margin: 0, height: 1, border: 0, padding: 0, fontSize: 14 }} id="demo-simple-select-helper-label">Level</InputLabel>
+                <InputLabel sx={{ m: 0, margin: 0, height: 1, border: 0, padding: 0, fontSize: 14 }}>Level</InputLabel>
                 <Select
-                  defaultValue="All"
-                  labelId="demo-simple-select-helper-label"
-                  id="demo-simple-select-helper"
-                  value={level}
+                  multiple
+                  autoWidth
+                  value={levels}
                   label="Level"
                   onChange={selectLevel}
-                  sx={{ padding: 0, border: 0 }}
+                  renderValue={(selected) => selected.join(', ')}
                 >
-                  <MenuItem value={2}>All</MenuItem>
-                  <MenuItem value={1}>Undergraduate</MenuItem>
-                  <MenuItem value={0}>Graduate</MenuItem>
+                  <MenuItem value={'Undergraduate'}>
+                    <Checkbox checked={levels.includes('Undergraduate')} />
+                    Undergraduate
+                  </MenuItem>
+                  <MenuItem value={'Graduate'}>
+                    <Checkbox checked={levels.includes('Graduate')} />
+                    Graduate
+                  </MenuItem>
                 </Select>
               </FormControl>
             </div>
             <div>
               <FormControl sx={{ m: 1, minWidth: 120, height: 20, marginTop: 0 }} size="small">
-                <InputLabel sx={{ m: 0, margin: 0, height: 1, border: 0, padding: 0, fontSize: 14 }} id="demo-simple-select-helper-label">Geography</InputLabel>
+                <InputLabel sx={{ m: 0, margin: 0, height: 1, border: 0, padding: 0, fontSize: 14 }}>Geography</InputLabel>
                 <Select
-                  defaultValue="All"
-                  labelId="demo-simple-select-helper-label"
-                  id="demo-simple-select-helper"
-                  value={geography}
+                  multiple
+                  autoWidth
+                  value={geographies}
                   label="Geography"
                   onChange={selectGeography}
+                  renderValue={(selected) => selected.join(', ')}
                   sx={{ padding: 0, border: 0 }}
                 >
-                  <MenuItem value="All">All</MenuItem>
-                  <MenuItem value="Africa">Africa</MenuItem>
-                  <MenuItem value="East Asia">East Asia</MenuItem>
-                  <MenuItem value="Europe">Europe</MenuItem>
-                  <MenuItem value="Latin America">Latin America</MenuItem>
-                  <MenuItem value="MESA">Middle East - South Asia</MenuItem>
-                  <MenuItem value="North America">North America</MenuItem>
-                  <MenuItem value="Global">Global</MenuItem>
+                  {['Africa', 'East Asia', 'Europe', 'Latin America', 'MESA', 'North America', 'Global'].map((geo, idx) => (
+                    <MenuItem value={geo} key={idx}>
+                      <Checkbox checked={geographies.includes(geo)} />
+                      {geo}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </div>
             <div>
               <FormControl sx={{ m: 1, minWidth: 120, height: 20, marginTop: 0 }} size="small">
-                <InputLabel sx={{ m: 0, margin: 0, height: 1, border: 0, padding: 0, fontSize: 14 }} id="demo-simple-select-helper-label">Semester</InputLabel>
+                <InputLabel sx={{ m: 0, margin: 0, height: 1, border: 0, padding: 0, fontSize: 14 }}>Semester</InputLabel>
                 <Select
-                  defaultValue="All"
-                  labelId="demo-simple-select-helper-label"
-                  id="demo-simple-select-helper"
-                  value={semester}
+                  multiple
+                  autoWidth
+                  value={semesters}
                   label="Semester"
                   onChange={selectSemester}
+                  renderValue={(selected) => selected.join(', ')}
                   sx={{ padding: 0, border: 0 }}
                 >
-                  <MenuItem value="All">All</MenuItem>
-                  <MenuItem value="Winter">Winter</MenuItem>
-                  <MenuItem value="Spring">Spring</MenuItem>
-                  <MenuItem value="Summer">Summer</MenuItem>
-                  <MenuItem value="Fall">Fall</MenuItem>
+                  {['Winter', 'Spring', 'Summer', 'Fall'].map((sem, idx) => (
+                    <MenuItem value={sem} key={idx}>
+                      <Checkbox checked={semesters.includes(sem)} />
+                      {sem}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </div>
@@ -352,47 +341,11 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
           <Box sx={{ display: 'flex', height: 50, }}>
             <FormControl sx={{ m: 0 }} component="fieldset" variant="standard">
               <FormGroup row={true}>
-              <FormControlLabel
-                  control={
-                    <Checkbox checked={is_remote_accessible} onChange={selectFilters} name="is_remote_accessible" />
-                  }
-                  label="Accessible to Remote Students (REM)"
-                />
-              <FormControlLabel
-                  control={
-                    <Checkbox checked={is_capstone} onChange={selectFilters} name="is_capstone" />
-                  }
-                  label="Capstone"
-                />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={is_CBLR} onChange={selectFilters} name="is_CBLR" />
+                    <Checkbox checked={is_WRIT} onChange={selectFilters} name="is_WRIT" />
                   }
-                  label="Community-Based Learning & Research (CBLR)"
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox checked={is_FYS} onChange={selectFilters} name="is_FYS" />
-                  }
-                  label="First-Year Seminar"
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox checked={is_intro} onChange={selectFilters} name="is_intro" />
-                  }
-                  label="Intro"
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox checked={is_lecture} onChange={selectFilters} name="is_lecture" />
-                  }
-                  label="Lecture"
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox checked={is_premodern} onChange={selectFilters} name="is_premodern" />
-                  }
-                  label="Premodern"
+                  label="WRIT"
                 />
                 <FormControlLabel
                   control={
@@ -402,15 +355,27 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={is_SYS} onChange={selectFilters} name="is_SYS" />
+                    <Checkbox checked={is_remote_only} onChange={selectFilters} name="is_remote_only" />
                   }
-                  label="Second-Year Seminar"
+                  label="Remote Only"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={is_WRIT} onChange={selectFilters} name="is_WRIT" />
+                    <Checkbox checked={is_remote_accessible} onChange={selectFilters} name="is_remote_accessible" />
                   }
-                  label="WRIT"
+                  label="Remote Accessible"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox checked={is_premodern} onChange={selectFilters} name="is_premodern" />
+                  }
+                  label="Premodern"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox checked={is_CBLR} onChange={selectFilters} name="is_CBLR" />
+                  }
+                  label="Community-Based Learning & Research (CBLR)"
                 />
               </FormGroup>
             </FormControl>
