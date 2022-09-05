@@ -78,7 +78,7 @@ function CourseProposal() {
     isNewProposal = myState.isNewProposal;
   }
 
-  const [isRegular, setRegular] = useState(1);
+  const [isRegular, setRegular] = useState(true);
   const [leaveSpring, setleaveSpring] = useState(false);
   const [leaveFall, setleaveFall] = useState(false);
   const [notes, setNotes] = useState('');
@@ -108,15 +108,65 @@ function CourseProposal() {
   useEffect(() => {
     // if creating a new proposal, prefill values w/ original course values
     if (myState != null) {
+      if (typeof originalCourse.on_leave_fall != "undefined") {
+        setleaveFall(originalCourse.on_leave_fall)
+      }
+
+      if (typeof originalCourse.on_leave_spring != "undefined") {
+        setleaveSpring(originalCourse.on_leave_spring)
+      }
+
+      if (typeof originalCourse.is_regular_prof != "undefined") {
+        setRegular(originalCourse.is_regular_prof)
+      }
+
       if (typeof originalCourse.course_title !== "undefined") {
         setCourseTitle(originalCourse.course_title)
       }
+
+      if (typeof originalCourse.description !== "undefined") {
+        setDescription(originalCourse.description)
+      }
+
       if (typeof originalCourse.professors !== "undefined") {
         setProfessors(originalCourse.professors)
       }
+
+      if (typeof originalCourse.syllabus_link != "undefined") {
+        setSyllabusLink(originalCourse.syllabus_link)
+      }
+
+      if (typeof originalCourse.levels != "undefined") {
+        setLevels(originalCourse.levels)
+      }
+      
       if (typeof originalCourse.is_undergrad !== "undefined") {
         setIsUndergrad(originalCourse.is_undergrad)
       }
+
+      if (typeof originalCourse.is_RPP != "undefined") {
+        setRPP(originalCourse.is_RPP)
+      }
+
+      if (typeof originalCourse.is_WRIT != "undefined") {
+        setWrit(originalCourse.is_WRIT)
+      }
+
+      if (typeof originalCourse.is_CBLR != "undefined") {
+        setCBLR(originalCourse.is_CBLR)
+      }
+
+      if (typeof originalCourse.is_premodern != "undefined") {
+        setPremodern(originalCourse.is_premodern)
+      }
+
+      if (typeof originalCourse.is_remote_accessible != "undefined") {
+        setRemoteAccessible(originalCourse.is_remote_accessible)
+      }
+      if (typeof originalCourse.is_remote_only != "undefined") {
+        setRemoteOnly(originalCourse.is_remote_only)
+      }
+      
       if (typeof originalCourse.semester !== "undefined") {
         setSemester(originalCourse.semester)
       }
@@ -131,52 +181,17 @@ function CourseProposal() {
       if (typeof originalCourse.geography !== "undefined") {
         setGeography(originalCourse.geography)
       }
-      if (typeof originalCourse.description !== "undefined") {
-        setDescription(originalCourse.description)
-      }
+
       if (typeof originalCourse.course_type !== 'undefined') {
         setCourseType(originalCourse.course_type)
       }
-      if (typeof originalCourse.is_WRIT != "undefined") {
-        setWrit(originalCourse.is_WRIT)
-      }
-      if (typeof originalCourse.is_RPP != "undefined") {
-        setRPP(originalCourse.is_RPP)
-      }
-      if (typeof originalCourse.is_remote_accessible != "undefined") {
-        setRemoteAccessible(originalCourse.is_remote_accessible)
-      }
-      if (typeof originalCourse.is_remote_only != "undefined") {
-        setRemoteOnly(originalCourse.is_remote_only)
-      }
-      if (typeof originalCourse.is_premodern != "undefined") {
-        setPremodern(originalCourse.is_premodern)
-      }
-      if (typeof originalCourse.is_CBLR != "undefined") {
-        setCBLR(originalCourse.is_CBLR)
-      }
+    
       if (typeof originalCourse.final_time != "undefined") {
         setFinalTime(originalCourse.final_time)
       }
 
       if (typeof originalCourse.course_number != "undefined") {
         setCourseNumber(originalCourse.course_number)
-      }
-
-      if (typeof originalCourse.is_regular_prof != "undefined") {
-        originalCourse.is_regular_prof ? setRegular(1) : setRegular(0)
-      }
-
-      if (typeof originalCourse.on_leave_fall != "undefined") {
-        setleaveFall(originalCourse.on_leave_fall)
-      }
-
-      if (typeof originalCourse.on_leave_spring != "undefined") {
-        setleaveSpring(originalCourse.on_leave_spring)
-      }
-
-      if (typeof originalCourse.syllabus_link != "undefined") {
-        setSyllabusLink(originalCourse.syllabus_link)
       }
 
       if (typeof originalCourse.further_notes != "undefined") {
@@ -241,7 +256,7 @@ function CourseProposal() {
     var proposedCourse = {
       on_leave_fall: leaveFall,
       on_leave_spring: leaveSpring,
-      is_regular_prof: isRegular === 1,
+      is_regular_prof: isRegular,
       course_title: courseTitle,
       description: description,
       professors: profId,
@@ -297,7 +312,7 @@ function CourseProposal() {
     var proposedCourse = {
       on_leave_fall: leaveFall,
       on_leave_spring: leaveSpring,
-      is_regular_prof: isRegular === 1,
+      is_regular_prof: isRegular,
       course_title: courseTitle,
       description: description,
       professors: profId,
@@ -426,7 +441,7 @@ function CourseProposal() {
             autoWidth
             value={isRegular}
             onChange={(e) => {
-              let val = e.target.value as number
+              let val = e.target.value as boolean
               setRegular(val)
             }
             }

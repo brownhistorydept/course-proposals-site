@@ -2,16 +2,18 @@ import bson
 from pymongo import MongoClient, collection
 from openpyxl import load_workbook
 
-client = MongoClient(MONGODB_URI)
+client = MongoClient(MONGI_URI)
 db=client.HistoryDB
 c = collection.Collection(db, 'courses')
 u = collection.Collection(db, 'users')
 
-wb = load_workbook('/Users/carolynzech/Desktop/courses.xlsx')
+wb = load_workbook('path')
 ws = wb.active
 
 rows = tuple(ws.rows)
 courses = []
+
+c.delete_many({})
 
 def get_profs(row):
     if row[2].value:
@@ -25,7 +27,6 @@ def get_profs(row):
             else:
                 print('No prof found for ' + name)
 
-            
     return prof_ids
 
 
@@ -38,7 +39,7 @@ for row in rows:
         'geography': [str(geo) for geo in row[3].value.split(',')] if row[3].value != None else '',
         'is_premodern': str(row[4].value) == 'P',
         'proposal_status': 'accepted by CCC',
-        'is_undergrad': 1 == 1, # true
+        'levels': ['Undergraduate']
     }
     courses.append(course)
 

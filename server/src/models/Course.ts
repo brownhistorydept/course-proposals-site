@@ -23,8 +23,6 @@ export const COURSE_STATUS = Object.freeze({
   EXISTING: "existing",
 });
 
-// do we think my designation of optional variables is fair? Might be something to run by the client,
-// not sure whether more/less of these are optional than I might think
 export interface ICourse {
   _id?: string,
   created_at?: Date,
@@ -39,12 +37,11 @@ export interface ICourse {
   syllabus_link?: string,
   levels: string[],
   // boolean designations
-  is_undergrad: boolean, // if false, then grad
+  is_undergrad: boolean, // if false, then grad only
   is_RPP?: boolean,
   is_WRIT?: boolean,
   is_CBLR?: boolean,
   is_premodern?: boolean,
-  course_type: string,
   is_remote_accessible?: boolean,
   is_remote_only?: boolean,
   // enumerated designations
@@ -52,6 +49,7 @@ export interface ICourse {
   year: number,
   time_ranking: string[], // array of strings, e.g. [A, C, E]
   geography?: string[], // has to be from geo_regions list -- this is optional b/c we're not sure if graduate courses use these
+  course_type: string,
   // these are optional so that frontend can pass back proposed courses w/o them, but we always set them in submit
   proposal_status?: string,
   course_status?: string, // new, revised, or existing --> these are existing hist. dept. standards that we're replicating here
@@ -82,7 +80,6 @@ const courseSchema = new Schema<ICourse>({
   is_WRIT: { type: Boolean, required: false },
   is_CBLR: { type: Boolean, required: false },
   is_premodern: { type: Boolean, required: false },
-  course_type: {type: String, required: false},
   is_remote_accessible: { type: Boolean, required: false },
   is_remote_only: { type: Boolean, required: false},
   // enumerated designations
@@ -90,6 +87,7 @@ const courseSchema = new Schema<ICourse>({
   year: { type: Number, required: true },
   time_ranking: { type: [String], enum: TIMES, required: true }, // array of strings, e.g. [A, C, E]
   geography: { type: [String], enum: GEO_REGIONS, required: false }, // has to be from geo_regions list
+  course_type: {type: String, required: false},
   // we set these in backend
   proposal_status: { type: String, enum: Object.values(PROPOSAL_STATUS), required: false },
   course_status: { type: String, enum: Object.values(COURSE_STATUS), required: false },

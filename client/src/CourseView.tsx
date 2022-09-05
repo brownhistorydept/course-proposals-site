@@ -126,7 +126,13 @@ function CourseView() {
         </Box>
       </Box>
 
-      <Grid container spacing={2} maxWidth={1000} mx="auto" marginBottom='20px'>
+      <Grid
+          container
+          spacing={2} 
+          maxWidth={1000} 
+          mx="auto" 
+          marginBottom='20px'
+        >
 
         {!isRestrictedView && <>
           <Grid item xs={2}>
@@ -347,22 +353,27 @@ function CourseView() {
           />
         </Grid>
 
-        <Grid item xs={4.5}></Grid>
-        <Grid item xs={3}>
-        <FormGroup>
-          <FormControlLabel control={<Checkbox disabled checked={course.is_WRIT} />} label="WRIT" />
-          <FormControlLabel control={<Checkbox disabled checked={course.is_RPP} />} label="RPP" />
-          <FormControlLabel control={<Checkbox disabled checked={course.is_remote_only} />} label="Remote Only" />
-        </FormGroup>
+        <Grid
+          container
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Grid item xs={2.5}>
+            <FormGroup>
+              <FormControlLabel control={<Checkbox disabled checked={course.is_WRIT} />} label="WRIT" />
+              <FormControlLabel control={<Checkbox disabled checked={course.is_RPP} />} label="RPP" />
+              <FormControlLabel control={<Checkbox disabled checked={course.is_remote_only} />} label="Remote Only" />
+            </FormGroup>
+          </Grid>
+          <Grid item xs={2.5}>
+            <FormGroup>
+              <FormControlLabel control={<Checkbox disabled checked={course.is_remote_accessible} />} label="Remote Accessible" />
+              <FormControlLabel control={<Checkbox disabled checked={course.is_premodern} />} label="Premodern" />
+              <FormControlLabel control={<Checkbox disabled checked={course.is_CBLR} />} label="CBLR" />
+            </FormGroup>
+          </Grid>
         </Grid>
-        <Grid item xs={3}>
-        <FormGroup>
-          <FormControlLabel control={<Checkbox disabled checked={course.is_remote_accessible} />} label="Remote Accessible" />
-          <FormControlLabel control={<Checkbox disabled checked={course.is_premodern} />} label="Premodern" />
-          <FormControlLabel control={<Checkbox disabled checked={course.is_CBLR} />} label="CBLR" />
-        </FormGroup>
-        </Grid>
-        <Grid item xs={1.5}></Grid>
 
         <Grid item xs={2}>
           <Typography variant="body1" fontWeight="bold" align='right'>Syllabus Link</Typography>
@@ -415,76 +426,84 @@ function CourseView() {
           </Grid> </>}
 
       </Grid>
-
-      <Grid container spacing={3} justifyContent="center" paddingBottom={2}>
-
-        {/* purely aesthetics, just to make the buttons line up with the checkboxes and not look off */}
-        <Grid item xs={1}></Grid>
-
-        {canAccept && <>
-          <Button
-            style={{ textDecoration: 'none', marginTop: "20px" }}
-            variant="contained"
-            sx={{ textTransform: "none", backgroundColor: "#992525", mx: 1 }}
-            onClick={async () => {
-              const success = await acceptRejectCourse(course, true, reason);
-              if (success) {
-                openAlert('Course successfully accepted', true);
-              } else {
-                openAlert('Error accepting course', false);
-              }
-            }}>
-            <Typography gutterBottom variant="body1">
-              Accept
-            </Typography>
-          </Button>
-          <Button
-            style={{ textDecoration: 'none', marginTop: "20px" }}
-            variant="contained"
-            sx={{ textTransform: "none", backgroundColor: "#992525", mx: 1 }}
-            onClick={async () => {
-              const success = await acceptRejectCourse(course, false, reason);
-              if (success) {
-                openAlert('Course successfully rejected', true);
-              } else {
-                openAlert('Error rejecting course', false);
-              }
-            }}>
-            <Typography gutterBottom variant="body1">
-              Reject
-            </Typography>
-          </Button>
-        </>}
-
-        {canEdit && <>
-          <Link style={{ textDecoration: 'none', marginTop: "20px" }} to={"/course_proposal"} state={{ course: editCourse, isEditing: true, isNewProposal: false }}>
+      
+      <Grid
+        container
+        direction="row"
+        justifyContent="center"
+        alignItems="center"
+        spacing={2} 
+        maxWidth={1000} 
+        mx="auto" 
+        marginTop='50px'
+        marginBottom='20px'
+      >
+        <Grid xs={8} container spacing={2} paddingBottom={2} justifyContent="center">
+          {canAccept && <>
             <Button
+              style={{ textDecoration: 'none', marginTop: "20px" }}
               variant="contained"
               sx={{ textTransform: "none", backgroundColor: "#992525", mx: 1 }}
-            >
+              onClick={async () => {
+                const success = await acceptRejectCourse(course, true, reason);
+                if (success) {
+                  openAlert('Course successfully accepted', true);
+                } else {
+                  openAlert('Error accepting course', false);
+                }
+              }}>
               <Typography gutterBottom variant="body1">
-                Edit
+                Accept
               </Typography>
             </Button>
-          </Link>
-        </>}
+            <Button
+              style={{ textDecoration: 'none', marginTop: "20px" }}
+              variant="contained"
+              sx={{ textTransform: "none", backgroundColor: "#992525", mx: 1 }}
+              onClick={async () => {
+                const success = await acceptRejectCourse(course, false, reason);
+                if (success) {
+                  openAlert('Course successfully rejected', true);
+                } else {
+                  openAlert('Error rejecting course', false);
+                }
+              }}>
+              <Typography gutterBottom variant="body1">
+                Reject
+              </Typography>
+            </Button>
+          </>}
 
+          {canEdit && <>
+            <Grid>
+              <Link style={{ textDecoration: 'none'}} to={"/course_proposal"} state={{ course: editCourse, isEditing: true, isNewProposal: false }}>
+                <Button
+                  variant="contained"
+                  sx={{ textTransform: "none", backgroundColor: "#992525", mx: 1 }}
+                >
+                  <Typography gutterBottom variant="body1">
+                    Edit
+                  </Typography>
+                </Button>
+              </Link>
+            </Grid>
+          </>}
 
-        {canNewProposal && <>
-          <Grid item marginX="auto" >
-            <Link style={{ textDecoration: 'none' }} to={"/course_proposal"} state={{ course: proposalCourse, isEditing: false, isNewProposal: true }}>
-              <Button
-                variant="contained"
-                sx={{ textTransform: "none", backgroundColor: "#992525", mx: 1 }}
-              >
-                <Typography gutterBottom variant="body1">
-                  New Proposal
-                </Typography>
-              </Button>
-            </Link>
-          </Grid>
-        </>}
-
+          {canNewProposal && <>
+            <Grid>
+              <Link style={{ textDecoration: 'none' }} to={"/course_proposal"} state={{ course: proposalCourse, isEditing: false, isNewProposal: true }}>
+                <Button
+                  variant="contained"
+                  sx={{ textTransform: "none", backgroundColor: "#992525", mx: 1 }}
+                >
+                  <Typography gutterBottom variant="body1">
+                    New Proposal
+                  </Typography>
+                </Button>
+              </Link>
+            </Grid>
+          </>}
+        </Grid>
       </Grid>
 
       <Dialog open={alertOpen}>

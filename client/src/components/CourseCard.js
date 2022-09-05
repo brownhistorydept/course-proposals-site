@@ -25,10 +25,12 @@ export default function ComplexGrid({ course, status, canEdit, canAccept, canNew
             {/* First row */}
             <Grid item xs container >
 
-              <Grid item xs='auto' container >
+              {course.course_number? 
+              <Grid item xs={3} container >
                   <Typography gutterBottom variant="body1" sx={{ fontWeight: 'bold' }}>{course.course_number}</Typography>
               </Grid>
-              <Grid item xs={9} container>
+              : <></>}
+              <Grid item xs={6} container>
                   <Typography variant="body1" gutterBottom>{course.course_title}</Typography>
               </Grid>
               <Grid item xs={3} container>
@@ -38,7 +40,7 @@ export default function ComplexGrid({ course, status, canEdit, canAccept, canNew
 
             {/* Second row */}
             <Grid item xs container >
-              <Grid item xs={5} container >
+              <Grid item xs={4} container >
                 {course.professors.map((name, index) => {
                   if (index === course.professors.length - 1) {
                     return <Typography gutterBottom variant="body1" key={name.displayName}>{name.displayName}</Typography>
@@ -47,7 +49,7 @@ export default function ComplexGrid({ course, status, canEdit, canAccept, canNew
                   }
                 })}
               </Grid>
-              <Grid item xs={1} container >
+              <Grid item xs={2} container >
                 <Typography gutterBottom variant="body1">{course.semester} {course.year}</Typography>
               </Grid>
               <Grid item xs={3} container >

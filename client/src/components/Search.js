@@ -33,7 +33,7 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
   const [consider, setConsider] = React.useState({
     year: true,
     professor: false,
-    level: false,
+    levels: false,
     geography: false,
     designations: false,
     search: false,
@@ -63,10 +63,10 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
       }
 
       if (consider['professor']) {
-        toFilter = toFilter.filter(course => professors.every(profName => course.professors.some(p => p.displayName === profName)))
+        toFilter = toFilter.filter(course => professors.some(profName => course.professors.some(p => p.displayName === profName)))
       }
 
-      if (consider['level']) {
+      if (consider['levels']) {
         toFilter = toFilter.filter(course => levels.every(level => course.levels.includes(level)));
       }
 
@@ -134,6 +134,7 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
 
   const selectLevel = (event) => {
     setLevels(typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value);
+    console.log(event.target.value)
     if (event.target.value.length === 0) {
       setConsider({
         ...consider,
@@ -395,7 +396,7 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
         </Box>
       </Box>
       {filter().map((course, index) => (
-        <CourseCard key={index} course={course} status={false} canEdit={false} canAccept={false} canNewProposal={user?.role !== "default"} isRestrictedView={true} />
+        <CourseCard key={index} course={course} status={false} canEdit={user?.role === 'manager'} canAccept={false} canNewProposal={user?.role !== "default"} isRestrictedView={true} />
       ))
       }
     </div>
