@@ -438,7 +438,7 @@ function CourseView() {
         marginTop='50px'
         marginBottom='20px'
       >
-        <Grid xs={8} container spacing={2} paddingBottom={2} justifyContent="center">
+        <Grid item xs={8} container spacing={2} paddingBottom={2} justifyContent="center">
           {canAccept && <>
             <Button
               style={{ textDecoration: 'none', marginTop: "20px" }}

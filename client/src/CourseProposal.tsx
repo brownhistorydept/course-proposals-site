@@ -78,7 +78,7 @@ function CourseProposal() {
     isNewProposal = myState.isNewProposal;
   }
 
-  const [isRegular, setRegular] = useState(true);
+  const [isRegular, setRegular] = useState(1);
   const [leaveSpring, setleaveSpring] = useState(false);
   const [leaveFall, setleaveFall] = useState(false);
   const [notes, setNotes] = useState('');
@@ -117,7 +117,7 @@ function CourseProposal() {
       }
 
       if (typeof originalCourse.is_regular_prof != "undefined") {
-        setRegular(originalCourse.is_regular_prof)
+        setRegular(originalCourse.is_regular_prof? 1 : 0)
       }
 
       if (typeof originalCourse.course_title !== "undefined") {
@@ -256,7 +256,7 @@ function CourseProposal() {
     var proposedCourse = {
       on_leave_fall: leaveFall,
       on_leave_spring: leaveSpring,
-      is_regular_prof: isRegular,
+      is_regular_prof: isRegular == 1,
       course_title: courseTitle,
       description: description,
       professors: profId,
@@ -283,7 +283,11 @@ function CourseProposal() {
     const success = await editCourse(proposedCourse);
     if (success) {
       if (user?.role === "manager") {
-        openAlert("Course successfully edited", '/review_courses');
+        if (originalCourse?.proposal_status === 'accepted by CCC') {
+          openAlert("Course successfully edited", '/course_catalog');
+        } else {
+          openAlert("Course successfully edited", '/review_courses');
+        }
       } else {
         openAlert("Course successfully edited", '/my_courses')
       }
@@ -312,7 +316,7 @@ function CourseProposal() {
     var proposedCourse = {
       on_leave_fall: leaveFall,
       on_leave_spring: leaveSpring,
-      is_regular_prof: isRegular,
+      is_regular_prof: isRegular === 1,
       course_title: courseTitle,
       description: description,
       professors: profId,
@@ -441,7 +445,7 @@ function CourseProposal() {
             autoWidth
             value={isRegular}
             onChange={(e) => {
-              let val = e.target.value as boolean
+              let val = e.target.value as number
               setRegular(val)
             }
             }
