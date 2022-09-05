@@ -134,14 +134,14 @@ courseRouter.post("/edit", authCheck, async (req: IGetUserAuthInfoRequest, res: 
       });
       return;
     }
-  }
 
     if (course.proposal_status === PROPOSAL_STATUS.CCC_ACCEPTED) {
       res.status(403).json({
-        message: "Cannot edit a course that has been accepted by CCC"
+        message: "Only the manager can edit a course that has been accepted by CCC"
       });
       return;
     }
+  }
 
     if (req.user.role === ROLES.PROFESSOR || req.user.role === ROLES.CURRIC_COORD &&
       course.proposal_status === PROPOSAL_STATUS.DIRECTOR_ACCEPTED) {
