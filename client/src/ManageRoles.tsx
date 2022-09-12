@@ -73,6 +73,15 @@ function ManageRoles() {
     }
   }
 
+  function sortUsers() {
+    allUsers?.sort((prof1, prof2) => {
+      const prof1_surname = prof1.displayName.split(' ')[1]
+      const prof2_surname = prof2.displayName.split(' ')[1]
+      return prof1_surname.localeCompare(prof2_surname)
+    }
+    )
+  }
+
   if (user?.role !== "manager") {
     navigate('/course_catalog');
   }
@@ -90,6 +99,7 @@ function ManageRoles() {
             </TableRow>
           </TableHead>
           <TableBody>
+            {sortUsers()}
             {allUsers?.map((u, index) => (
               <TableRow key={index}>
                 <TableCell>{u.displayName}</TableCell>

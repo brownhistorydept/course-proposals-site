@@ -240,6 +240,7 @@ function CourseReview() {
 
           <Button variant='contained' onClick={onDownload}>Download Spreadsheet</Button>
 
+          {(yearSemOptions.length > 0) ?
           <Grid item xs={8} paddingBottom='30px' paddingTop='15px'>
             <FormControl fullWidth>
               <Select
@@ -265,9 +266,10 @@ function CourseReview() {
               </Select>
             </FormControl>
           </Grid>
+          :<></>}
 
         </Box>
-        <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={3}>
+        <Typography variant="h4" color="#992525" fontWeight={500} marginY={3}>
           To Review
         </Typography>
 
