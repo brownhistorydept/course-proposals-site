@@ -256,7 +256,7 @@ function CourseProposal() {
     var proposedCourse = {
       on_leave_fall: leaveFall,
       on_leave_spring: leaveSpring,
-      is_regular_prof: isRegular == 1,
+      is_regular_prof: isRegular === 1,
       course_title: courseTitle,
       description: description,
       professors: profId,
