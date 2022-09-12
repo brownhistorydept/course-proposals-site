@@ -182,23 +182,23 @@ function CourseView() {
               }}
             />
           </Grid>
-
-          <Grid item xs={2}>
-            <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Number</Typography>
-          </Grid>
-          <Grid item xs={9.5}>
-            <TextField
-              variant="standard"
-              InputProps={{
-                disableUnderline: true,
-                readOnly: true,
-              }}
-              size='small'
-              value={courseNumber}
-              sx={{ border: 0 }}
-            />
-          </Grid>
         </>}
+
+        <Grid item xs={2}>
+          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Number</Typography>
+        </Grid>
+        <Grid item xs={9.5}>
+          <TextField
+            variant="standard"
+            InputProps={{
+              disableUnderline: true,
+              readOnly: true,
+            }}
+            size='small'
+            value={courseNumber}
+            sx={{ border: 0 }}
+          />
+        </Grid>
 
         <Grid item xs={2}>
           <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Title</Typography>
