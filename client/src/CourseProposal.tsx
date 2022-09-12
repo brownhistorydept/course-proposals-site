@@ -23,7 +23,7 @@ import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router'
 import { ICourse } from "../../server/src/models/Course";
 import { Dialog, DialogActions, DialogTitle } from '@mui/material';
-import { GEO_REGIONS, TIMES, TIME_STRINGS } from './utils/constants';
+import { COURSE_TYPES, GEO_REGIONS, TIMES, TIME_STRINGS } from './utils/constants';
 
 function CourseProposal() {
   const navigate = useNavigate();
@@ -92,7 +92,7 @@ function CourseProposal() {
   const [isUndergrad, setIsUndergrad] = useState(true);
   const [geography, setGeography] = useState<string[]>([]);
   const [description, setDescription] = useState('');
-  const [courseType, setCourseType] = useState('0150 Lecture Course');
+  const [courseType, setCourseType] = useState(COURSE_TYPES[0]);
   const [writ, setWrit] = useState(false);
   const [rpp, setRPP] = useState(false);
   const [cblr, setCBLR] = useState(false);
@@ -578,16 +578,8 @@ function CourseProposal() {
             value={courseType}
             onChange={(e) => { setCourseType(e.target.value) }}
           >
-            <MenuItem value='0150 Lecture Course'>0150 Lecture Course</MenuItem>
-            <MenuItem value='Gateway Intro Lecture Course'>"Gateway" Intro Lecture Course</MenuItem>
-            <MenuItem value='Other (1000-level) Lecture Course'>Other (1000-level) Lecture Course</MenuItem>
-            <MenuItem value='First-Year Seminar'>First-Year Seminar</MenuItem>
-            <MenuItem value='Second-Year Seminar'>Second-Year Seminar</MenuItem>
-            <MenuItem value='Non-Capstone Seminar'>Non-Capstone Seminar</MenuItem>
-            <MenuItem value='Capstone Seminar'>Capstone Seminar</MenuItem>
-            <MenuItem value='Honors Series Course'>Honors Series Course</MenuItem>
-            <MenuItem value='Grad Course'>Grad Course</MenuItem>
-            <MenuItem value='Grad/Undergrad Course'>Grad/Undergrad Course</MenuItem>
+            {COURSE_TYPES.map((type, index) => (
+              <MenuItem key={index} value={type}>{type}</MenuItem>))}
           </Select>
         </Grid>
 

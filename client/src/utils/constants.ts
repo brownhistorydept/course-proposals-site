@@ -6,3 +6,5 @@ export const TIME_STRINGS = ["A: MWF 8-8:50", "B: MWF 9-9:50", "C: MWF 10-10:50"
   "I: TTh 10:30-11:50", "J: TTh 1-2:20", "K: TTh 2:30-3:50",
   "L: TTh 6:40-8", "M: M 3-5:30", "N: W 3-5:30", "O: F 3-5:30",
   "P: T 4-6:30", "Q: Th 4-6:30", "T: MW 3-4:20"];
+export const COURSE_TYPES = ["0150 Lecture Course", "Gateway Intro Lecture Course", "Other (1000-level) Lecture Course", "First-Year Seminar",
+  "Second-Year Seminar", "Non-Capstone Seminar", "Capstone Seminar", "Honors Series Course", "Grad Course", "Grad/Undergrad Course"];

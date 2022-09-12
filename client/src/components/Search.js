@@ -11,13 +11,14 @@ import Select from '@mui/material/Select';
 import * as React from 'react';
 
 import CourseCard from './CourseCard';
-import { GEO_REGIONS } from '../utils/constants';
+import { COURSE_TYPES, GEO_REGIONS } from '../utils/constants';
 
 export default function Search({ allProfessors, courses: allCourses, user }) {
   const [searched, setSearched] = React.useState('');
   const [professors, setProfessors] = React.useState([]);
   const [levels, setLevels] = React.useState([]);
   const [geographies, setGeographies] = React.useState([]);
+  const [courseTypes, setCourseTypes] = React.useState([]);
   const [year, setYear] = React.useState(new Date().getFullYear());
   const [semesters, setSemesters] = React.useState([]);
   // not sure having it default to the default year makes sense, but with '' react thinks its a string so === test fails
@@ -36,6 +37,7 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
     professor: false,
     levels: false,
     geography: false,
+    course_type: false,
     designations: false,
     search: false,
   })
@@ -73,6 +75,10 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
 
       if (consider['geography']) {
         toFilter = toFilter.filter(course => geographies.every(geo => course.geography.includes(geo)));
+      }
+
+      if (consider['courseType']) {
+        toFilter = toFilter.filter(course => courseTypes.some(type => type === course.course_type));
       }
 
       if (consider['designations']) {
@@ -160,6 +166,21 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
       setConsider({
         ...consider,
         'geography': true,
+      })
+    }
+  };
+
+  const selectCourseType = (event) => {
+    setCourseTypes(typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value);
+    if (event.target.value.length === 0) {
+      setConsider({
+        ...consider,
+        'courseType': false,
+      });
+    } else {
+      setConsider({
+        ...consider,
+        'courseType': true,
       })
     }
   };
@@ -301,6 +322,27 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
                     <MenuItem value={geo} key={idx}>
                       <Checkbox checked={geographies.includes(geo)} />
                       {geo}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </div>
+            <div>
+              <FormControl sx={{ m: 1, minWidth: 120, height: 20, marginTop: 0 }} size="small">
+                <InputLabel sx={{ m: 0, margin: 0, height: 1, border: 0, padding: 0, fontSize: 14 }}>Course Type</InputLabel>
+                <Select
+                  multiple
+                  autoWidth
+                  value={courseTypes}
+                  label="CourseType"
+                  onChange={selectCourseType}
+                  renderValue={(selected) => selected.join(', ')}
+                  sx={{ padding: 0, border: 0 }}
+                >
+                  {COURSE_TYPES.map((type, idx) => (
+                    <MenuItem value={type} key={idx}>
+                      <Checkbox checked={courseTypes.includes(type)} />
+                      {type}
                     </MenuItem>
                   ))}
                 </Select>
