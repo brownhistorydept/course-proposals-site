@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 const { model, Schema } = mongoose;
 
 // taken from dept. spreadsheet tracking courses, https://docs.google.com/spreadsheets/d/1NT5l7zAqlXDCivZXcTdsdceSnMD5v28ke6550tnBrnE/edit?usp=sharing
-export const GEO_REGIONS = Object.freeze(["Africa", "East Asia", "Europe", "Latin America", "MESA", "North America", "Global"]);
+export const GEO_REGIONS = Object.freeze(["Africa", "East Asia", "Europe", "Latin America", "Middle East - South Asia (MESA)", "North America", "Global"]);
 export const SEMESTERS = Object.freeze(["Fall", "Spring", "Winter", "Summer"]);
 export const TIMES = Object.freeze(["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "T"]);
 export const PROPOSAL_STATUS = Object.freeze({
@@ -81,13 +81,13 @@ const courseSchema = new Schema<ICourse>({
   is_CBLR: { type: Boolean, required: false },
   is_premodern: { type: Boolean, required: false },
   is_remote_accessible: { type: Boolean, required: false },
-  is_remote_only: { type: Boolean, required: false},
+  is_remote_only: { type: Boolean, required: false },
   // enumerated designations
   semester: { type: String, enum: SEMESTERS, required: true },
   year: { type: Number, required: true },
   time_ranking: { type: [String], enum: TIMES, required: true }, // array of strings, e.g. [A, C, E]
   geography: { type: [String], enum: GEO_REGIONS, required: false }, // has to be from geo_regions list
-  course_type: {type: String, required: false},
+  course_type: { type: String, required: false },
   // we set these in backend
   proposal_status: { type: String, enum: Object.values(PROPOSAL_STATUS), required: false },
   course_status: { type: String, enum: Object.values(COURSE_STATUS), required: false },
@@ -96,7 +96,7 @@ const courseSchema = new Schema<ICourse>({
   final_time: { type: String, required: false },
   // further notes
   further_notes: { type: String, required: false },
-  comments: {type: String, required: false}
+  comments: { type: String, required: false }
 });
 
 const Course = model<ICourse>("Course", courseSchema);

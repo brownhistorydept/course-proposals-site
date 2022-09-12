@@ -7,6 +7,8 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { Link } from 'react-router-dom';
 
+import { TIMES, TIME_STRINGS } from '../utils/constants';
+
 export default function ComplexGrid({ course, status, canEdit, canAccept, canNewProposal, isRestrictedView }) {
   return (
     <Paper
@@ -25,13 +27,13 @@ export default function ComplexGrid({ course, status, canEdit, canAccept, canNew
             {/* First row */}
             <Grid item xs container >
 
-              {course.course_number? 
-              <Grid item xs={3} container >
+              {course.course_number ?
+                <Grid item xs={3} container >
                   <Typography gutterBottom variant="body1" sx={{ fontWeight: 'bold' }}>{course.course_number}</Typography>
-              </Grid>
-              : <></>}
+                </Grid>
+                : <></>}
               <Grid item xs={6} container>
-                  <Typography variant="body1" gutterBottom>{course.course_title}</Typography>
+                <Typography variant="body1" gutterBottom>{course.course_title}</Typography>
               </Grid>
               <Grid item xs={3} container>
                 <Typography variant="body1" gutterBottom>{course.course_type}</Typography>
@@ -53,7 +55,7 @@ export default function ComplexGrid({ course, status, canEdit, canAccept, canNew
                 <Typography gutterBottom variant="body1">{course.semester} {course.year}</Typography>
               </Grid>
               <Grid item xs={3} container >
-                <Typography gutterBottom variant="body1">{course.final_time}</Typography>
+                <Typography gutterBottom variant="body1">{TIMES.indexOf(course.final_time) !== -1 ? TIME_STRINGS[TIMES.indexOf(course.final_time)] : ''}</Typography>
               </Grid>
               <Grid item xs={3} container >
                 <Typography gutterBottom variant="body1" sx={{ pr: 8 }}>{course.levels?.join(', ') ?? ''}</Typography>

@@ -16,6 +16,7 @@ import { Link } from 'react-router-dom';
 import { acceptRejectCourse } from './utils/courses';
 import { useNavigate } from 'react-router-dom';
 import { Dialog, DialogActions, DialogTitle, } from '@mui/material';
+import { TIMES, TIME_STRINGS } from './utils/constants';
 
 function CourseView() {
   const [user, setUser] = useState<IUser>();
@@ -53,12 +54,12 @@ function CourseView() {
   const courseNumber = course["course_number"]
   const courseTitle = course["course_title"]
   const courseType = course["course_type"]
-  const courseYear = course["year"]? course["year"] : ''
+  const courseYear = course["year"] ? course["year"] : ''
   const courseDescription = course["description"]
-  const courseSemester = course["semester"]? course["semester"] : ''
+  const courseSemester = course["semester"] ? course["semester"] : ''
   const courseLevels = course["levels"]?.join(', ') ?? ''
   const courseGeography = course["geography"]
-  const courseFinalTime = course["final_time"]
+  const courseFinalTime = TIMES.indexOf(course["final_time"]) !== -1 ? TIME_STRINGS[TIMES.indexOf(course["final_time"])] : ''
   const courseIsRegular = course["is_regular_prof"] ? "Yes" : "No"
   const courseLeaveFall = course["on_leave_fall"] ? "Yes" : "No"
   const courseLeaveSpring = course["on_leave_spring"] ? "Yes" : "No"
@@ -127,12 +128,12 @@ function CourseView() {
       </Box>
 
       <Grid
-          container
-          spacing={2} 
-          maxWidth={1000} 
-          mx="auto" 
-          marginBottom='20px'
-        >
+        container
+        spacing={2}
+        maxWidth={1000}
+        mx="auto"
+        marginBottom='20px'
+      >
 
         {!isRestrictedView && <>
           <Grid item xs={2}>
@@ -426,15 +427,15 @@ function CourseView() {
           </Grid> </>}
 
       </Grid>
-      
+
       <Grid
         container
         direction="row"
         justifyContent="center"
         alignItems="center"
-        spacing={2} 
-        maxWidth={1000} 
-        mx="auto" 
+        spacing={2}
+        maxWidth={1000}
+        mx="auto"
         marginTop='50px'
         marginBottom='20px'
       >
@@ -476,7 +477,7 @@ function CourseView() {
 
           {canEdit && <>
             <Grid>
-              <Link style={{ textDecoration: 'none'}} to={"/course_proposal"} state={{ course: editCourse, isEditing: true, isNewProposal: false }}>
+              <Link style={{ textDecoration: 'none' }} to={"/course_proposal"} state={{ course: editCourse, isEditing: true, isNewProposal: false }}>
                 <Button
                   variant="contained"
                   sx={{ textTransform: "none", backgroundColor: "#992525", mx: 1 }}

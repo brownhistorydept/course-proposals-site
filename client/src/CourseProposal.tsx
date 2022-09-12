@@ -23,6 +23,7 @@ import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router'
 import { ICourse } from "../../server/src/models/Course";
 import { Dialog, DialogActions, DialogTitle } from '@mui/material';
+import { GEO_REGIONS, TIMES, TIME_STRINGS } from './utils/constants';
 
 function CourseProposal() {
   const navigate = useNavigate();
@@ -117,7 +118,7 @@ function CourseProposal() {
       }
 
       if (typeof originalCourse.is_regular_prof != "undefined") {
-        setRegular(originalCourse.is_regular_prof? 1 : 0)
+        setRegular(originalCourse.is_regular_prof ? 1 : 0)
       }
 
       if (typeof originalCourse.course_title !== "undefined") {
@@ -139,7 +140,7 @@ function CourseProposal() {
       if (typeof originalCourse.levels != "undefined") {
         setLevels(originalCourse.levels)
       }
-      
+
       if (typeof originalCourse.is_undergrad !== "undefined") {
         setIsUndergrad(originalCourse.is_undergrad)
       }
@@ -166,7 +167,7 @@ function CourseProposal() {
       if (typeof originalCourse.is_remote_only != "undefined") {
         setRemoteOnly(originalCourse.is_remote_only)
       }
-      
+
       if (typeof originalCourse.semester !== "undefined") {
         setSemester(originalCourse.semester)
       }
@@ -185,7 +186,7 @@ function CourseProposal() {
       if (typeof originalCourse.course_type !== 'undefined') {
         setCourseType(originalCourse.course_type)
       }
-    
+
       if (typeof originalCourse.final_time != "undefined") {
         setFinalTime(originalCourse.final_time)
       }
@@ -201,19 +202,9 @@ function CourseProposal() {
 
   }, []);
 
-  const geographyValues = [
-    'Africa', "East Asia", "Europe", "Latin America", "Middle East - South Asia (MESA)", "North America", "Global"
-  ]
-  const timeValues = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "T"]
-  const timeStrings = ["A: MWF 8-8:50", "B: MWF 9-9:50", "C: MWF 10-10:50", "D: MWF 11-11:50",
-    "E: MWF 12-12:50", "F: MWF 1-1:50", "G: MWF 2-2:50", "H: TTh 9-10:20",
-    "I: TTh 10:30-11:50", "J: TTh 1-2:20", "K: TTh 2:30-3:50",
-    "L: TTh 6:40-8", "M: M 3-5:30", "N: W 3-5:30", "O: F 3-5:30",
-    "P: T 4-6:30", "Q: Th 4-6:30", "T: MW 3-4:20"]
-
-    if (user?.role === "default") {
-      navigate('/course_catalog');
-    }
+  if (user?.role === "default") {
+    navigate('/course_catalog');
+  }
 
   const openAlert = (title: string, path?: string) => {
     setAlertTitle(title);
@@ -415,8 +406,8 @@ function CourseProposal() {
                   value={finalTime}
                   onChange={(e) => { setFinalTime(e.target.value) }}
                 >
-                  {timeValues.map((time, index) =>
-                    <MenuItem key={index} value={time}>{timeStrings[index]}</MenuItem>
+                  {TIMES.map((time, index) =>
+                    <MenuItem key={index} value={time}>{TIME_STRINGS[index]}</MenuItem>
                   )}
                 </Select>
               </FormControl>
@@ -578,7 +569,7 @@ function CourseProposal() {
         </Grid>
 
         <Grid item xs={2}>
-            <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Type *</Typography>
+          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Type *</Typography>
         </Grid>
         <Grid item xs={10}>
           <Select
@@ -586,18 +577,18 @@ function CourseProposal() {
             autoWidth
             value={courseType}
             onChange={(e) => { setCourseType(e.target.value) }}
-            >
-              <MenuItem value='0150 Lecture Course'>0150 Lecture Course</MenuItem>
-              <MenuItem value='Gateway Intro Lecture Course'>"Gateway" Intro Lecture Course</MenuItem>
-              <MenuItem value='Other (1000-level) Lecture Course'>Other (1000-level) Lecture Course</MenuItem>
-              <MenuItem value='First-Year Seminar'>First-Year Seminar</MenuItem>
-              <MenuItem value='Second-Year Seminar'>Second-Year Seminar</MenuItem>
-              <MenuItem value='Non-Capstone Seminar'>Non-Capstone Seminar</MenuItem>
-              <MenuItem value='Capstone Seminar'>Capstone Seminar</MenuItem>
-              <MenuItem value='Honors Series Course'>Honors Series Course</MenuItem>
-              <MenuItem value='Grad Course'>Grad Course</MenuItem>
-              <MenuItem value='Grad/Undergrad Course'>Grad/Undergrad Course</MenuItem>
-            </Select>
+          >
+            <MenuItem value='0150 Lecture Course'>0150 Lecture Course</MenuItem>
+            <MenuItem value='Gateway Intro Lecture Course'>"Gateway" Intro Lecture Course</MenuItem>
+            <MenuItem value='Other (1000-level) Lecture Course'>Other (1000-level) Lecture Course</MenuItem>
+            <MenuItem value='First-Year Seminar'>First-Year Seminar</MenuItem>
+            <MenuItem value='Second-Year Seminar'>Second-Year Seminar</MenuItem>
+            <MenuItem value='Non-Capstone Seminar'>Non-Capstone Seminar</MenuItem>
+            <MenuItem value='Capstone Seminar'>Capstone Seminar</MenuItem>
+            <MenuItem value='Honors Series Course'>Honors Series Course</MenuItem>
+            <MenuItem value='Grad Course'>Grad Course</MenuItem>
+            <MenuItem value='Grad/Undergrad Course'>Grad/Undergrad Course</MenuItem>
+          </Select>
         </Grid>
 
         <Grid item xs={2}>
@@ -621,7 +612,7 @@ function CourseProposal() {
               }}
               renderValue={(selected) => selected.join(', ')}
             >
-              {geographyValues.map((name, index) => (
+              {GEO_REGIONS.map((name, index) => (
                 <MenuItem key={index} value={name}>
                   <Checkbox checked={geography.indexOf(name) > -1} />
                   <ListItemText primary={name} />
@@ -647,8 +638,8 @@ function CourseProposal() {
               value={time1}
               onChange={(e) => { setTime1(e.target.value) }}
             >
-              {timeValues.map((time, index) =>
-                <MenuItem key={index} value={time}>{timeStrings[index]}</MenuItem>
+              {TIMES.map((time, index) =>
+                <MenuItem key={index} value={time}>{TIME_STRINGS[index]}</MenuItem>
               )}
             </Select>
           </FormControl>
@@ -663,8 +654,8 @@ function CourseProposal() {
               value={time2}
               onChange={(e) => { setTime2(e.target.value) }}
             >
-              {timeValues.map((time, index) =>
-                <MenuItem key={index} value={time}>{timeStrings[index]}</MenuItem>
+              {TIMES.map((time, index) =>
+                <MenuItem key={index} value={time}>{TIME_STRINGS[index]}</MenuItem>
               )}
             </Select>
           </FormControl>
@@ -679,8 +670,8 @@ function CourseProposal() {
               value={time3}
               onChange={(e) => { setTime3(e.target.value) }}
             >
-              {timeValues.map((time, index) =>
-                <MenuItem key={index} value={time}>{timeStrings[index]}</MenuItem>
+              {TIMES.map((time, index) =>
+                <MenuItem key={index} value={time}>{TIME_STRINGS[index]}</MenuItem>
               )}
             </Select>
           </FormControl>
@@ -700,22 +691,22 @@ function CourseProposal() {
             onChange={(e) => setDescription(e.target.value)}
           />
         </Grid>
-        
+
         <Grid item xs={4.5}></Grid>
-          <Grid item xs={3}>
+        <Grid item xs={3}>
           <FormGroup>
             <FormControlLabel control={<Checkbox checked={writ} onClick={(e) => { setWrit((e.target as HTMLInputElement).checked) }} />} label="WRIT" />
             <FormControlLabel control={<Checkbox checked={rpp} onClick={(e) => { setRPP((e.target as HTMLInputElement).checked) }} />} label="RPP" />
             <FormControlLabel control={<Checkbox checked={remoteOnly} onClick={(e) => { setRemoteOnly((e.target as HTMLInputElement).checked) }} />} label="Remote Only" />
           </FormGroup>
-          </Grid>
-          <Grid item xs={3}>
+        </Grid>
+        <Grid item xs={3}>
           <FormGroup>
             <FormControlLabel control={<Checkbox checked={remoteAccessible} onClick={(e) => { setRemoteAccessible((e.target as HTMLInputElement).checked) }} />} label="Remote Accessible" />
             <FormControlLabel control={<Checkbox checked={premodern} onClick={(e) => { setPremodern((e.target as HTMLInputElement).checked) }} />} label="Premodern" />
             <FormControlLabel control={<Checkbox checked={cblr} onClick={(e) => { setCBLR((e.target as HTMLInputElement).checked) }} />} label="CBLR" />
           </FormGroup>
-          </Grid>
+        </Grid>
         <Grid item xs={1.5}></Grid>
 
         <Grid item xs={2}>

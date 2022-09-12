@@ -10,7 +10,8 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import * as React from 'react';
 
-import CourseCard from './CourseCard'
+import CourseCard from './CourseCard';
+import { GEO_REGIONS } from '../utils/constants';
 
 export default function Search({ allProfessors, courses: allCourses, user }) {
   const [searched, setSearched] = React.useState('');
@@ -254,11 +255,11 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
                     ?.map(prof => prof.displayName)
                     ?.sort()
                     ?.map((profName, idx) => (
-                    <MenuItem value={profName} key={idx}>
-                      <Checkbox checked={professors.some(pName => pName === profName)} />
-                      {profName}
-                    </MenuItem>
-                  ))}
+                      <MenuItem value={profName} key={idx}>
+                        <Checkbox checked={professors.some(pName => pName === profName)} />
+                        {profName}
+                      </MenuItem>
+                    ))}
                 </Select>
               </FormControl>
             </div>
@@ -296,7 +297,7 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
                   renderValue={(selected) => selected.join(', ')}
                   sx={{ padding: 0, border: 0 }}
                 >
-                  {['Africa', 'East Asia', 'Europe', 'Latin America', 'MESA', 'North America', 'Global'].map((geo, idx) => (
+                  {GEO_REGIONS.map((geo, idx) => (
                     <MenuItem value={geo} key={idx}>
                       <Checkbox checked={geographies.includes(geo)} />
                       {geo}
@@ -333,7 +334,7 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
                 onChange={selectYear}
                 defaultValue={year}
                 size="small"
-                style={{ minWidth: 120, marginLeft: 8}}
+                style={{ minWidth: 120, marginLeft: 8 }}
               />
             </div>
           </Box>
