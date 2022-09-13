@@ -58,7 +58,8 @@ function CourseView() {
   const courseSemester = course["semester"] ? course["semester"] : ''
   const courseLevels = course["levels"]?.join(', ') ?? ''
   const courseGeography = course["geography"]
-  const courseFinalTime = TIMES.indexOf(course["final_time"]) !== -1 ? TIME_STRINGS[TIMES.indexOf(course["final_time"])] : ''
+  // if final time is from drop down, include time string, else use exact value
+  const courseFinalTime = TIMES.indexOf(course["final_time"]) === -1 ? course["final_time"] : TIME_STRINGS[TIMES.indexOf(course["final_time"])]
   const courseIsRegular = course["is_regular_prof"] ? "Yes" : "No"
   const courseLeaveFall = course["on_leave_fall"] ? "Yes" : "No"
   const courseLeaveSpring = course["on_leave_spring"] ? "Yes" : "No"
@@ -441,7 +442,7 @@ function CourseView() {
         <Grid item xs={8} container spacing={2} paddingBottom={2} justifyContent="center">
           {canAccept && <>
             <Button
-              style={{ textDecoration: 'none', marginTop: "20px" }}
+              style={{ textDecoration: 'none'}}
               variant="contained"
               sx={{ textTransform: "none", backgroundColor: "#992525", mx: 1 }}
               onClick={async () => {
@@ -457,7 +458,7 @@ function CourseView() {
               </Typography>
             </Button>
             <Button
-              style={{ textDecoration: 'none', marginTop: "20px" }}
+              style={{ textDecoration: 'none'}}
               variant="contained"
               sx={{ textTransform: "none", backgroundColor: "#992525", mx: 1 }}
               onClick={async () => {

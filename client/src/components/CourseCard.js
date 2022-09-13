@@ -55,7 +55,7 @@ export default function ComplexGrid({ course, status, canEdit, canAccept, canNew
                 <Typography gutterBottom variant="body1">{course.semester} {course.year}</Typography>
               </Grid>
               <Grid item xs={2} container >
-                <Typography gutterBottom variant="body1">{TIMES.indexOf(course.final_time) !== -1 ? TIME_STRINGS[TIMES.indexOf(course.final_time)] : ''}</Typography>
+                <Typography gutterBottom variant="body1">{TIMES.indexOf(course.final_time) === -1 ? course.final_time : TIME_STRINGS[TIMES.indexOf(course.final_time)]}</Typography>
               </Grid>
               <Grid item xs={3} container >
                 <Typography gutterBottom variant="body1" sx={{ pr: 8 }}>{course.levels?.join(', ') ?? ''}</Typography>
@@ -78,12 +78,12 @@ export default function ComplexGrid({ course, status, canEdit, canAccept, canNew
             {
               !isRestrictedView && <>
                 <Grid item xs container >
-                  <Grid item xs={5} container >
+                  <Grid item xs={6} container >
                     {status && <Typography variant="body1" fontWeight="bold" gutterBottom>Proposal Status: &nbsp;</Typography>}
                     {status && <Typography variant="body1" gutterBottom>{course.proposal_status} </Typography>}
                   </Grid>
 
-                  <Grid item xs={5} container >
+                  <Grid item xs={6} container >
                     {status && <Typography variant="body1" fontWeight="bold" gutterBottom>Course Status: &nbsp;</Typography>}
                     {status && <Typography variant="body1" gutterBottom>{course.course_status} </Typography>}
                   </Grid>
