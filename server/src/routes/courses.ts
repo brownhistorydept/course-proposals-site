@@ -126,7 +126,7 @@ courseRouter.post("/edit", authCheck, async (req: IGetUserAuthInfoRequest, res: 
       message: "Default users cannot edit"
     });
     return;
-  } else if (req.user.role !== ROLES.MANAGER) {
+  } else if (req.user.role === ROLES.PROFESSOR || req.user.role === ROLES.GRAD_DIRECTOR || req.user.role === ROLES.UG_DIRECTOR) {
     // if you don't own the course
     if (!course.professors.includes((req.user._id as any).valueOf())) {
       res.status(403).json({
@@ -136,57 +136,53 @@ courseRouter.post("/edit", authCheck, async (req: IGetUserAuthInfoRequest, res: 
     }
 
     if (course.proposal_status === PROPOSAL_STATUS.CCC_ACCEPTED) {
-      res.status(403).json({
-        message: "Only the manager can edit a course that has been accepted by CCC"
-      });
-      return;
-    }
-  }
-
-    if (req.user.role === ROLES.PROFESSOR || req.user.role === ROLES.CURRIC_COORD &&
-      course.proposal_status === PROPOSAL_STATUS.DIRECTOR_ACCEPTED) {
         res.status(403).json({
-          message: "Cannot edit a course that has been accepted by director"
+          message: "Only the manager or curriculum coordinator can edit a course that has been accepted by CCC"
+        });
+        return;
+      }
+
+    if (req.user.role === ROLES.PROFESSOR && course.proposal_status === PROPOSAL_STATUS.DIRECTOR_ACCEPTED) {
+        res.status(403).json({
+          message: "Professors cannot edit a course that has been accepted by director"
         });
         return;
     }
+  }
 
-    var profIds = [];
     var recipient_roles = [];
-    
-    // if manager is editing a course, notify course profs and relevant director
-    if (req.user.role === ROLES.MANAGER) {
-      profIds = course.professors 
-      if (course.is_undergrad) {
-        recipient_roles = [ROLES.UG_DIRECTOR]
-      } else {
-        recipient_roles = [ROLES.GRAD_DIRECTOR]
-      }
-      // a director can only edit their own course, so only notify manager if course was previously rejected by CCC so she needs to review again
-    } else if (req.user.role === ROLES.UG_DIRECTOR || req.user.role === ROLES.GRAD_DIRECTOR) {
-        if (course.proposal_status === PROPOSAL_STATUS.CCC_REJECTED) {
-          recipient_roles = [ROLES.MANAGER]
-        }
-      // if profs and curriculum coordinators edit a rejected course, notify manager and their director
-    } else if (req.user.role === ROLES.CURRIC_COORD || req.user.role === ROLES.PROFESSOR) {
-        if (course.proposal_status === PROPOSAL_STATUS.CCC_REJECTED) {
-          if (course.is_undergrad) {
-            recipient_roles = [ROLES.UG_DIRECTOR, ROLES.MANAGER]
-          } else {
-            recipient_roles = [ROLES.GRAD_DIRECTOR, ROLES.MANAGER]
-          }
-        } else if (course.proposal_status === PROPOSAL_STATUS.DIRECTOR_REJECTED) {
-            if (course.is_undergrad) {
-              recipient_roles = [ROLES.UG_DIRECTOR]
-            } else {
-              recipient_roles = [ROLES.GRAD_DIRECTOR]
-            }
-        }
-    }
+    var profIds = []
 
-  // managers can always edit without going through approval process again
+    if (req.user.role === ROLES.PROFESSOR) {
+      // email only if prof is editing a rejected course
+      if (course.proposal_status !== PROPOSAL_STATUS.DIRECTOR_REVIEW) {
+        // email co-professors, if they exist
+        profIds = course.professors.filter(function(prof) {
+          return prof !== req.user._id.toString()
+        })
+        // email relevant directors
+        if (course.levels.length == 2) {
+          recipient_roles.push(ROLES.UG_DIRECTOR, ROLES.GRAD_DIRECTOR)
+        } else if (course.levels[0] === 'Undergraduate') {
+          recipient_roles.push(ROLES.UG_DIRECTOR)
+        } else {
+          recipient_roles.push(ROLES.GRAD_DIRECTOR)
+        }
+    
+        if (course.proposal_status === PROPOSAL_STATUS.CCC_REJECTED) {
+          recipient_roles.push(ROLES.MANAGER)
+        }
+      }
+    } else {
+      // email professors / co-professors
+      profIds = course.professors.filter(function(prof) {
+        return prof !== req.user._id
+      })
+    }
+    
+  // managers and curriculum coordinators can always edit without going through approval process again
   // directors already can't edit other profs' courses, so this just prevents them from having to reapprove their own course if they edit
-  if (req.user.role === ROLES.PROFESSOR || req.user.role === ROLES.CURRIC_COORD) {
+  if (req.user.role === ROLES.PROFESSOR) {
     course.proposal_status = PROPOSAL_STATUS.DIRECTOR_REVIEW;
   }
 
@@ -205,10 +201,10 @@ courseRouter.post("/edit", authCheck, async (req: IGetUserAuthInfoRequest, res: 
         to.push(match.email)
       }
     }
-
-    if (to.length > 0) {
-      sendRevisionEmail(to, course, req.user.displayName);
-    }
+    console.log(to)
+    // if (to.length > 0) {
+    //   sendRevisionEmail(to, course, req.user.displayName);
+    // }
 
     res.status(200).json({
       message: "editing course succeeded"
@@ -233,19 +229,13 @@ courseRouter.post("/submit-dev-only", async (req: IGetUserAuthInfoRequest, res: 
 
 courseRouter.post("/accept-reject/:is_accept", authCheck, async (req: IGetUserAuthInfoRequest, res: Response) => {
   const isAccept = typeof req.params.is_accept !== 'undefined' && strToBool(req.params.is_accept);
+  const { course, reason } = req.body as { course: ICourse, reason: string };
+  var new_status = '';
 
   if (req.user.role === ROLES.MANAGER || req.user.role === ROLES.GRAD_DIRECTOR || req.user.role === ROLES.UG_DIRECTOR) {
-    const { course, reason } = req.body as { course: ICourse, reason: string };
-    let new_status;
-    if (req.user.role === ROLES.UG_DIRECTOR && course.is_undergrad) {
+    if (req.user.role === ROLES.UG_DIRECTOR || req.user.role === ROLES.GRAD_DIRECTOR) {
       if (isAccept) {
         new_status = PROPOSAL_STATUS.DIRECTOR_ACCEPTED;;
-      } else {
-        new_status = PROPOSAL_STATUS.DIRECTOR_REJECTED;
-      }
-    } else if (req.user.role === ROLES.GRAD_DIRECTOR && !course.is_undergrad) {
-      if (isAccept) {
-        new_status = PROPOSAL_STATUS.DIRECTOR_ACCEPTED;
       } else {
         new_status = PROPOSAL_STATUS.DIRECTOR_REJECTED;
       }
@@ -255,26 +245,29 @@ courseRouter.post("/accept-reject/:is_accept", authCheck, async (req: IGetUserAu
       } else {
         new_status = PROPOSAL_STATUS.CCC_REJECTED;
       }
-    } else {
-      res.status(403).json({
-        message: "do not have permission to accept/reject this specific course",
-      });
-    }
+    } 
+  } else {
+    res.status(403).json({
+      message: "do not have permission to accept/reject courses",
+    });
+  }
 
     try {
-      // await Course.updateOne({ _id: course._id }, { proposal_status: new_status }, {$set: {comments: reason}});
       await Course.updateOne({ _id: course._id }, {$set: { proposal_status: new_status , comments: reason}});
 
-      // very janky with types - should be a better way to do this
-      const courseDocument = await Course.findOne({ _id: course._id });
-      const courseDocumentWithProfessors = await courseDocument.populate('professors');
-      const profEmails = (courseDocumentWithProfessors.professors as unknown as IUser[]).map(p => p.email);
-      
-      // if (isAccept) {
-      //   sendAcceptEmail(profEmails, course, reason, req.user.role !== ROLES.MANAGER);
-      // } else {
-      //   sendRejectEmail(profEmails, course, reason, req.user.role !== ROLES.MANAGER);
-      // }
+      var profEmails = [];
+      for (const profId of course.professors) {
+        let match = await User.findOne({_id: profId}, {email: true})
+        if (match !== null) {
+          profEmails.push(match.email)
+        }
+      }
+      console.log(profEmails)
+      if (isAccept) {
+        sendAcceptEmail(profEmails, course, reason, req.user.role !== ROLES.MANAGER);
+      } else {
+        sendRejectEmail(profEmails, course, reason, req.user.role !== ROLES.MANAGER);
+      }
 
       res.status(200).json({
         message: "accepting/rejected course succeeded"
@@ -285,13 +278,6 @@ courseRouter.post("/accept-reject/:is_accept", authCheck, async (req: IGetUserAu
         message: "accepting/rejecting course failed",
       });
     }
-
-  } else {
-    res.status(403).json({
-      message: "do not have permission to accept/reject courses"
-
-    });
-  }
-});
+  });
 
 export default courseRouter;

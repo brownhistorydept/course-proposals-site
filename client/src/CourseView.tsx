@@ -464,13 +464,13 @@ function CourseView() {
               onClick={async () => {
                 const success = await acceptRejectCourse(course, false, reason);
                 if (success) {
-                  openAlert('Course successfully rejected', true);
+                  openAlert('Sucessfully requested revisions', true);
                 } else {
-                  openAlert('Error rejecting course', false);
+                  openAlert('Error requesting revision', false);
                 }
               }}>
               <Typography gutterBottom variant="body1">
-                Reject
+                Request Revisions
               </Typography>
             </Button>
           </>}

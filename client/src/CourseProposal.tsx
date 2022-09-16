@@ -22,7 +22,7 @@ import Tooltip from '@mui/material/Tooltip';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router'
 import { ICourse } from "../../server/src/models/Course";
-import { Dialog, DialogActions, DialogTitle } from '@mui/material';
+import { Dialog, DialogActions, DialogTitle, FormHelperText } from '@mui/material';
 import { COURSE_TYPES, GEO_REGIONS, TIMES, TIME_STRINGS } from './utils/constants';
 
 function CourseProposal() {
@@ -57,6 +57,16 @@ function CourseProposal() {
       return prof1_surname.localeCompare(prof2_surname)
     }
     )
+  }
+
+  function wordCounter() {
+    var wordList = description.match(/[^\s]+/g)
+    console.log(wordList)
+    if (wordList !== null) {
+      return wordList.length.toString()
+    } else {
+      return 0
+    }
   }
 
   interface CustomizedState {
@@ -105,6 +115,7 @@ function CourseProposal() {
   const [time2, setTime2] = useState('B');
   const [time3, setTime3] = useState('C');
   const [finalTime, setFinalTime] = useState('');
+  const [profType, setProfType] = useState('regular');
 
   useEffect(() => {
     // if creating a new proposal, prefill values w/ original course values
@@ -119,6 +130,10 @@ function CourseProposal() {
 
       if (typeof originalCourse.is_regular_prof != "undefined") {
         setRegular(originalCourse.is_regular_prof ? 1 : 0)
+      }
+
+      if (typeof originalCourse.prof_type != "undefined") {
+        setProfType(originalCourse.prof_type)
       }
 
       if (typeof originalCourse.course_title !== "undefined") {
@@ -225,6 +240,9 @@ function CourseProposal() {
     } else if (isUndergrad && geography.length === 0) {
       openAlert("Please select geography")
       return true;
+    } else if (!isRegular && profType === 'regular') {
+      openAlert('You have indicated that you are not a regular professor. In that case, please indicate your role.')
+      return true;
     }
 
     return false;
@@ -248,6 +266,7 @@ function CourseProposal() {
       on_leave_fall: leaveFall,
       on_leave_spring: leaveSpring,
       is_regular_prof: isRegular === 1,
+      prof_type: profType,
       course_title: courseTitle,
       description: description,
       professors: profId,
@@ -273,7 +292,7 @@ function CourseProposal() {
     }
     const success = await editCourse(proposedCourse);
     if (success) {
-      if (user?.role === "manager") {
+      if (user?.role === "manager" || user?.role === 'curriculum coordinator') {
         if (originalCourse?.proposal_status === 'accepted by CCC') {
           openAlert("Course successfully edited", '/course_catalog');
         } else {
@@ -308,6 +327,7 @@ function CourseProposal() {
       on_leave_fall: leaveFall,
       on_leave_spring: leaveSpring,
       is_regular_prof: isRegular === 1,
+      prof_type: profType,
       course_title: courseTitle,
       description: description,
       professors: profId,
@@ -372,7 +392,7 @@ function CourseProposal() {
 
       <Grid container spacing={2} maxWidth={1000} mx="auto">
 
-        {user?.role === "manager" &&
+        {(user?.role === "manager" || user?.role === "curriculum coordinator") &&
           <Grid item xs={11} container spacing={2}>
             <Grid item xs={2.2}>
               <Tooltip title="Full course number, including department abbreviation (e.g. HIST0150A), entered by the manager" placement="bottom-end" arrow>
@@ -388,7 +408,7 @@ function CourseProposal() {
             </Grid>
           </Grid>}
 
-        {user?.role === "manager" &&
+        {(user?.role === "manager" || user?.role === "curriculum coordinator") &&
           <Grid item xs={11} container spacing={2}>
             <Grid item xs={2.2}>
               <Tooltip title="Time slot for the course, entered by the manager" placement="bottom-end" arrow>
@@ -445,6 +465,21 @@ function CourseProposal() {
             <MenuItem value={0}>No</MenuItem>
           </Select>
         </Grid>
+
+        {!isRegular && <>
+          <Grid item xs={2}>
+          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Role *</Typography>
+        </Grid>
+        <Grid item xs={10}>
+          <TextField
+            size='small'
+            fullWidth
+            placeholder={'DFF, Lecturer, VAP, HAT, etc.'}
+            onChange={(e) => setProfType(e.target.value)}
+          />
+        </Grid>
+        
+        </>}
 
         <Grid item xs={2}>
           <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Planning to take leave in fall? *</Typography>
@@ -566,6 +601,7 @@ function CourseProposal() {
               Graduate
             </MenuItem>
           </Select>
+          <FormHelperText sx={{fontSize: '15px'}}>(select all that apply)</FormHelperText>
         </Grid>
 
         <Grid item xs={2}>
@@ -592,7 +628,6 @@ function CourseProposal() {
           <FormControl fullWidth>
             <Select
               size='small'
-              multiple
               value={geography}
               onChange={(event) => {
                 const {
@@ -606,7 +641,6 @@ function CourseProposal() {
             >
               {GEO_REGIONS.map((name, index) => (
                 <MenuItem key={index} value={name}>
-                  <Checkbox checked={geography.indexOf(name) > -1} />
                   <ListItemText primary={name} />
                 </MenuItem>
               ))}
@@ -678,6 +712,7 @@ function CourseProposal() {
           <TextField
             fullWidth
             value={description}
+            helperText={"Word Count is " + wordCounter()}
             multiline={true}
             rows={5}
             onChange={(e) => setDescription(e.target.value)}
@@ -726,7 +761,7 @@ function CourseProposal() {
             value={syllabusLink}
             onChange={(e) => setSyllabusLink(e.target.value)}
           />
-          <Typography variant="body2" mx="auto">If you are regular professor teaching this course for the first time, please add a syllabus link.</Typography>
+          <FormHelperText sx={{fontSize: '15px'}}>If you are a regular professor teaching for the second time, please add a link to your syllabus. You may also email a hard copy of your syllabus to the Student Affairs Manager.</FormHelperText>
         </Grid>
 
         <Grid item xs={6}></Grid>

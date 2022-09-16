@@ -439,7 +439,7 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
         </Box>
       </Box>
       {filter().map((course, index) => (
-        <CourseCard key={index} course={course} status={false} canEdit={user?.role === 'manager'} canAccept={false} canNewProposal={user?.role !== "default"} isRestrictedView={true} />
+        <CourseCard key={index} course={course} status={false} canEdit={user?.role === "manager" || user?.role === "curriculum coordinator"} canAccept={user?.role === "manager"} canNewProposal={user?.role !== "default"} isRestrictedView={true} />
       ))
       }
     </div>

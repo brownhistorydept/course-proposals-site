@@ -58,7 +58,7 @@ function CourseReview() {
   // get CCC rejected courses
   useEffect(() => {
     let isMounted = true;
-    var params = { proposal_status: "rejected by CCC" };
+    var params = { proposal_status: "revisions requested by manager" };
     if (user?.role === "undergraduate director") {
       params = Object.assign(params, { is_undergrad: true });
     } else if (user?.role === "graduate director") {
@@ -77,7 +77,7 @@ function CourseReview() {
   // get director rejected courses
   useEffect(() => {
     let isMounted = true;
-    var params = { proposal_status: "rejected by director" };
+    var params = { proposal_status: "revisions requested by director" };
     if (user?.role === "undergraduate director") {
       params = Object.assign(params, { is_undergrad: true });
     } else if (user?.role === "graduate director") {
@@ -275,7 +275,7 @@ function CourseReview() {
 
         {underReviewCourses?.map((course, index) => (
           (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
-          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role === "manager" || user?.role === "graduate director" || user?.role === "undergraduate director"} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'} />
+          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager" || user?.role === 'curriculum coordinator'} canAccept={user?.role === "manager" || user?.role === "graduate director" || user?.role === "undergraduate director"} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'} />
         ))}
 
         <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={3} paddingTop='30px'>
@@ -290,7 +290,7 @@ function CourseReview() {
 
         {directorAcceptedCourses?.map((course, index) => (
           (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
-          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role !== "curriculum coordinator"} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'} />
+          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager" || user?.role === "curriculum coordinator"} canAccept={user?.role !== "curriculum coordinator"} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'} />
         ))}
 
         <Typography variant="h6" color="#992525" fontWeight={500} marginBottom={3}>
@@ -299,7 +299,7 @@ function CourseReview() {
 
         {directorRejectedCourses?.map((course, index) => (
           (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
-          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role !== "curriculum coordinator"} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'} />
+          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager" || user?.role === "curriculum coordinator"} canAccept={user?.role !== "curriculum coordinator"} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'} />
         ))}
 
         <Typography variant="h6" color="#992525" fontWeight={500} marginBottom={3}>
@@ -308,7 +308,7 @@ function CourseReview() {
 
         {cccRejectedCourses?.map((course, index) => (
           (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
-          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager"} canAccept={user?.role !== "curriculum coordinator"} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'} />
+          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager" || user?.role === "curriculum coordinator"} canAccept={user?.role !== "curriculum coordinator"} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'} />
         ))}
       </Box>
 

@@ -11,11 +11,11 @@ export const PROPOSAL_STATUS = Object.freeze({
   // undergraduate or graduate director accepts
   DIRECTOR_ACCEPTED: "accepted by director",
   // undergraduate or graduate director rejects
-  DIRECTOR_REJECTED: "rejected by director",
+  DIRECTOR_REJECTED: "revisions requested by director",
   // manager accepts, reflecting CCC decision
   CCC_ACCEPTED: "accepted by CCC",
   // manager rejects, reflecting CCC decision
-  CCC_REJECTED: "rejected by CCC",
+  CCC_REJECTED: "revisions requested by manager",
 });
 export const COURSE_STATUS = Object.freeze({
   NEW: "new",
@@ -30,6 +30,7 @@ export interface ICourse {
   on_leave_fall: boolean,
   on_leave_spring: boolean,
   is_regular_prof: boolean,
+  prof_type: string,
   // core attributes
   course_title: string,
   description: string,
@@ -68,6 +69,7 @@ const courseSchema = new Schema<ICourse>({
   on_leave_fall: { type: Boolean, required: true },
   on_leave_spring: { type: Boolean, required: true },
   is_regular_prof: { type: Boolean, required: true },
+  prof_type: {type : String, required: false},
   // core attributes
   course_title: { type: String, required: true },
   description: { type: String, required: true },

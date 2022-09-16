@@ -38,9 +38,9 @@ export function sendAcceptEmail(to: string[], course: ICourse, reason: string, i
 export function sendRejectEmail(to: string[], course: ICourse, reason: string, isDirector: boolean) {
   sendEmail(
     to,
-    "Course Proposal Rejected",
+    "Course Proposal Revision Request",
     `Hello,
-    \nYour course proposal titled "${course.course_title}" has been rejected by ${isDirector ? 'a director' : 'the CCC'}${typeof reason === 'undefined' ? '.' : ` and received the following comments:\n\n ${reason}\n`}
+    \n${isDirector ? 'A director' : 'The Student Affairs Manager'} has requested that you revise your course proposal titled "${course.course_title}" ${typeof reason === 'undefined' ? '.' : ` for the following reason:\n\n ${reason}\n`}
     \nGo to ${process.env.CLIENT_URL} for more information.
     \n--\nDepartment of History Course Proposals Automated Message`
   );
@@ -49,9 +49,9 @@ export function sendRejectEmail(to: string[], course: ICourse, reason: string, i
 export function sendRevisionEmail(to: string[], course: ICourse, reviser: string) {
   sendEmail(
     to,
-    "Course Revisions Addressed",
+    "Course Revised",
     `Hello,
-    \nThe course proposal titled "${course.course_title}" has been updated by ${reviser} since it was last reviewed.
+    \nThe course proposal titled "${course.course_title}" has been edited by ${reviser} since it was last reviewed.
     \nGo to ${process.env.CLIENT_URL} for more information.
     \n--\nDepartment of History Course Proposals Automated Message`
   )
