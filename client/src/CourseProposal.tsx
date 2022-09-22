@@ -391,7 +391,7 @@ function CourseProposal() {
           }}>
           <Typography variant="h3" paddingBottom={5}>
             Course Proposal
-            <Typography variant="body2" my={"8px"} mx="auto">Hover over field labels to see descriptions. Fields marked with * are required.</Typography>
+            <Typography variant="body2" my={"8px"} mx="auto">Fields marked with * are required.</Typography>
           </Typography>
         </Box>
       </Box>
@@ -401,9 +401,7 @@ function CourseProposal() {
         {(user?.role === "manager" || user?.role === "curriculum coordinator") &&
           <Grid item xs={11} container spacing={2}>
             <Grid item xs={2.2}>
-              <Tooltip title="Full course number, including department abbreviation (e.g. HIST0150A), entered by the manager" placement="bottom-end" arrow>
-                <Typography variant="body1" fontWeight="bold" align='right'>Course Number</Typography>
-              </Tooltip>
+              <Typography variant="body1" fontWeight="bold" align='right'>Course Number</Typography>
             </Grid>
             <Grid item xs={8}>
               <TextField
@@ -411,19 +409,18 @@ function CourseProposal() {
                 value={courseNumber}
                 onChange={(e) => setCourseNumber(e.target.value)}
               />
+              <FormHelperText sx={{ fontSize: '14px' }}>Full course number, including dept. abbreviation (e.g. HIST0150A), entered by manager.</FormHelperText>
             </Grid>
           </Grid>}
 
         {(user?.role === "manager" || user?.role === "curriculum coordinator") &&
           <Grid item xs={11} container spacing={2}>
             <Grid item xs={2.2}>
-              <Tooltip title="Time slot for the course, entered by the manager" placement="bottom-end" arrow>
-                <Typography variant="body1" fontWeight="bold" align='right'>Final Time</Typography>
-              </Tooltip>
+              <Typography variant="body1" fontWeight="bold" align='right'>Final Time</Typography>
             </Grid>
 
             <Grid marginLeft={1.8} marginTop={2}>
-              <FormControl style={{minWidth: 120}}>
+              <FormControl style={{ minWidth: 120 }}>
                 <Select
                   size='small'
                   fullWidth
@@ -436,6 +433,7 @@ function CourseProposal() {
                   )}
                 </Select>
               </FormControl>
+              <FormHelperText sx={{ fontSize: '14px' }}>Time slot for the course, entered by manager.</FormHelperText>
             </Grid>
 
             {finalTime == "Other" && <>
@@ -448,12 +446,10 @@ function CourseProposal() {
               </Grid>
             </>}
 
-            </Grid>}
+          </Grid>}
 
         <Grid item xs={2}>
-          <Tooltip title="Are you a regular tenure-track/tenured HIST faculty member, or not?" placement="bottom-end" arrow>
-            <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Regular Professor? *</Typography>
-          </Tooltip>
+          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Regular Professor? *</Typography>
         </Grid>
         <Grid item xs={9.5}>
           <Select
@@ -469,21 +465,23 @@ function CourseProposal() {
             <MenuItem value={1}>Yes</MenuItem>
             <MenuItem value={0}>No</MenuItem>
           </Select>
+          <FormHelperText sx={{ fontSize: '14px' }}>Are you a regular tenure-track/tenured HIST faculty member, or not?</FormHelperText>
         </Grid>
+
 
         {!isRegular && <>
           <Grid item xs={2}>
-          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Role *</Typography>
-        </Grid>
-        <Grid item xs={10}>
-          <TextField
-            size='small'
-            fullWidth
-            placeholder={'DFF, Lecturer, VAP, HAT, etc.'}
-            onChange={(e) => setProfType(e.target.value)}
-          />
-        </Grid>
-        
+            <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Role *</Typography>
+          </Grid>
+          <Grid item xs={10}>
+            <TextField
+              size='small'
+              fullWidth
+              placeholder={'DFF, Lecturer, VAP, HAT, etc.'}
+              onChange={(e) => setProfType(e.target.value)}
+            />
+          </Grid>
+
         </>}
 
         <Grid item xs={2}>
@@ -501,9 +499,7 @@ function CourseProposal() {
         </Grid>
 
         <Grid item xs={2}>
-          <Tooltip title="Title of the course (e.g. War, Tyranny, and Peace in Modern Europe)" placement="bottom-end" arrow>
-            <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Title *</Typography>
-          </Tooltip>
+          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Title *</Typography>
         </Grid>
         <Grid item xs={10}>
           {myState === null && <TextField
@@ -519,6 +515,7 @@ function CourseProposal() {
             value={courseTitle}
             onChange={(e) => setCourseTitle(e.target.value)}
           />}
+          <FormHelperText sx={{ fontSize: '14px' }}>Title of the course (e.g. War, Tyranny, and Peace in Modern Europe).</FormHelperText>
         </Grid>
 
         <Grid item xs={2}>
@@ -606,7 +603,7 @@ function CourseProposal() {
               Graduate
             </MenuItem>
           </Select>
-          <FormHelperText sx={{fontSize: '14px'}}>(select all that apply)</FormHelperText>
+          <FormHelperText sx={{ fontSize: '14px' }}>(select all that apply)</FormHelperText>
         </Grid>
 
         <Grid item xs={2}>
@@ -625,9 +622,7 @@ function CourseProposal() {
         </Grid>
 
         <Grid item xs={2}>
-          <Tooltip title="The geographic region(s) that best fit the content of the course (required for undergraduate courses)" placement="bottom-end" arrow>
-            <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Geography (undergrad *)</Typography>
-          </Tooltip>
+          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Geography *</Typography>
         </Grid>
         <Grid item xs={10}>
           <FormControl fullWidth>
@@ -651,13 +646,11 @@ function CourseProposal() {
               ))}
             </Select>
           </FormControl>
-
+          <FormHelperText sx={{ fontSize: '14px' }}>The geographic region that best fits the content of the course (only required for undergraduate courses).</FormHelperText>
         </Grid>
 
         <Grid item xs={2}>
-          <Tooltip title="Your preference ranking for course time slots, which will inform the final time choice" placement="bottom-end" arrow>
-            <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Time Ranking *</Typography>
-          </Tooltip>
+          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Time Ranking *</Typography>
         </Grid>
         <Grid item xs={3.33}>
           <FormControl fullWidth>
@@ -674,6 +667,7 @@ function CourseProposal() {
               )}
             </Select>
           </FormControl>
+          <FormHelperText sx={{ fontSize: '14px' }}>Your preference ranking for course time slots, which will inform the final time choice.</FormHelperText>
         </Grid>
         <Grid item xs={3.33}>
           <FormControl fullWidth>
@@ -709,9 +703,7 @@ function CourseProposal() {
         </Grid>
 
         <Grid item xs={2}>
-          <Tooltip title="Any course time slots during which you are unavailable" placement="bottom-end" arrow>
-            <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Unavailable Times</Typography>
-          </Tooltip>
+          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Unavailable Times</Typography>
         </Grid>
         <Grid item xs={3.33}>
           <FormControl fullWidth>
@@ -730,9 +722,6 @@ function CourseProposal() {
               }}
               renderValue={(selected) => selected.join(', ')}
             >
-              {/* {TIMES.map((time, index) =>
-                <MenuItem key={index} value={time}>{TIME_STRINGS[index]}</MenuItem>
-              )} */}
               {TIMES.map((time, index) =>
                 <MenuItem key={index} value={time}>
                   <Checkbox checked={timesCantTeach.indexOf(time) > -1} />
@@ -740,47 +729,50 @@ function CourseProposal() {
                 </MenuItem>
               )}
             </Select>
-            <FormHelperText sx={{fontSize: '14px'}}>Any course time slots during which you are unavailable to teach.</FormHelperText>
           </FormControl>
+          <FormHelperText sx={{ fontSize: '14px' }}>Any course time slots during which you are unavailable to teach (select all that apply).</FormHelperText>
         </Grid>
         <Grid item xs={6.66}></Grid>
         <Grid item xs={2}>
-          <Tooltip title="A short paragraph describing the course content, which will end up on CAB" placement="bottom-end" arrow>
-            <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Description *</Typography>
-          </Tooltip>
+          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Description *</Typography>
         </Grid>
         <Grid item xs={10}>
           <TextField
             fullWidth
             value={description}
-            helperText={"Word Count is " + wordCounter()}
+            helperText={wordCounter() + " words"}
             multiline={true}
             rows={5}
             onChange={(e) => setDescription(e.target.value)}
           />
+          <FormHelperText sx={{ fontSize: '14px' }}>A short paragraph describing the course content, which will end up on CAB.</FormHelperText>
         </Grid>
 
         <Grid item xs={4.5}></Grid>
         <Grid item xs={3}>
           <FormGroup>
-            <FormControlLabel control={<Checkbox checked={writ} onClick={(e) => { setWrit((e.target as HTMLInputElement).checked) }} />} label="WRIT" />
-            <FormControlLabel control={<Checkbox checked={rpp} onClick={(e) => { setRPP((e.target as HTMLInputElement).checked) }} />} label="RPP" />
-            <FormControlLabel control={<Checkbox checked={remoteOnly} onClick={(e) => { setRemoteOnly((e.target as HTMLInputElement).checked) }} />} label="Remote Only" />
+            <Tooltip title="Subject to CCC approval in accordance with their guidelines - syllabus submission required" placement="left">
+              <FormControlLabel control={<Checkbox checked={writ} onClick={(e) => { setWrit((e.target as HTMLInputElement).checked) }} />} label="WRIT" />
+            </Tooltip>
+            <Tooltip title="Subject to CCC approval in accordance with their guidelines - syllabus submission required" placement="left">
+              <FormControlLabel control={<Checkbox checked={rpp} onClick={(e) => { setRPP((e.target as HTMLInputElement).checked) }} />} label="RPP" />
+            </Tooltip>
+            <Tooltip title="Must be 2/3 prior to 1800" placement="left">
+              <FormControlLabel control={<Checkbox checked={premodern} onClick={(e) => { setPremodern((e.target as HTMLInputElement).checked) }} />} label="Premodern" />
+            </Tooltip>
           </FormGroup>
         </Grid>
         <Grid item xs={3}>
           <FormGroup>
+            <FormControlLabel control={<Checkbox checked={remoteOnly} onClick={(e) => { setRemoteOnly((e.target as HTMLInputElement).checked) }} />} label="Remote Only" />
             <FormControlLabel control={<Checkbox checked={remoteAccessible} onClick={(e) => { setRemoteAccessible((e.target as HTMLInputElement).checked) }} />} label="Remote Accessible" />
-            <FormControlLabel control={<Checkbox checked={premodern} onClick={(e) => { setPremodern((e.target as HTMLInputElement).checked) }} />} label="Premodern" />
             <FormControlLabel control={<Checkbox checked={cblr} onClick={(e) => { setCBLR((e.target as HTMLInputElement).checked) }} />} label="CBLR" />
           </FormGroup>
         </Grid>
         <Grid item xs={1.5}></Grid>
 
         <Grid item xs={2}>
-          <Tooltip title="Any extra notes by professor or director/manager that don't fit into the other fields" placement="bottom-end" arrow>
-            <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Further Notes</Typography>
-          </Tooltip>
+          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Further Notes</Typography>
         </Grid>
         <Grid item xs={10}>
           <TextField
@@ -790,10 +782,11 @@ function CourseProposal() {
             rows={3}
             onChange={(e) => setNotes(e.target.value)}
           />
+          <FormHelperText sx={{ fontSize: '14px' }}>Any extra notes by professor or director/manager that don't fit into the other fields.</FormHelperText>
         </Grid>
 
         <Grid item xs={2}>
-          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Syllabus Link</Typography>
+          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Syllabus Link *</Typography>
         </Grid>
         <Grid item xs={10}>
           <TextField
@@ -802,7 +795,7 @@ function CourseProposal() {
             value={syllabusLink}
             onChange={(e) => setSyllabusLink(e.target.value)}
           />
-          <FormHelperText sx={{fontSize: '14px'}}>If you are a regular professor teaching for the second time, please add a link to your syllabus. You may also email a hard copy of your syllabus to the Student Affairs Manager.</FormHelperText>
+          <FormHelperText sx={{ fontSize: '14px' }}>Please remember that if you are a regular professor teaching for the second time, you must add a link to your syllabus. You may also email a copy of your syllabus to the Student Affairs Manager.</FormHelperText>
         </Grid>
 
         <Grid item xs={6}></Grid>
