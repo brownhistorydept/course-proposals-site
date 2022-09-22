@@ -119,7 +119,7 @@ function MyCourses() {
 
           {submittedCourses?.map((course, index) => (
             (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
-            && <CourseCard key={index} course={course} status={true} canEdit={course.proposal_status !== 'accepted by director' || user?.role === 'undergraduate director' || user?.role === 'graduate director'} canAccept={false} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'} />
+            && <CourseCard key={index} course={course} status={true} canEdit={course.proposal_status !== 'accepted by director' || user?.role !== 'professor'} canAccept={false} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'} />
           ))}
         </Box>
       </Box>

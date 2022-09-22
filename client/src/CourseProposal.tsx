@@ -94,7 +94,6 @@ function CourseProposal() {
   const [leaveFall, setleaveFall] = useState(false);
   const [notes, setNotes] = useState('');
   const [syllabusLink, setSyllabusLink] = useState('');
-
   const [courseNumber, setCourseNumber] = useState('');
   const [courseTitle, setCourseTitle] = useState('');
   const [professors, setProfessors] = useState<string[]>([]);
@@ -111,10 +110,11 @@ function CourseProposal() {
   const [premodern, setPremodern] = useState(false);
   const [semester, setSemester] = useState('Fall');
   const [year, setYear] = useState(new Date().getFullYear());
-  const [time1, setTime1] = useState('A');
-  const [time2, setTime2] = useState('B');
-  const [time3, setTime3] = useState('C');
+  const [time1, setTime1] = useState('');
+  const [time2, setTime2] = useState('');
+  const [time3, setTime3] = useState('');
   const [finalTime, setFinalTime] = useState('');
+  const [timesCantTeach, setTimesCantTeach] = useState<string[]>([]);
   const [profType, setProfType] = useState('regular');
 
   useEffect(() => {
@@ -206,6 +206,10 @@ function CourseProposal() {
         setFinalTime(originalCourse.final_time)
       }
 
+      if (typeof originalCourse.times_cant_teach != "undefined") {
+        setTimesCantTeach(originalCourse.times_cant_teach)
+      }
+
       if (typeof originalCourse.course_number != "undefined") {
         setCourseNumber(originalCourse.course_number)
       }
@@ -283,6 +287,7 @@ function CourseProposal() {
       semester: semester,
       year: year,
       time_ranking: [time1, time2, time3],
+      times_cant_teach: timesCantTeach,
       geography: geography,
       course_number: courseNumber,
       proposal_status: originalCourse!.proposal_status!,
@@ -344,6 +349,7 @@ function CourseProposal() {
       semester: semester,
       year: year,
       time_ranking: [time1, time2, time3],
+      times_cant_teach: timesCantTeach,
       geography: geography,
       final_time: finalTime,
       course_number: courseNumber,
@@ -417,15 +423,14 @@ function CourseProposal() {
             </Grid>
 
             <Grid marginLeft={1.8} marginTop={2}>
-              <FormControl>
-                <InputLabel>Final Time</InputLabel>
+              <FormControl style={{minWidth: 120}}>
                 <Select
-                  label="Final Time"
                   size='small'
                   fullWidth
                   value={finalTime}
                   onChange={(e) => { setFinalTime(e.target.value) }}
                 >
+                  <MenuItem aria-label="None" value="Other">Other</MenuItem>
                   {TIMES.map((time, index) =>
                     <MenuItem key={index} value={time}>{TIME_STRINGS[index]}</MenuItem>
                   )}
@@ -433,17 +438,17 @@ function CourseProposal() {
               </FormControl>
             </Grid>
 
-            <Grid item xs={2.75}>
-              <Typography variant="body2">If final time is not listed in the dropdown, write it here:</Typography>
-            </Grid>
+            {finalTime == "Other" && <>
+              <Grid marginLeft={1} marginTop={2}>
+                <TextField
+                  size='small'
+                  placeholder='Other Final Time'
+                  onChange={(e) => setFinalTime(e.target.value)}
+                />
+              </Grid>
+            </>}
 
-            <Grid marginTop={2}>
-              <TextField
-                size='small'
-                onChange={(e) => setFinalTime(e.target.value)}
-              />
-            </Grid>
-          </Grid>}
+            </Grid>}
 
         <Grid item xs={2}>
           <Tooltip title="Are you a regular tenure-track/tenured HIST faculty member, or not?" placement="bottom-end" arrow>
@@ -601,7 +606,7 @@ function CourseProposal() {
               Graduate
             </MenuItem>
           </Select>
-          <FormHelperText sx={{fontSize: '15px'}}>(select all that apply)</FormHelperText>
+          <FormHelperText sx={{fontSize: '14px'}}>(select all that apply)</FormHelperText>
         </Grid>
 
         <Grid item xs={2}>
@@ -704,6 +709,42 @@ function CourseProposal() {
         </Grid>
 
         <Grid item xs={2}>
+          <Tooltip title="Any course time slots during which you are unavailable" placement="bottom-end" arrow>
+            <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Unavailable Times</Typography>
+          </Tooltip>
+        </Grid>
+        <Grid item xs={3.33}>
+          <FormControl fullWidth>
+            <Select
+              size='small'
+              autoWidth
+              multiple
+              value={timesCantTeach}
+              onChange={(event) => {
+                const {
+                  target: { value },
+                } = event;
+                setTimesCantTeach(
+                  typeof value === 'string' ? value.split(',') : value,
+                );
+              }}
+              renderValue={(selected) => selected.join(', ')}
+            >
+              {/* {TIMES.map((time, index) =>
+                <MenuItem key={index} value={time}>{TIME_STRINGS[index]}</MenuItem>
+              )} */}
+              {TIMES.map((time, index) =>
+                <MenuItem key={index} value={time}>
+                  <Checkbox checked={timesCantTeach.indexOf(time) > -1} />
+                  <ListItemText primary={TIME_STRINGS[index]} />
+                </MenuItem>
+              )}
+            </Select>
+            <FormHelperText sx={{fontSize: '14px'}}>Any course time slots during which you are unavailable to teach.</FormHelperText>
+          </FormControl>
+        </Grid>
+        <Grid item xs={6.66}></Grid>
+        <Grid item xs={2}>
           <Tooltip title="A short paragraph describing the course content, which will end up on CAB" placement="bottom-end" arrow>
             <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Description *</Typography>
           </Tooltip>
@@ -761,7 +802,7 @@ function CourseProposal() {
             value={syllabusLink}
             onChange={(e) => setSyllabusLink(e.target.value)}
           />
-          <FormHelperText sx={{fontSize: '15px'}}>If you are a regular professor teaching for the second time, please add a link to your syllabus. You may also email a hard copy of your syllabus to the Student Affairs Manager.</FormHelperText>
+          <FormHelperText sx={{fontSize: '14px'}}>If you are a regular professor teaching for the second time, please add a link to your syllabus. You may also email a hard copy of your syllabus to the Student Affairs Manager.</FormHelperText>
         </Grid>
 
         <Grid item xs={6}></Grid>

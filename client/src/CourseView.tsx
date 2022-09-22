@@ -86,12 +86,21 @@ function CourseView() {
     proposalProfessors = profList
   }
 
-  // course to be used for a new proposal; reset year, semester, professor
+  // course to be used for a new proposal; reset some fields
   const proposalCourse = {
     ...course,
     professors: proposalProfessors,
     year: new Date().getFullYear(),
-    semester: ''
+    semester: '',
+    time_ranking: [],
+    times_cant_teach: [],
+    further_notes: '',
+    comments: '',
+    final_time: '',
+    on_leave_fall: false, 
+    on_leave_spring: false,
+    is_regular_prof: true,
+    course_number: '',
   }
 
   var profString = profList.join(", ")

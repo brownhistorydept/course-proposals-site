@@ -30,7 +30,7 @@ export interface ICourse {
   on_leave_fall: boolean,
   on_leave_spring: boolean,
   is_regular_prof: boolean,
-  prof_type: string,
+  prof_type: string, // lecturer, etc.
   // core attributes
   course_title: string,
   description: string,
@@ -49,7 +49,8 @@ export interface ICourse {
   semester: string,
   year: number,
   time_ranking: string[], // array of strings, e.g. [A, C, E]
-  geography?: string[], // has to be from geo_regions list -- this is optional b/c we're not sure if graduate courses use these
+  times_cant_teach?: string[], // array of times (strings) that prof can't teach, optional since maybe they can teach all times
+  geography?: string[], // has to be from geo_regions list -- this is optional b/c graduate courses don't use these
   course_type: string,
   // these are optional so that frontend can pass back proposed courses w/o them, but we always set them in submit
   proposal_status?: string,
@@ -88,6 +89,7 @@ const courseSchema = new Schema<ICourse>({
   semester: { type: String, enum: SEMESTERS, required: true },
   year: { type: Number, required: true },
   time_ranking: { type: [String], enum: TIMES, required: true }, // array of strings, e.g. [A, C, E]
+  times_cant_teach: { type: [String], enum: TIMES, required: false },
   geography: { type: [String], enum: GEO_REGIONS, required: false }, // has to be from geo_regions list
   course_type: { type: String, required: false },
   // we set these in backend
