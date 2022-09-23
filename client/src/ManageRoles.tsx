@@ -20,6 +20,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useNavigate } from 'react-router-dom';
+import { Box, TextField } from '@mui/material';
 
 function ManageRoles() {
 
@@ -29,13 +30,18 @@ function ManageRoles() {
 
   const [user, setUser] = useState<IUser>();
   const [allUsers, setAllUsers] = useState<IUser[]>();
+  // const [defaultUsers, setDefaultUsers] = useState<IUser[]>();
+  // const [nonDefaultUsers, setNonDefaultUsers] = useState<IUser[]>();
   const [alertOpen, setAlertOpen] = useState(false);
   const [lastUser, setLastUser] = useState<IUser>();
   const [lastRole, setLastRole] = useState('');
+  const [searched, setSearched] = useState('');
 
   // called once when components on page have rendered
   async function getAllUsers(isMounted: boolean = true) {
     await fetchUsers(setAllUsers, false, isMounted);
+    // setDefaultUsers(allUsers?.filter(user => user.role === "default"))
+    // setNonDefaultUsers(allUsers?.filter(user => user.role !== "default"))
   }
 
   async function getUser() {
@@ -78,8 +84,17 @@ function ManageRoles() {
       const prof1_surname = prof1.displayName.split(' ')[1]
       const prof2_surname = prof2.displayName.split(' ')[1]
       return prof1_surname.localeCompare(prof2_surname)
+    })
+  }
+
+  const filter = () => {
+    if (typeof(allUsers) === 'undefined') {
+      return []
+    } else if (searched === '') {
+      return allUsers
+    } else {
+      return allUsers.filter(user => user.displayName.toLowerCase().includes(searched.toLowerCase()));
     }
-    )
   }
 
   if (user?.role !== "manager") {
@@ -89,6 +104,26 @@ function ManageRoles() {
   return (
     <>
       <NavBar user={user} />
+        <Box
+          component="form"
+          sx={{
+            '& .MuiTextField-root': { m: 1, marginTop: 4, width: '25ch' },
+          }}
+          noValidate
+          autoComplete="off"
+        >
+          <div>
+            <TextField
+              label="Search by Name"
+              fullWidth
+              id="outlined-size-small"
+              onChange={(e) => { setSearched(e.target.value) }}
+              size="small"
+              style={{ width: 1010 }}
+            />
+            <br />
+          </div>
+        </Box>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -100,7 +135,7 @@ function ManageRoles() {
           </TableHead>
           <TableBody>
             {sortUsers()}
-            {allUsers?.map((u, index) => (
+            {filter().map((u, index) => (
               <TableRow key={index}>
                 <TableCell>{u.displayName}</TableCell>
                 <TableCell>{u.email}</TableCell>
@@ -117,10 +152,11 @@ function ManageRoles() {
                   </Select>
                 </TableCell>
               </TableRow>
-            ))}
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
+      
       <Dialog open={alertOpen} onClose={handleClose}>
         <DialogTitle>{"Are you sure?"}</DialogTitle>
         <DialogContent>
