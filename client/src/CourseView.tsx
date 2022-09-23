@@ -328,6 +328,22 @@ function CourseView() {
             >
             </TextField>
           </Grid>
+          <Grid item xs={2}>
+            <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Unavailable Times</Typography>
+          </Grid>
+          <Grid item xs={10}>
+            <TextField
+              size='small'
+              variant="standard"
+              InputProps={{
+                disableUnderline: true,
+                readOnly: true,
+              }}
+              value={course.times_cant_teach.join(", ")}
+              sx={{ marginRight: 1 }}
+            >
+            </TextField>
+          </Grid>
         </>}
 
         <Grid item xs={2}>
