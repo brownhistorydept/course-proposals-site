@@ -76,7 +76,6 @@ function CourseProposal() {
 
   const location = useLocation();
   const state = location.state as CustomizedState; // Type Casting, then you can get the params passed via router
-  // window.history.replaceState(null, "")
   const myState = state;
 
   var originalCourse = {} as ICourse;
@@ -89,8 +88,8 @@ function CourseProposal() {
   }
 
   const [isRegular, setRegular] = useState(1);
-  const [leaveSpring, setleaveSpring] = useState(false);
-  const [leaveFall, setleaveFall] = useState(false);
+  const [leaveSpring, setleaveSpring] = useState(0);
+  const [leaveFall, setleaveFall] = useState(0);
   const [notes, setNotes] = useState('');
   const [syllabusLink, setSyllabusLink] = useState('');
   const [courseNumber, setCourseNumber] = useState('');
@@ -100,7 +99,7 @@ function CourseProposal() {
   const [isUndergrad, setIsUndergrad] = useState(true);
   const [geography, setGeography] = useState<string[]>([]);
   const [description, setDescription] = useState('');
-  const [courseType, setCourseType] = useState(COURSE_TYPES[0]);
+  const [courseType, setCourseType] = useState('');
   const [writ, setWrit] = useState(false);
   const [rpp, setRPP] = useState(false);
   const [cblr, setCBLR] = useState(false);
@@ -121,11 +120,11 @@ function CourseProposal() {
     // if creating a new proposal, prefill values w/ original course values
     if (myState != null) {
       if (typeof originalCourse.on_leave_fall != "undefined") {
-        setleaveFall(originalCourse.on_leave_fall)
+        setleaveFall(originalCourse.on_leave_fall ? 1 : 0)
       }
 
       if (typeof originalCourse.on_leave_spring != "undefined") {
-        setleaveSpring(originalCourse.on_leave_spring)
+        setleaveSpring(originalCourse.on_leave_spring ? 1 : 0)
       }
 
       if (typeof originalCourse.is_regular_prof != "undefined") {
@@ -240,17 +239,35 @@ function CourseProposal() {
   }
 
   async function hasError() {
-    if (courseTitle === "" || description === "" || semester === "" || year === 0 || professors.length === 0 || levels.length === 0) {
-      openAlert("Please fill in all required fields")
+    if (courseTitle === "") {
+      openAlert("Please fill in course title.")
+      return true;
+    } else if (description === "") {
+      openAlert("Please fill in course description.")
+      return true;
+    } else if (courseType === "") {
+      openAlert("Please fill in course type.")
+      return true;
+    } else if (semester === "") {
+      openAlert("Please fill in semester.")
       return true;
     } else if (isNaN(year)) {
       openAlert("Year has to be a numerical value")
       return true;
+    } else if (professors.length === 0) {
+      openAlert("Please fill in professors.")
+      return true;
+    } else if (levels.length === 0) {
+      openAlert("Please fill in level.")
+      return true;
+    } else if (time1 === "" || time2 === "" || time3 === "") {
+      openAlert("Please rank three times for Time Ranking.")
+      return true;
     } else if (time1 === time2 || time2 === time3 || time1 === time3) {
-      openAlert("Please enter three different times for Time Ranking")
+      openAlert("Please enter three different times for Time Ranking.")
       return true;
     } else if (isUndergrad && geography.length === 0) {
-      openAlert("Please select geography")
+      openAlert("Please select geography.")
       return true;
     } else if (!isRegular && profType === 'regular') {
       openAlert('You have indicated that you are not a regular professor. In that case, please indicate your role.')
@@ -275,8 +292,8 @@ function CourseProposal() {
       profId.push(profMap.get(prof)!)
     })
     var proposedCourse = {
-      on_leave_fall: leaveFall,
-      on_leave_spring: leaveSpring,
+      on_leave_fall: leaveFall === 1,
+      on_leave_spring: leaveSpring === 1,
       is_regular_prof: isRegular === 1,
       prof_type: profType,
       course_title: courseTitle,
@@ -337,8 +354,8 @@ function CourseProposal() {
     })
 
     var proposedCourse = {
-      on_leave_fall: leaveFall,
-      on_leave_spring: leaveSpring,
+      on_leave_fall: leaveFall === 1,
+      on_leave_spring: leaveSpring === 1,
       is_regular_prof: isRegular === 1,
       prof_type: profType,
       course_title: courseTitle,
@@ -399,7 +416,6 @@ function CourseProposal() {
           }}>
           <Typography variant="h3" paddingBottom={5}>
             Course Proposal
-            <Typography variant="body2" my={"8px"} mx="auto">Fields marked with * are required.</Typography>
           </Typography>
         </Box>
       </Box>
@@ -457,7 +473,7 @@ function CourseProposal() {
           </Grid>}
 
         <Grid item xs={2}>
-          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Regular Professor? *</Typography>
+          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Regular Professor?</Typography>
         </Grid>
         <Grid item xs={9.5}>
           <Select
@@ -473,13 +489,13 @@ function CourseProposal() {
             <MenuItem value={1}>Yes</MenuItem>
             <MenuItem value={0}>No</MenuItem>
           </Select>
-          <FormHelperText sx={{ fontSize: '14px' }}>Are you a regular tenure-track/tenured HIST faculty member, or not?</FormHelperText>
+          <FormHelperText sx={{ fontSize: '14px' }}>Are you a regular tenure-track/tenured history department faculty member?</FormHelperText>
         </Grid>
 
 
         {!isRegular && <>
           <Grid item xs={2}>
-            <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Role *</Typography>
+            <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Role</Typography>
           </Grid>
           <Grid item xs={10}>
             <TextField
@@ -493,21 +509,45 @@ function CourseProposal() {
         </>}
 
         <Grid item xs={2}>
-          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Planning to take leave in fall? *</Typography>
+          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Planning to take leave in fall?</Typography>
         </Grid>
         <Grid item xs={9.5}>
-          <FormControlLabel control={<Checkbox checked={leaveFall} onClick={(e) => { setleaveFall((e.target as HTMLInputElement).checked) }} />} label="" />
+          <Select
+            size='small'
+            autoWidth
+            value={leaveFall}
+            onChange={(e) => {
+              let val = e.target.value as number
+              setleaveFall(val)
+            }
+            }
+          >
+            <MenuItem value={1}>Yes</MenuItem>
+            <MenuItem value={0}>No</MenuItem>
+          </Select>
+        </Grid>
+        
+        <Grid item xs={2}>
+          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Planning to take leave in spring?</Typography>
+        </Grid>
+        <Grid item xs={9.5}>
+          <Select
+            size='small'
+            autoWidth
+            value={leaveSpring}
+            onChange={(e) => {
+              let val = e.target.value as number
+              setleaveSpring(val)
+            }
+            }
+          >
+            <MenuItem value={1}>Yes</MenuItem>
+            <MenuItem value={0}>No</MenuItem>
+          </Select>
         </Grid>
 
         <Grid item xs={2}>
-          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Planning to take leave in spring? *</Typography>
-        </Grid>
-        <Grid item xs={9.5}>
-          <FormControlLabel control={<Checkbox checked={leaveSpring} onClick={(e) => { setleaveSpring((e.target as HTMLInputElement).checked) }} />} label="" />
-        </Grid>
-
-        <Grid item xs={2}>
-          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Title *</Typography>
+          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Title</Typography>
         </Grid>
         <Grid item xs={10}>
           {myState === null && <TextField
@@ -523,11 +563,10 @@ function CourseProposal() {
             value={courseTitle}
             onChange={(e) => setCourseTitle(e.target.value)}
           />}
-          <FormHelperText sx={{ fontSize: '14px' }}>Title of the course (e.g. War, Tyranny, and Peace in Modern Europe).</FormHelperText>
         </Grid>
 
         <Grid item xs={2}>
-          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Professor(s) *</Typography>
+          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Professor(s)</Typography>
         </Grid>
         <Grid item xs={10}>
           <FormControl fullWidth>
@@ -557,7 +596,7 @@ function CourseProposal() {
         </Grid>
 
         <Grid item xs={2}>
-          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Semester *</Typography>
+          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Semester</Typography>
         </Grid>
         <Grid item xs={10}>
           <Select
@@ -584,7 +623,7 @@ function CourseProposal() {
 
 
         <Grid item xs={2}>
-          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Level *</Typography>
+          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Level</Typography>
         </Grid>
         <Grid item xs={10}>
           <Select
@@ -615,7 +654,7 @@ function CourseProposal() {
         </Grid>
 
         <Grid item xs={2}>
-          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Type *</Typography>
+          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Type</Typography>
         </Grid>
         <Grid item xs={10}>
           <Select
@@ -630,7 +669,7 @@ function CourseProposal() {
         </Grid>
 
         <Grid item xs={2}>
-          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Geography *</Typography>
+          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Geography</Typography>
         </Grid>
         <Grid item xs={10}>
           <FormControl fullWidth>
@@ -661,7 +700,7 @@ function CourseProposal() {
         </Grid>
 
         <Grid item xs={2}>
-          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Time Ranking *</Typography>
+          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Time Ranking</Typography>
         </Grid>
         <Grid item xs={3.33}>
           <FormControl fullWidth>
@@ -745,7 +784,7 @@ function CourseProposal() {
         </Grid>
         <Grid item xs={6.66}></Grid>
         <Grid item xs={2}>
-          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Description *</Typography>
+          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Description</Typography>
         </Grid>
         <Grid item xs={10}>
           <TextField
@@ -793,11 +832,11 @@ function CourseProposal() {
             rows={3}
             onChange={(e) => setNotes(e.target.value)}
           />
-          <FormHelperText sx={{ fontSize: '14px' }}>Any extra notes by professor or director/manager that don't fit into the other fields.</FormHelperText>
+          <FormHelperText sx={{ fontSize: '14px' }}>Any extra notes you would like to add that do not fit into the other fields.</FormHelperText>
         </Grid>
 
         <Grid item xs={2}>
-          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Syllabus Link *</Typography>
+          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Syllabus Link</Typography>
         </Grid>
         <Grid item xs={10}>
           <TextField
