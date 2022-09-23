@@ -61,7 +61,6 @@ function CourseProposal() {
 
   function wordCounter() {
     var wordList = description.match(/[^\s]+/g)
-    console.log(wordList)
     if (wordList !== null) {
       return wordList.length.toString()
     } else {
@@ -114,6 +113,7 @@ function CourseProposal() {
   const [time2, setTime2] = useState('');
   const [time3, setTime3] = useState('');
   const [finalTime, setFinalTime] = useState('');
+  const [otherFinalTime, setOtherFinalTime] = useState('');
   const [timesCantTeach, setTimesCantTeach] = useState<string[]>([]);
   const [profType, setProfType] = useState('regular');
 
@@ -231,6 +231,14 @@ function CourseProposal() {
     setAlertPath(path);
   }
 
+  function getFinalTime() {
+    if (finalTime !== 'Other') {
+      return finalTime;
+    } else {
+      return otherFinalTime;
+    }
+  }
+
   async function hasError() {
     if (courseTitle === "" || description === "" || semester === "" || year === 0 || professors.length === 0 || levels.length === 0) {
       openAlert("Please fill in all required fields")
@@ -292,7 +300,7 @@ function CourseProposal() {
       course_number: courseNumber,
       proposal_status: originalCourse!.proposal_status!,
       further_notes: notes,
-      final_time: finalTime,
+      final_time: getFinalTime(),
       _id: originalCourse!._id!
     }
     const success = await editCourse(proposedCourse);
@@ -351,7 +359,7 @@ function CourseProposal() {
       time_ranking: [time1, time2, time3],
       times_cant_teach: timesCantTeach,
       geography: geography,
-      final_time: finalTime,
+      final_time: getFinalTime(),
       course_number: courseNumber,
       further_notes: notes,
     }
@@ -436,12 +444,12 @@ function CourseProposal() {
               <FormHelperText sx={{ fontSize: '14px' }}>Time slot for the course, entered by manager.</FormHelperText>
             </Grid>
 
-            {finalTime == "Other" && <>
+            {finalTime === 'Other' && <>
               <Grid marginLeft={1} marginTop={2}>
                 <TextField
                   size='small'
                   placeholder='Other Final Time'
-                  onChange={(e) => setFinalTime(e.target.value)}
+                  onChange={(e) => setOtherFinalTime(e.target.value)}
                 />
               </Grid>
             </>}
@@ -639,6 +647,9 @@ function CourseProposal() {
               }}
               renderValue={(selected) => selected.join(', ')}
             >
+              <MenuItem value="">
+                <ListItemText primary="" />
+              </MenuItem>
               {GEO_REGIONS.map((name, index) => (
                 <MenuItem key={index} value={name}>
                   <ListItemText primary={name} />

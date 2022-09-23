@@ -70,7 +70,7 @@ const courseSchema = new Schema<ICourse>({
   on_leave_fall: { type: Boolean, required: true },
   on_leave_spring: { type: Boolean, required: true },
   is_regular_prof: { type: Boolean, required: true },
-  prof_type: {type : String, required: false},
+  prof_type: { type: String, required: false },
   // core attributes
   course_title: { type: String, required: true },
   description: { type: String, required: true },
@@ -90,7 +90,7 @@ const courseSchema = new Schema<ICourse>({
   year: { type: Number, required: true },
   time_ranking: { type: [String], enum: TIMES, required: true }, // array of strings, e.g. [A, C, E]
   times_cant_teach: { type: [String], enum: TIMES, required: false },
-  geography: { type: [String], enum: GEO_REGIONS, required: false }, // has to be from geo_regions list
+  geography: { type: [String], required: false }, // has to be from geo_regions list
   course_type: { type: String, required: false },
   // we set these in backend
   proposal_status: { type: String, enum: Object.values(PROPOSAL_STATUS), required: false },

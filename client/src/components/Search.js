@@ -141,7 +141,6 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
 
   const selectLevel = (event) => {
     setLevels(typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value);
-    console.log(event.target.value)
     if (event.target.value.length === 0) {
       setConsider({
         ...consider,
