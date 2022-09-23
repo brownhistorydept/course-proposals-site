@@ -269,7 +269,7 @@ function CourseProposal() {
     } else if (isUndergrad && geography.length === 0) {
       openAlert("Please select geography.")
       return true;
-    } else if (!isRegular && profType === 'regular') {
+    } else if (!isRegular && (profType === 'regular' || profType === '')) {
       openAlert('You have indicated that you are not a regular professor. In that case, please indicate your role.')
       return true;
     }
@@ -502,6 +502,7 @@ function CourseProposal() {
               size='small'
               fullWidth
               placeholder={'DFF, Lecturer, VAP, HAT, etc.'}
+              value={profType}
               onChange={(e) => setProfType(e.target.value)}
             />
           </Grid>
@@ -526,7 +527,7 @@ function CourseProposal() {
             <MenuItem value={0}>No</MenuItem>
           </Select>
         </Grid>
-        
+
         <Grid item xs={2}>
           <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Planning to take leave in spring?</Typography>
         </Grid>

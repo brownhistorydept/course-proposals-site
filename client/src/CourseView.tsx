@@ -60,7 +60,7 @@ function CourseView() {
   const courseGeography = course["geography"]
   // if final time is from drop down, include time string, else use exact value
   const courseFinalTime = TIMES.indexOf(course["final_time"]) === -1 ? course["final_time"] : TIME_STRINGS[TIMES.indexOf(course["final_time"])]
-  const courseIsRegular = course["is_regular_prof"] ? "Yes" : "No"
+  const courseIsRegular = course["is_regular_prof"] ? "Yes" : `No (${course["prof_type"]})`
   const courseLeaveFall = course["on_leave_fall"] ? "Yes" : "No"
   const courseLeaveSpring = course["on_leave_spring"] ? "Yes" : "No"
   const courseSyllabusLink = course["syllabus_link"]
