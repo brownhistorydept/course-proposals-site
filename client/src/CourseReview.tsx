@@ -16,6 +16,7 @@ function CourseReview() {
   const [user, setUser] = useState<IUser>();
   const [underReviewCourses, setUnderReviewCourses] = useState<ICourse[]>();
   const [cccRejectedCourses, setCCCRejectedCourses] = useState<ICourse[]>();
+  const [cccAcceptedCourses, setCCCAcceptedCourses] = useState<ICourse[]>();
   const [directorRejectedCourses, setDirectorRejectedCourses] = useState<ICourse[]>();
   const [directorAcceptedCourses, setDirectorAcceptedCourses] = useState<ICourse[]>();
   const [yearSems, setYearSems] = useState<string[]>([]);
@@ -74,6 +75,25 @@ function CourseReview() {
     }
   }, [user]);
 
+  // get CCC accepted courses
+  useEffect(() => {
+    let isMounted = true;
+    var params = { proposal_status: "accepted by CCC" };
+    if (user?.role === "undergraduate director") {
+      params = Object.assign(params, { is_undergrad: true });
+    } else if (user?.role === "graduate director") {
+      params = Object.assign(params, { is_undergrad: false });
+    }
+
+    async function getCourses() {
+      await fetchCourses(setCCCAcceptedCourses, params, false, isMounted);
+    }
+    getCourses();
+    return () => {
+      isMounted = false
+    }
+  }, [user]);
+
   // get director rejected courses
   useEffect(() => {
     let isMounted = true;
@@ -119,16 +139,17 @@ function CourseReview() {
       typeof underReviewCourses === 'undefined' ||
       typeof directorAcceptedCourses == 'undefined' ||
       typeof directorRejectedCourses == 'undefined' ||
-      typeof cccRejectedCourses === 'undefined') {
+      typeof cccRejectedCourses === 'undefined' ||
+      typeof cccAcceptedCourses === 'undefined') {
       return;
     }
     getYearSems();
-  }, [underReviewCourses, directorAcceptedCourses, directorRejectedCourses, cccRejectedCourses]);
+  }, [underReviewCourses, directorAcceptedCourses, directorRejectedCourses, cccRejectedCourses, cccAcceptedCourses]);
 
   function getYearSems() {
     const allCourses = (underReviewCourses ?? []).concat(
-      (directorAcceptedCourses ?? []), (directorRejectedCourses ?? []), (cccRejectedCourses ?? []));
-      const sortedCourses = allCourses.sort((c1, c2) => {
+      (directorAcceptedCourses ?? []), (directorRejectedCourses ?? []), (cccRejectedCourses ?? []), (cccAcceptedCourses ?? []));
+    const sortedCourses = allCourses.sort((c1, c2) => {
       const semesters = ['Fall', 'Summer', 'Spring', 'Winter'];
       if (c1.year > c2.year) {
         return -1;
@@ -139,7 +160,8 @@ function CourseReview() {
       }
     });
 
-    const options = [...new Set(sortedCourses.map(course => `${course.semester} ${course.year}`))]
+    let options = [...new Set(sortedCourses.map(course => `${course.semester} ${course.year}`))]
+    options = options.filter(opt => opt !== 'undefined undefined');
     // set of every year/semester this user has a course entry; used to populate dropdown options
     setYearSemOptions(options);
     setYearSems([options[0]])
@@ -155,13 +177,17 @@ function CourseReview() {
     setAlertPath(path);
   }
 
-  const onDownload = () => {
-    if (!directorAcceptedCourses || directorAcceptedCourses.length === 0) {
-      openAlert('No director accepted courses to download', '/review_courses')
+  const onDownload = (showAllCourses: boolean) => {
+    const coursesToShow = showAllCourses ?
+      (underReviewCourses ?? []).concat((directorAcceptedCourses ?? []), (directorRejectedCourses ?? []), (cccRejectedCourses ?? []), (cccAcceptedCourses ?? []))
+      : (directorAcceptedCourses ?? []);
+
+    if (!coursesToShow || coursesToShow.length === 0) {
+      openAlert('No courses to download', '/review_courses')
       return;
     }
 
-    const rows = directorAcceptedCourses.map((course) => {
+    const rows = coursesToShow.map((course) => {
       // this includes everything from Course schema (as of 9/4) except comments
       return [
         course.on_leave_fall,
@@ -221,8 +247,8 @@ function CourseReview() {
       'Final Time',
       'Further Notes',
     ];
-    const csvContent = Papa.unparse({ fields: columns, data: rows }, );
-    downloadFile('director-accepted-courses', csvContent, 'text/csv');
+    const csvContent = Papa.unparse({ fields: columns, data: rows },);
+    downloadFile(showAllCourses ? 'all-courses' : 'director-accepted-courses', csvContent, 'text/csv');
   };
 
   return (
@@ -238,36 +264,36 @@ function CourseReview() {
             Review Courses
           </Typography>
 
-          <Button variant='contained' onClick={onDownload}>Download Spreadsheet</Button>
-
           {(yearSemOptions.length > 0) ?
-          <Grid item xs={8} paddingBottom='30px' paddingTop='15px'>
-            <FormControl fullWidth>
-              <Select
-                size='small'
-                multiple
-                value={yearSems}
-                onChange={(event) => {
-                  const {
-                    target: { value },
-                  } = event;
-                  setYearSems(
-                    typeof value === 'string' ? value.split(',') : value,
-                  );
-                }}
-                renderValue={(selected) => selected.join(', ')}
-              >
-                {yearSemOptions.map((pair, index) => (
-                  <MenuItem key={index} value={pair}>
-                    <Checkbox checked={yearSems.indexOf(pair) > -1} />
-                    <ListItemText primary={pair} />
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          :<></>}
-
+            <Grid item xs={8} paddingBottom='30px' paddingTop='15px'>
+              <FormControl fullWidth>
+                <Select
+                  size='small'
+                  multiple
+                  value={yearSems}
+                  onChange={(event) => {
+                    const {
+                      target: { value },
+                    } = event;
+                    setYearSems(
+                      typeof value === 'string' ? value.split(',') : value,
+                    );
+                  }}
+                  renderValue={(selected) => selected.join(', ')}
+                >
+                  {yearSemOptions.map((pair, index) => (
+                    <MenuItem key={index} value={pair}>
+                      <Checkbox checked={yearSems.indexOf(pair) > -1} />
+                      <ListItemText primary={pair} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            : <></>}
+          <Button variant='contained' onClick={() => onDownload(false)}>Export Director Accepted Courses</Button>
+          <p></p>
+          <Button variant='contained' onClick={() => onDownload(true)}>Export All Courses</Button>
         </Box>
         <Typography variant="h4" color="#992525" fontWeight={500} marginY={3}>
           To Review
@@ -294,7 +320,7 @@ function CourseReview() {
         ))}
 
         <Typography variant="h6" color="#992525" fontWeight={500} marginBottom={3}>
-          Rejected by Director:
+          Revisions Requested by Director:
         </Typography>
 
         {directorRejectedCourses?.map((course, index) => (
@@ -303,7 +329,7 @@ function CourseReview() {
         ))}
 
         <Typography variant="h6" color="#992525" fontWeight={500} marginBottom={3}>
-          Rejected by CCC:
+          Revisions Requested by Manager:
         </Typography>
 
         {cccRejectedCourses?.map((course, index) => (
