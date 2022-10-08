@@ -114,7 +114,7 @@ function CourseProposal() {
   const [finalTime, setFinalTime] = useState('');
   const [otherFinalTime, setOtherFinalTime] = useState('');
   const [timesCantTeach, setTimesCantTeach] = useState<string[]>([]);
-  const [profType, setProfType] = useState('regular');
+  const [profType, setProfType] = useState('');
 
   useEffect(() => {
     // if creating a new proposal, prefill values w/ original course values
@@ -269,7 +269,7 @@ function CourseProposal() {
     } else if (isUndergrad && geography.length === 0) {
       openAlert("Please select geography.")
       return true;
-    } else if (!isRegular && (profType === 'regular' || profType === '')) {
+    } else if (!isRegular && profType === '') {
       openAlert('You have indicated that you are not a regular professor. In that case, please indicate your role.')
       return true;
     }

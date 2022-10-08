@@ -100,7 +100,6 @@ function CourseView() {
     on_leave_fall: false,
     on_leave_spring: false,
     is_regular_prof: true,
-    course_number: '',
   }
 
   var profString = profList.join(", ")
