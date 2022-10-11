@@ -167,6 +167,10 @@ function CourseReview() {
     setYearSems([options[0]])
   }
 
+  function filterByYearSem(courses?: ICourse[]): ICourse[] | undefined {
+    return courses?.filter(course => yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1));
+  }
+
   if (user?.role === "default" || user?.role === "professor") {
     navigate('/course_catalog');
   }
@@ -179,8 +183,8 @@ function CourseReview() {
 
   const onDownload = (showAllCourses: boolean) => {
     const coursesToShow = showAllCourses ?
-      (underReviewCourses ?? []).concat((directorAcceptedCourses ?? []), (directorRejectedCourses ?? []), (cccRejectedCourses ?? []), (cccAcceptedCourses ?? []))
-      : (directorAcceptedCourses ?? []);
+      (filterByYearSem(underReviewCourses) ?? []).concat((filterByYearSem(directorAcceptedCourses) ?? []), (filterByYearSem(directorRejectedCourses) ?? []), (filterByYearSem(cccRejectedCourses) ?? []), (filterByYearSem(cccAcceptedCourses) ?? []))
+      : (filterByYearSem(directorAcceptedCourses) ?? []);
 
     if (!coursesToShow || coursesToShow.length === 0) {
       openAlert('No courses to download', '/review_courses')
@@ -299,10 +303,9 @@ function CourseReview() {
           To Review
         </Typography>
 
-        {underReviewCourses?.map((course, index) => (
-          (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
-          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager" || user?.role === 'curriculum coordinator'} canAccept={user?.role === "manager" || user?.role === "graduate director" || user?.role === "undergraduate director"} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'} />
-        ))}
+        {filterByYearSem(underReviewCourses)?.map((course, index) =>
+          <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager" || user?.role === 'curriculum coordinator'} canAccept={user?.role === "manager" || user?.role === "graduate director" || user?.role === "undergraduate director"} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'} />
+        )}
 
         <Typography variant="h4" color="#992525" fontWeight={500} marginBottom={3} paddingTop='30px'>
           Reviewed
@@ -314,28 +317,25 @@ function CourseReview() {
           Accepted by Director:
         </Typography>
 
-        {directorAcceptedCourses?.map((course, index) => (
-          (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
-          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager" || user?.role === "curriculum coordinator"} canAccept={user?.role !== "curriculum coordinator"} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'} />
-        ))}
+        {filterByYearSem(directorAcceptedCourses)?.map((course, index) =>
+          <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager" || user?.role === "curriculum coordinator"} canAccept={user?.role !== "curriculum coordinator"} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'} />
+        )}
 
         <Typography variant="h6" color="#992525" fontWeight={500} marginBottom={3}>
           Revisions Requested by Director:
         </Typography>
 
-        {directorRejectedCourses?.map((course, index) => (
-          (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
-          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager" || user?.role === "curriculum coordinator"} canAccept={user?.role !== "curriculum coordinator"} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'} />
-        ))}
+        {filterByYearSem(directorRejectedCourses)?.map((course, index) =>
+          <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager" || user?.role === "curriculum coordinator"} canAccept={user?.role !== "curriculum coordinator"} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'} />
+        )}
 
         <Typography variant="h6" color="#992525" fontWeight={500} marginBottom={3}>
           Revisions Requested by Manager:
         </Typography>
 
-        {cccRejectedCourses?.map((course, index) => (
-          (yearSems?.some(yearSem => yearSem.indexOf(String(course.year)) > -1 && yearSem.indexOf(course.semester) > -1))
-          && <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager" || user?.role === "curriculum coordinator"} canAccept={user?.role !== "curriculum coordinator"} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'} />
-        ))}
+        {filterByYearSem(cccRejectedCourses)?.map((course, index) =>
+          <CourseCard key={index} course={course} status={true} canEdit={user?.role === "manager" || user?.role === "curriculum coordinator"} canAccept={user?.role !== "curriculum coordinator"} canNewProposal={false} isRestrictedView={user?.role === 'professor' && course.proposal_status === 'accepted by CCC'} />
+        )}
       </Box>
 
       <Dialog open={alertOpen}>
