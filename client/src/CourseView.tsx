@@ -299,13 +299,13 @@ function CourseView() {
         <Grid item xs={10}>
           <TextField
             size='small'
+            fullWidth
             variant="standard"
             InputProps={{
               disableUnderline: true,
               readOnly: true,
             }}
             value={geoString}
-
           >
           </TextField>
         </Grid>
