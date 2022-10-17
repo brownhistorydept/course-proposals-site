@@ -8519,9 +8519,9 @@ react-copy-to-clipboard@5.1.0:
     copy-to-clipboard "^3.3.1"
     prop-types "15.8.1"
 
-react-countup@6.3.0:
-  version "6.3.0"
-  resolved "https://registry.npmjs.org/react-countup/-/react-countup-6.3.0.tgz"
+react-countup@6.3.2:
+  version "6.3.2"
+  resolved "https://registry.yarnpkg.com/react-countup/-/react-countup-6.3.2.tgz#37359bb4262c2af52ae1e0ad36d2d0feff01d278"
   dependencies:
     countup.js "^2.2.0"
 
