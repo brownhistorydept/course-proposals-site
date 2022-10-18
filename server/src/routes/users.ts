@@ -39,9 +39,9 @@ interface RoleBody {
 // change user's role; this should only be used by managers
 // id is the string form of the _id of the user whose role is being changed, role is their new role as a string in req.body
 userRouter.post("/change-role/:id", authCheck, async (req: IGetUserAuthInfoRequest, res: Response) => {
-  const role_body = req.body as RoleBody;
+  const role_body = (req as any).body as RoleBody;
 
-  if (typeof req.params.id === 'undefined') {
+  if (typeof (req as any).params.id === 'undefined') {
     res.status(400).json({
       message: "specify the user whose role is to be changed",
     });
@@ -69,7 +69,7 @@ userRouter.post("/change-role/:id", authCheck, async (req: IGetUserAuthInfoReque
     return;
   }
 
-  const user_id = req.params.id;
+  const user_id = (req as any).params.id;
 
   try {
     await User.updateOne({ _id: user_id }, {
