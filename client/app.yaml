@@ -5,9 +5,9 @@ handlers:
     static_dir: build/static
     secure: always
 
-  - url: /(.*\.(json|ico|js))$
+  - url: /(.*\.(json|ico|js|png))$
     static_files: build/\1
-    upload: build/.*\.(json|ico|js)$
+    upload: build/.*\.(json|ico|js|png)$
     secure: always
 
   - url: .*
@@ -16,4 +16,4 @@ handlers:
     secure: always
 
 env_variables:
-  REACT_APP_SERVER_URL: "https://hist-courses.ue.r.appspot.com/api"
+  REACT_APP_SERVER_URL: "https://history-course-interface.ue.r.appspot.com/api"
