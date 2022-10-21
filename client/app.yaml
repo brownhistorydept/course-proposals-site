@@ -16,4 +16,4 @@ handlers:
     secure: always
 
 env_variables:
-  REACT_APP_SERVER_URL: "https://api.history-app-366002.ue.r.appspot.com"
+  REACT_APP_SERVER_URL: "https://hist-courses.ue.r.appspot.com/api"

@@ -53,11 +53,11 @@ export function main() {
   );
 
   // set up routes
-  app.use("/auth", authRouter);
-  app.use("/courses", courseRouter);
-  app.use("/users", userRouter);
+  app.use("/api/auth", authRouter);
+  app.use("/api/courses", courseRouter);
+  app.use("/api/users", userRouter);
 
-  app.get("/", (req, res, next) => res.send("helloooo"));
+  app.get("/api", (req, res, next) => res.send("helloooo"));
 
   console.log('about to listen')
 
