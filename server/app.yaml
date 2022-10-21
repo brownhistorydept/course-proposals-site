@@ -2,6 +2,11 @@ runtime: nodejs16
 
 service: api
 
+handlers:
+  - url: /.*
+    script: auto
+    secure: always
+
 env_variables:
   MONGODB_URI: "mongodb+srv://dummyUser:12345@cluster0.wj2k3ar.mongodb.net/?retryWrites=true&w=majority"
   PORT: 4000

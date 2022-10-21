@@ -3,14 +3,17 @@ runtime: nodejs16
 handlers:
   - url: /static
     static_dir: build/static
+    secure: always
 
   - url: /(.*\.(json|ico|js))$
     static_files: build/\1
     upload: build/.*\.(json|ico|js)$
+    secure: always
 
   - url: .*
     static_files: build/index.html
     upload: build/index.html
+    secure: always
 
 env_variables:
   REACT_APP_SERVER_URL: "https://api.history-app-366002.ue.r.appspot.com"
