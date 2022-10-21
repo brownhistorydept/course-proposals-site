@@ -10,7 +10,7 @@ handlers:
 env_variables:
   MONGODB_URI: "mongodb+srv://dummyUser:12345@cluster0.wj2k3ar.mongodb.net/?retryWrites=true&w=majority"
   PORT: 4000
-  CLIENT_URL: "https://history-app-366002.ue.r.appspot.com"
+  CLIENT_URL: "https://history-course-interface.ue.r.appspot.com"
   GOOGLE_CLIENT_ID: "108318053408-70egqlado3ahcqflcr87vqgl6g62qoda.apps.googleusercontent.com"
   GOOGLE_CLIENT_SECRET: "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"
   SESSION_SECRET: "secret"
