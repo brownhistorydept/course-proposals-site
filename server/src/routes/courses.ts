@@ -201,9 +201,9 @@ courseRouter.post("/edit", authCheck, async (req: IGetUserAuthInfoRequest, res: 
         to.push(match.email)
       }
     }
-    // if (to.length > 0) {
-    //   sendRevisionEmail(to, course, req.user.displayName);
-    // }
+    if (to.length > 0) {
+      sendRevisionEmail(to, course, req.user.displayName);
+    }
 
     res.status(200).json({
       message: "editing course succeeded"
