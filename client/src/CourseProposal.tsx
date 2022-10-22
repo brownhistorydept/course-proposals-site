@@ -86,7 +86,8 @@ function CourseProposal() {
     isEditing = myState.isEditing;
     isNewProposal = myState.isNewProposal;
   }
-
+   // when 1, time ranking is optional, else required. purely for frontend, not passed back in course schema
+  const [isCrossListed, setIsCrossListed] = useState(0);
   const [isRegular, setRegular] = useState(1);
   const [leaveSpring, setleaveSpring] = useState(0);
   const [leaveFall, setleaveFall] = useState(0);
@@ -115,6 +116,7 @@ function CourseProposal() {
   const [otherFinalTime, setOtherFinalTime] = useState('');
   const [timesCantTeach, setTimesCantTeach] = useState<string[]>([]);
   const [profType, setProfType] = useState('');
+  const [transcriptTitle, setTranscriptTitle] = useState('');
 
   useEffect(() => {
     // if creating a new proposal, prefill values w/ original course values
@@ -137,6 +139,10 @@ function CourseProposal() {
 
       if (typeof originalCourse.course_title !== "undefined") {
         setCourseTitle(originalCourse.course_title)
+      }
+
+      if (typeof originalCourse.transcript_title !== "undefined") {
+        setTranscriptTitle(originalCourse.transcript_title)
       }
 
       if (typeof originalCourse.description !== "undefined") {
@@ -213,6 +219,10 @@ function CourseProposal() {
         setCourseNumber(originalCourse.course_number)
       }
 
+      if (typeof originalCourse.is_cross_listed != "undefined") {
+        setIsCrossListed(originalCourse.is_cross_listed ? 1 : 0)
+      }
+
       if (typeof originalCourse.further_notes != "undefined") {
         setNotes(originalCourse.further_notes)
       }
@@ -238,6 +248,20 @@ function CourseProposal() {
     }
   }
 
+  function getTimeRanking() {
+    var timeRanking = [];
+    if (time1 != '') {
+      timeRanking.push(time1);
+    }
+    if (time2 != '') {
+      timeRanking.push(time2);
+    }
+    if (time3 != '') {
+      timeRanking.push(time3);
+    }
+    return timeRanking
+  }
+
   async function hasError() {
     if (courseTitle === "") {
       openAlert("Please fill in course title.")
@@ -260,10 +284,10 @@ function CourseProposal() {
     } else if (levels.length === 0) {
       openAlert("Please fill in level.")
       return true;
-    } else if (time1 === "" || time2 === "" || time3 === "") {
+    } else if ((time1 === "" || time2 === "" || time3 === "") && !isCrossListed) {
       openAlert("Please rank three times for Time Ranking.")
       return true;
-    } else if (time1 === time2 || time2 === time3 || time1 === time3) {
+    } else if ((time1 === time2 || time2 === time3 || time1 === time3)  && !isCrossListed) {
       openAlert("Please enter three different times for Time Ranking.")
       return true;
     } else if (isUndergrad && geography.length === 0) {
@@ -271,6 +295,9 @@ function CourseProposal() {
       return true;
     } else if (!isRegular && profType === '') {
       openAlert('You have indicated that you are not a regular professor. In that case, please indicate your role.')
+      return true;
+    } else if (transcriptTitle.length > 30) {
+      openAlert('Transcript title must be 30 characters or less.')
       return true;
     }
 
@@ -297,6 +324,7 @@ function CourseProposal() {
       is_regular_prof: isRegular === 1,
       prof_type: profType,
       course_title: courseTitle,
+      transcript_title: transcriptTitle,
       description: description,
       professors: profId,
       syllabus_link: syllabusLink,
@@ -305,13 +333,14 @@ function CourseProposal() {
       is_RPP: rpp,
       is_WRIT: writ,
       is_CBLR: cblr,
+      is_cross_listed: isCrossListed === 1,
       is_premodern: premodern,
       course_type: courseType,
       is_remote_accessible: remoteAccessible,
       is_remote_only: remoteOnly,
       semester: semester,
       year: year,
-      time_ranking: [time1, time2, time3],
+      time_ranking: getTimeRanking(),
       times_cant_teach: timesCantTeach,
       geography: geography,
       course_number: courseNumber,
@@ -359,6 +388,7 @@ function CourseProposal() {
       is_regular_prof: isRegular === 1,
       prof_type: profType,
       course_title: courseTitle,
+      transcript_title: transcriptTitle,
       description: description,
       professors: profId,
       syllabus_link: syllabusLink,
@@ -367,19 +397,21 @@ function CourseProposal() {
       is_RPP: rpp,
       is_WRIT: writ,
       is_CBLR: cblr,
+      is_cross_listed: isCrossListed === 1,
       is_premodern: premodern,
       course_type: courseType,
       is_remote_accessible: remoteAccessible,
       is_remote_only: remoteOnly,
       semester: semester,
       year: year,
-      time_ranking: [time1, time2, time3],
+      time_ranking: getTimeRanking(),
       times_cant_teach: timesCantTeach,
       geography: geography,
       final_time: getFinalTime(),
       course_number: courseNumber,
       further_notes: notes,
     }
+
     var success = false;
     if (isNewProposal) {
       success = await submitCourse({ original: originalCourse!, proposed: proposedCourse });
@@ -548,6 +580,25 @@ function CourseProposal() {
         </Grid>
 
         <Grid item xs={2}>
+          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course scheduled via another unit?</Typography>
+        </Grid>
+        <Grid item xs={9.5}>
+          <Select
+            size='small'
+            autoWidth
+            value={isCrossListed}
+            onChange={(e) => {
+              let val = e.target.value as number
+              setIsCrossListed(val)
+            }
+            }
+          >
+            <MenuItem value={1}>Yes</MenuItem>
+            <MenuItem value={0}>No</MenuItem>
+          </Select>
+        </Grid>
+
+        <Grid item xs={2}>
           <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Course Title</Typography>
         </Grid>
         <Grid item xs={10}>
@@ -564,6 +615,20 @@ function CourseProposal() {
             value={courseTitle}
             onChange={(e) => setCourseTitle(e.target.value)}
           />}
+        </Grid>
+
+        <Grid item xs={2}>
+          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Transcript Title</Typography>
+        </Grid>
+        <Grid item xs={10}>
+          <TextField
+            size='small'
+            fullWidth
+            required
+            helperText={transcriptTitle.length.toString() + "/30 characters"}
+            value={transcriptTitle}
+            onChange={(e) => setTranscriptTitle(e.target.value)}
+          />
         </Grid>
 
         <Grid item xs={2}>
