@@ -52,6 +52,7 @@ function CourseView() {
 
   const courseNumber = course["course_number"]
   const courseTitle = course["course_title"]
+  const transcriptTitle = course["transcript_title"] ? course["transcript_title"] : ''
   const courseType = course["course_type"]
   const courseYear = course["year"] ? course["year"] : ''
   const courseDescription = course["description"]
@@ -63,6 +64,7 @@ function CourseView() {
   const courseIsRegular = course["is_regular_prof"] ? "Yes" : `No (${course["prof_type"]})`
   const courseLeaveFall = course["on_leave_fall"] ? "Yes" : "No"
   const courseLeaveSpring = course["on_leave_spring"] ? "Yes" : "No"
+  const courseCrossListed = course["is_cross_listed"] ? "Yes" : "No"
   const courseSyllabusLink = course["syllabus_link"]
   const courseFurtherNotes = course["further_notes"]
   const courseComments = course["comments"]
@@ -191,6 +193,22 @@ function CourseView() {
               }}
             />
           </Grid>
+
+          <Grid item xs={2}>
+            <Typography variant="body1" fontWeight="bold" align='right'>Course scheduled via another unit?</Typography>
+          </Grid>
+          <Grid item xs={10}>
+            <TextField
+              fullWidth
+              size='small'
+              value={courseCrossListed}
+              variant="standard"
+              InputProps={{
+                disableUnderline: true,
+                readOnly: true,
+              }}
+            />
+          </Grid>
         </>}
 
         <Grid item xs={2}>
@@ -225,6 +243,25 @@ function CourseView() {
             sx={{ border: 0 }}
           />
         </Grid>
+        
+        {!isRestrictedView && <>
+        <Grid item xs={2}>
+          <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Transcript Title</Typography>
+        </Grid>
+        <Grid item xs={10}>
+          <TextField
+            size='small'
+            fullWidth
+            value={transcriptTitle}
+            variant="standard"
+            InputProps={{
+              disableUnderline: true,
+              readOnly: true,
+            }}
+            sx={{ border: 0 }}
+          />
+        </Grid>
+        </>}
 
         <Grid item xs={2}>
           <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Professor(s)</Typography>

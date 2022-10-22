@@ -192,11 +192,11 @@ function CourseReview() {
     }
 
     const rows = coursesToShow.map((course) => {
-      // this includes everything from Course schema (as of 9/4) except comments
-      return [
+      var r = [
         course.on_leave_fall,
         course.on_leave_spring,
         course.is_regular_prof,
+        course.prof_type,
         course.course_title,
         course.description,
         course.professors.map((professor) => (professor as unknown as IUser).displayName).join(', '),
@@ -206,27 +206,35 @@ function CourseReview() {
         course.is_WRIT,
         course.is_CBLR,
         course.is_premodern,
-        course.course_type,
         course.is_remote_accessible,
         course.is_remote_only,
         course.semester,
         course.year,
-        course.time_ranking.length >= 1 ? course.time_ranking[0] : '',
-        course.time_ranking.length >= 2 ? course.time_ranking[1] : '',
-        course.time_ranking.length >= 3 ? course.time_ranking[2] : '',
         course.geography?.join(', '),
+        course.course_type,
         course.proposal_status,
         course.course_status,
         course.course_number,
         course.final_time,
         course.further_notes,
+        course.transcript_title,
+        course.times_cant_teach?.join(', ')
       ];
+      if (course.time_ranking !== undefined) {
+        course.time_ranking.length >= 1 ? r.push(course.time_ranking[0]) : r.push('');
+        course.time_ranking.length >= 2 ? r.push(course.time_ranking[1]) : r.push('');
+        course.time_ranking.length >= 3 ? r.push(course.time_ranking[2]) : r.push('');
+      }
+
+      // this includes everything from Course schema (as of 10/22/22) except comments
+      return r
     });
 
     const columns = [
       'Taking Fall Leave',
       'Taking Spring Leave',
       'Is Regular Professor?',
+      'Professor Type',
       'Course Title',
       'Course Description',
       'Instructor(s)',
@@ -236,20 +244,22 @@ function CourseReview() {
       'WRIT',
       'CBLR',
       'Premodern',
-      'Course Type',
       'Remote Accessible',
       'Remote Only',
       'Semester',
       'Year',
-      'Time Choice 1',
-      'Time Choice 2',
-      'Time Choice 3',
       'Geography',
+      'Course Type',
       'Proposal Status',
       'Course Status',
       'Course Number',
       'Final Time',
       'Further Notes',
+      'Transcript Title',
+      'Unavailable Times to Teach',
+      'Time Choice 1',
+      'Time Choice 2',
+      'Time Choice 3',
     ];
     const csvContent = Papa.unparse({ fields: columns, data: rows },);
     downloadFile(showAllCourses ? 'all-courses' : 'director-accepted-courses', csvContent, 'text/csv');
