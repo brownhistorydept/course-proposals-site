@@ -19,11 +19,11 @@ function strToBool(str: string): boolean {
 // search courses
 courseRouter.get("/search/:finalized", authCheck, async (req: IGetUserAuthInfoRequest, res: Response) => {
 
-  const search_term = (req as any).query;
+  const search_term = req.query;
   let finalized_term = {};
 
-  if (!search_term.proposal_status && typeof (req as any).params.finalized !== 'undefined') { // if finalized exists (has been set)
-    if (strToBool((req as any).params.finalized)) { // if finalized is true
+  if (!search_term.proposal_status && typeof req.params.finalized !== 'undefined') { // if finalized exists (has been set)
+    if (strToBool(req.params.finalized)) { // if finalized is true
       finalized_term = { proposal_status: PROPOSAL_STATUS.CCC_ACCEPTED };
     } else { // want proposed courses
       finalized_term = { proposal_status: { $ne: PROPOSAL_STATUS.CCC_ACCEPTED } };
@@ -42,11 +42,11 @@ courseRouter.get("/search/:finalized", authCheck, async (req: IGetUserAuthInfoRe
 
 // NOT TO BE USED BY FRONTEND
 courseRouter.get("/search-dev-only/:finalized", async (req: IGetUserAuthInfoRequest, res: Response) => {
-  const search_term = (req as any).query;
+  const search_term = req.query;
   let finalized_term = {};
 
-  if (!search_term.proposal_status && typeof (req as any).params.finalized !== 'undefined') { // if finalized exists (has been set)
-    if (strToBool((req as any).params.finalized)) { // if finalized is true
+  if (!search_term.proposal_status && typeof req.params.finalized !== 'undefined') { // if finalized exists (has been set)
+    if (strToBool(req.params.finalized)) { // if finalized is true
       finalized_term = { proposal_status: PROPOSAL_STATUS.CCC_ACCEPTED };
     } else { // want proposed courses
       finalized_term = { proposal_status: { $ne: PROPOSAL_STATUS.CCC_ACCEPTED } };
@@ -93,7 +93,7 @@ interface ICourseProposalRequest {
 
 // submit a course
 courseRouter.post("/submit", authCheck, async (req: IGetUserAuthInfoRequest, res: Response) => {
-  const proposalRequest = (req as any).body as ICourseProposalRequest;
+  const proposalRequest = req.body as ICourseProposalRequest;
   const status = getCourseStatus(proposalRequest.proposed, proposalRequest.original);
 
   if ((await Course.find(proposalRequest.proposed)).length > 0) { // duplicate course
@@ -119,7 +119,7 @@ courseRouter.post("/submit", authCheck, async (req: IGetUserAuthInfoRequest, res
 
 // edit a course
 courseRouter.post("/edit", authCheck, async (req: IGetUserAuthInfoRequest, res: Response) => {
-  var course = (req as any).body as ICourse;
+  var course = req.body as ICourse;
 
   if (req.user.role === ROLES.DEFAULT) {
     res.status(403).json({
@@ -219,7 +219,7 @@ courseRouter.post("/edit", authCheck, async (req: IGetUserAuthInfoRequest, res: 
 
 // NOT TO BE USED BY FRONTEND
 courseRouter.post("/submit-dev-only", async (req: IGetUserAuthInfoRequest, res: Response) => {
-  const proposalRequest = (req as any).body as ICourse;
+  const proposalRequest = req.body as ICourse;
   const newCourse = await Course.create({
     ...proposalRequest
   });
@@ -227,8 +227,8 @@ courseRouter.post("/submit-dev-only", async (req: IGetUserAuthInfoRequest, res: 
 });
 
 courseRouter.post("/accept-reject/:is_accept", authCheck, async (req: IGetUserAuthInfoRequest, res: Response) => {
-  const isAccept = typeof (req as any).params.is_accept !== 'undefined' && strToBool((req as any).params.is_accept);
-  const { course, reason } = (req as any).body as { course: ICourse, reason: string };
+  const isAccept = typeof req.params.is_accept !== 'undefined' && strToBool(req.params.is_accept);
+  const { course, reason } = req.body as { course: ICourse, reason: string };
   var new_status = '';
 
   if (req.user.role === ROLES.MANAGER || req.user.role === ROLES.GRAD_DIRECTOR || req.user.role === ROLES.UG_DIRECTOR) {
@@ -261,7 +261,7 @@ courseRouter.post("/accept-reject/:is_accept", authCheck, async (req: IGetUserAu
         profEmails.push(match.email)
       }
     }
-    console.log(profEmails)
+
     if (isAccept) {
       sendAcceptEmail(profEmails, course, reason, req.user.role !== ROLES.MANAGER);
     } else {

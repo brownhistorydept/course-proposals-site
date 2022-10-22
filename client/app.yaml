@@ -14,6 +14,3 @@ handlers:
     static_files: build/index.html
     upload: build/index.html
     secure: always
-
-env_variables:
-  REACT_APP_SERVER_URL: "https://history-course-interface.ue.r.appspot.com/api"

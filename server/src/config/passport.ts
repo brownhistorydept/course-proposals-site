@@ -8,17 +8,14 @@ import User, { IUser } from "../models/User";
 import { ROLES } from "../models/User"
 
 export function passportInit() {
-  console.log('start of passport')
   // serialize the user.id to save in the cookie session
   // so the browser will remember the user when login
   passport.serializeUser((user: any, done) => {
-    console.log('passport serializeUser')
     done(null, user.id);
   });
 
   // deserialize the cookieUserId to user in the database
   passport.deserializeUser((id, done) => {
-    console.log('passport deserializeUser')
     User.findById(id)
       .then((user) => {
         done(null, user);
@@ -62,8 +59,6 @@ export function passportInit() {
           displayPicURL = profile.photos[0].value;
         }
 
-        console.log('about to find user')
-
         try {
           // searches for user in mongoDB collection by googleId
           let user = await User.findOne({ googleId: profile.id });
@@ -77,7 +72,6 @@ export function passportInit() {
             if (user) {
               // update user to have googleId so they can log in normally next time
               await User.updateOne({ _id: user._id }, { googleId: profile.id })
-              console.log('about to be done')
               done(null, user)
             } else {
               // creates a new user object
@@ -90,7 +84,6 @@ export function passportInit() {
               };
               // creates new user if not in mongoDB collection
               user = await User.create(newUser);
-              console.log('about to be done')
               done(null, user);
             }
           }

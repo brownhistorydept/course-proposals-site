@@ -57,14 +57,9 @@ export function main() {
   app.use("/api/courses", courseRouter);
   app.use("/api/users", userRouter);
 
-  app.get("/api", (req, res, next) => res.send("helloooo"));
-
-  console.log('about to listen')
-
   // server starts listening
   app.listen(8080, () => {
     console.log(`Server running on port 8080`);
-    console.log('after server running')
   });
 }
 main();
