@@ -1,11 +1,13 @@
 # Exclude compiled .js files
 *.js
+dist/
 
 # Exclude dependencies
 node_modules/
 
+# Exclude both local and production environment variables
 .env
-
-dist/
-
 env_vars.yaml
+
+# Misc
+.DS_Store
