@@ -45,10 +45,11 @@ export interface ICourse {
   is_premodern?: boolean,
   is_remote_accessible?: boolean,
   is_remote_only?: boolean,
+  is_cross_listed?: boolean,
   // enumerated designations
   semester: string,
   year: number,
-  time_ranking: string[], // array of strings, e.g. [A, C, E]
+  time_ranking?: string[], // array of strings, e.g. [A, C, E]
   times_cant_teach?: string[], // array of times (strings) that prof can't teach, optional since maybe they can teach all times
   geography?: string[], // has to be from geo_regions list -- this is optional b/c graduate courses don't use these
   course_type: string,
@@ -58,9 +59,10 @@ export interface ICourse {
   // manager sets this after course is finalized
   final_time?: string, // string of A,B,C or another string for a time outside of these (manager enters this once time is finalized)
   course_number?: string,
-  // further notes
+  // further notes/misc
   further_notes?: string;
   comments?: string,
+  transcript_title: string,
 }
 
 const courseSchema = new Schema<ICourse>({
@@ -85,10 +87,11 @@ const courseSchema = new Schema<ICourse>({
   is_premodern: { type: Boolean, required: false },
   is_remote_accessible: { type: Boolean, required: false },
   is_remote_only: { type: Boolean, required: false },
+  is_cross_listed: { type: Boolean, required: false },
   // enumerated designations
   semester: { type: String, enum: SEMESTERS, required: true },
   year: { type: Number, required: true },
-  time_ranking: { type: [String], enum: TIMES, required: true }, // array of strings, e.g. [A, C, E]
+  time_ranking: { type: [String], enum: TIMES, required: false }, // array of strings, e.g. [A, C, E]
   times_cant_teach: { type: [String], enum: TIMES, required: false },
   geography: { type: [String], required: false }, // has to be from geo_regions list
   course_type: { type: String, required: false },
@@ -98,9 +101,10 @@ const courseSchema = new Schema<ICourse>({
   // manager adds later
   course_number: { type: String, required: false },
   final_time: { type: String, required: false },
-  // further notes
+  // further notes, misc
   further_notes: { type: String, required: false },
-  comments: { type: String, required: false }
+  comments: { type: String, required: false },
+  transcript_title: { type: String, required: false }
 });
 
 const Course = model<ICourse>("Course", courseSchema);
