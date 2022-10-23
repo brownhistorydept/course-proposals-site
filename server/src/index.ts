@@ -58,7 +58,7 @@ export function main() {
   app.use("/api/users", userRouter);
 
   // server starts listening
-  app.listen(8080, () => {
+  app.listen(process.env.PORT, () => {
     console.log(`Server running on port 8080`);
   });
 }
