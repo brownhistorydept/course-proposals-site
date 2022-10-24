@@ -108,7 +108,7 @@ function CourseProposal() {
   const [remoteAccessible, setRemoteAccessible] = useState(false);
   const [premodern, setPremodern] = useState(false);
   const [semester, setSemester] = useState('Fall');
-  const [year, setYear] = useState(new Date().getFullYear());
+  const [year, setYear] = useState(new Date().getFullYear() + 1);
   const [time1, setTime1] = useState('');
   const [time2, setTime2] = useState('');
   const [time3, setTime3] = useState('');

@@ -92,7 +92,7 @@ function CourseView() {
   const proposalCourse = {
     ...course,
     professors: proposalProfessors,
-    year: new Date().getFullYear(),
+    year: new Date().getFullYear() + 1,
     semester: '',
     time_ranking: [],
     times_cant_teach: [],

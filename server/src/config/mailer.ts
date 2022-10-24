@@ -29,7 +29,7 @@ export function sendAcceptEmail(to: string[], course: ICourse, reason: string, i
     "Course Proposal Accepted",
     `Hello,
     \nYour course proposal titled "${course.course_title}" has been accepted by ${isDirector ? 'a director' : 'the CCC'}${typeof reason === 'undefined' ? '.' : ` and received the following comments:\n\n ${reason}`}
-    \nGo to ${process.env.CLIENT_URL} for more information.
+    \nGo to ${process.env.CLIENT_URL} and select "My Courses" on the upper right menu, locate the relevant course and select "View Course" to see the course.
     \n--\nDepartment of History Course Proposals Automated Message`
   );
 }
@@ -41,7 +41,7 @@ export function sendRejectEmail(to: string[], course: ICourse, reason: string, i
     "Course Proposal Revision Request",
     `Hello,
     \n${isDirector ? 'A director' : 'The Student Affairs Manager'} has requested that you revise your course proposal titled "${course.course_title}" ${typeof reason === 'undefined' ? '.' : ` for the following reason:\n\n ${reason}\n`}
-    \nGo to ${process.env.CLIENT_URL} for more information.
+    \nGo to ${process.env.CLIENT_URL} and select "My Courses" on the upper right menu, locate the relevant course and select "View Course," then select "Edit" at the bottom of the screen.
     \n--\nDepartment of History Course Proposals Automated Message`
   );
 }
@@ -52,7 +52,7 @@ export function sendRevisionEmail(to: string[], course: ICourse, reviser: string
     "Course Revised",
     `Hello,
     \nThe course proposal titled "${course.course_title}" has been edited by ${reviser} since it was last reviewed.
-    \nGo to ${process.env.CLIENT_URL} for more information.
+    \nGo to ${process.env.CLIENT_URL} and select "Review Courses" on the upper right menu, locate the relevant course and select "View Course" to see the course.
     \n--\nDepartment of History Course Proposals Automated Message`
   )
 }
