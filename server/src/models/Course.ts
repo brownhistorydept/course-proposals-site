@@ -46,6 +46,9 @@ export interface ICourse {
   is_remote_accessible?: boolean,
   is_remote_only?: boolean,
   is_cross_listed?: boolean,
+  is_FYS?: boolean,
+  is_SYS?: boolean,
+  is_COEX?: boolean,
   // enumerated designations
   semester: string,
   year: number,
@@ -88,6 +91,9 @@ const courseSchema = new Schema<ICourse>({
   is_remote_accessible: { type: Boolean, required: false },
   is_remote_only: { type: Boolean, required: false },
   is_cross_listed: { type: Boolean, required: false },
+  is_FYS: { type: Boolean, required: false },
+  is_SYS: { type: Boolean, required: false },
+  is_COEX: { type: Boolean, required: false },
   // enumerated designations
   semester: { type: String, enum: SEMESTERS, required: true },
   year: { type: Number, required: true },

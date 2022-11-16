@@ -415,26 +415,27 @@ function CourseView() {
           />
         </Grid>
 
-        <Grid
-          container
-          direction="row"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Grid item xs={2.5}>
-            <FormGroup>
-              <FormControlLabel control={<Checkbox disabled checked={course.is_WRIT} />} label="WRIT" />
-              <FormControlLabel control={<Checkbox disabled checked={course.is_RPP} />} label="RPP" />
-              <FormControlLabel control={<Checkbox disabled checked={course.is_premodern} />} label="Premodern" />
-            </FormGroup>
-          </Grid>
-          <Grid item xs={2.5}>
-            <FormGroup>
-              <FormControlLabel control={<Checkbox disabled checked={course.is_remote_only} />} label="Remote Only" />
-              <FormControlLabel control={<Checkbox disabled checked={course.is_remote_accessible} />} label="Remote Accessible" />
-              <FormControlLabel control={<Checkbox disabled checked={course.is_CBLR} />} label="CBLR" />
-            </FormGroup>
-          </Grid>
+        <Grid item xs={3}></Grid>
+        <Grid item xs={3}>
+          <FormGroup>
+            <FormControlLabel control={<Checkbox disabled checked={course.is_WRIT} />} label="WRIT" />
+            <FormControlLabel control={<Checkbox disabled checked={course.is_RPP} />} label="RPP" />
+            <FormControlLabel control={<Checkbox disabled checked={course.is_premodern} />} label="Premodern" />
+          </FormGroup>
+        </Grid>
+        <Grid item xs={3}>
+          <FormGroup>
+            <FormControlLabel control={<Checkbox disabled checked={course.is_FYS} />} label="FYS" />
+            <FormControlLabel control={<Checkbox disabled checked={course.is_SYS} />} label="SYS" />
+            <FormControlLabel control={<Checkbox disabled checked={course.is_COEX} />} label="COEX" />
+          </FormGroup>
+        </Grid>
+        <Grid item xs={3}>
+          <FormGroup>
+            <FormControlLabel control={<Checkbox disabled checked={course.is_remote_only} />} label="Remote Only" />
+            <FormControlLabel control={<Checkbox disabled checked={course.is_remote_accessible} />} label="Remote Accessible" />
+            <FormControlLabel control={<Checkbox disabled checked={course.is_CBLR} />} label="CBLR" />
+          </FormGroup>
         </Grid>
 
         <Grid item xs={2}>
