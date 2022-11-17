@@ -105,7 +105,7 @@ function CourseProposal() {
   const [rpp, setRPP] = useState(false);
   const [cblr, setCBLR] = useState(false);
   const [fys, setFYS] = useState(false);
-  const [sys, setSYS] = useState(false);
+  const [soph, setSoph] = useState(false);
   const [coex, setCOEX] = useState(false);
   const [remoteOnly, setRemoteOnly] = useState(false);
   const [remoteAccessible, setRemoteAccessible] = useState(false);
@@ -185,7 +185,7 @@ function CourseProposal() {
       }
 
       if (typeof originalCourse.is_SOPH != "undefined") {
-        setSYS(originalCourse.is_SOPH)
+        setSoph(originalCourse.is_SOPH)
       }
 
       if (typeof originalCourse.is_COEX != "undefined") {
@@ -302,7 +302,7 @@ function CourseProposal() {
     } else if ((time1 === "" || time2 === "" || time3 === "") && !isCrossListed) {
       openAlert("Please rank three times for Time Ranking.")
       return true;
-    } else if ((time1 === time2 || time2 === time3 || time1 === time3)  && !isCrossListed) {
+    } else if ((time1 === time2 || time2 === time3 || time1 === time3) && !isCrossListed) {
       openAlert("Please enter three different times for Time Ranking.")
       return true;
     } else if (isUndergrad && geography.length === 0) {
@@ -349,7 +349,7 @@ function CourseProposal() {
       is_WRIT: writ,
       is_CBLR: cblr,
       is_FYS: fys,
-      is_SOPH: sys,
+      is_SOPH: soph,
       is_COEX: coex,
       is_cross_listed: isCrossListed === 1,
       is_premodern: premodern,
@@ -416,7 +416,7 @@ function CourseProposal() {
       is_WRIT: writ,
       is_CBLR: cblr,
       is_FYS: fys,
-      is_SOPH: sys,
+      is_SOPH: soph,
       is_COEX: coex,
       is_cross_listed: isCrossListed === 1,
       is_premodern: premodern,
@@ -905,7 +905,7 @@ function CourseProposal() {
               <FormControlLabel control={<Checkbox checked={fys} onClick={(e) => { setFYS((e.target as HTMLInputElement).checked) }} />} label="FYS" />
             </Tooltip>
             <Tooltip title="Syllabus submission required" placement="left">
-              <FormControlLabel control={<Checkbox checked={sys} onClick={(e) => { setSYS((e.target as HTMLInputElement).checked) }} />} label="SOPH" />
+              <FormControlLabel control={<Checkbox checked={soph} onClick={(e) => { setSoph((e.target as HTMLInputElement).checked) }} />} label="SOPH" />
             </Tooltip>
             <FormControlLabel control={<Checkbox checked={coex} onClick={(e) => { setCOEX((e.target as HTMLInputElement).checked) }} />} label="COEX" />
           </FormGroup>

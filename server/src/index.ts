@@ -59,7 +59,7 @@ export function main() {
 
   // server starts listening
   app.listen(process.env.PORT, () => {
-    console.log(`Server running on port 8080`);
+    console.log(`Server running on port ${process.env.PORT}`);
   });
 }
 main();
