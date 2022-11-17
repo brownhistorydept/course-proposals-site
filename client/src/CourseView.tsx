@@ -426,7 +426,7 @@ function CourseView() {
         <Grid item xs={3}>
           <FormGroup>
             <FormControlLabel control={<Checkbox disabled checked={course.is_FYS} />} label="FYS" />
-            <FormControlLabel control={<Checkbox disabled checked={course.is_SYS} />} label="SYS" />
+            <FormControlLabel control={<Checkbox disabled checked={course.is_SOPH} />} label="SOPH" />
             <FormControlLabel control={<Checkbox disabled checked={course.is_COEX} />} label="COEX" />
           </FormGroup>
         </Grid>

@@ -30,6 +30,9 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
     is_premodern: false,
     is_remote_accessible: false,
     is_remote_only: false,
+    is_FYS: false,
+    is_SOPH: false,
+    is_COEX: false,
   })
 
   const [consider, setConsider] = React.useState({
@@ -215,7 +218,7 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
     return courses.filter(course => course.course_title.toLowerCase().includes(searchString.toLowerCase()));
   }
 
-  const { is_RPP, is_WRIT, is_CBLR, is_premodern, is_remote_accessible, is_remote_only } = designations;
+  const { is_RPP, is_WRIT, is_CBLR, is_premodern, is_remote_accessible, is_remote_only, is_FYS, is_SOPH, is_COEX } = designations;
 
   return (
     <div align='left'>
@@ -398,6 +401,30 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
                 />
                 <FormControlLabel
                   control={
+                    <Checkbox checked={is_premodern} onChange={selectFilters} name="is_premodern" />
+                  }
+                  label="Premodern"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox checked={is_FYS} onChange={selectFilters} name="is_FYS" />
+                  }
+                  label="FYS"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox checked={is_SOPH} onChange={selectFilters} name="is_SOPH" />
+                  }
+                  label="SOPH"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox checked={is_COEX} onChange={selectFilters} name="is_COEX" />
+                  }
+                  label="COEX"
+                />
+                <FormControlLabel
+                  control={
                     <Checkbox checked={is_remote_only} onChange={selectFilters} name="is_remote_only" />
                   }
                   label="Remote Only"
@@ -407,12 +434,6 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
                     <Checkbox checked={is_remote_accessible} onChange={selectFilters} name="is_remote_accessible" />
                   }
                   label="Remote Accessible"
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox checked={is_premodern} onChange={selectFilters} name="is_premodern" />
-                  }
-                  label="Premodern"
                 />
                 <FormControlLabel
                   control={

@@ -184,8 +184,8 @@ function CourseProposal() {
         setFYS(originalCourse.is_FYS)
       }
 
-      if (typeof originalCourse.is_SYS != "undefined") {
-        setSYS(originalCourse.is_SYS)
+      if (typeof originalCourse.is_SOPH != "undefined") {
+        setSYS(originalCourse.is_SOPH)
       }
 
       if (typeof originalCourse.is_COEX != "undefined") {
@@ -349,7 +349,7 @@ function CourseProposal() {
       is_WRIT: writ,
       is_CBLR: cblr,
       is_FYS: fys,
-      is_SYS: sys,
+      is_SOPH: sys,
       is_COEX: coex,
       is_cross_listed: isCrossListed === 1,
       is_premodern: premodern,
@@ -416,7 +416,7 @@ function CourseProposal() {
       is_WRIT: writ,
       is_CBLR: cblr,
       is_FYS: fys,
-      is_SYS: sys,
+      is_SOPH: sys,
       is_COEX: coex,
       is_cross_listed: isCrossListed === 1,
       is_premodern: premodern,
@@ -905,7 +905,7 @@ function CourseProposal() {
               <FormControlLabel control={<Checkbox checked={fys} onClick={(e) => { setFYS((e.target as HTMLInputElement).checked) }} />} label="FYS" />
             </Tooltip>
             <Tooltip title="Syllabus submission required" placement="left">
-              <FormControlLabel control={<Checkbox checked={sys} onClick={(e) => { setSYS((e.target as HTMLInputElement).checked) }} />} label="SYS" />
+              <FormControlLabel control={<Checkbox checked={sys} onClick={(e) => { setSYS((e.target as HTMLInputElement).checked) }} />} label="SOPH" />
             </Tooltip>
             <FormControlLabel control={<Checkbox checked={coex} onClick={(e) => { setCOEX((e.target as HTMLInputElement).checked) }} />} label="COEX" />
           </FormGroup>
