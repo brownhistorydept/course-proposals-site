@@ -1,0 +1,11 @@
+runtime: nodejs16
+
+service: api
+
+handlers:
+  - url: /.*
+    secure: always
+    script: auto
+
+includes:
+  - env_vars.yaml

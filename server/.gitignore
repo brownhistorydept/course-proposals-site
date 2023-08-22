@@ -1,2 +1,13 @@
-/node_modules
-/.env
+# Exclude compiled .js files
+*.js
+dist/
+
+# Exclude dependencies
+node_modules/
+
+# Exclude both local and production environment variables
+.env
+env_vars.yaml
+
+# Misc
+.DS_Store

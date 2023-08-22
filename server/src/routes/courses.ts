@@ -10,7 +10,6 @@ function search(search_term) {
   return Course.find(search_term).populate('professors');;
 }
 
-// this function is janky - should use a legit library
 function strToBool(str: string): boolean {
   const test = str.trim().toLowerCase();
   return !((test === 'false') || (test === '0') || (test === ''));
@@ -33,35 +32,6 @@ courseRouter.get("/search/:finalized", authCheck, async (req: IGetUserAuthInfoRe
   try {
     const result = await search({ ...search_term, ...finalized_term });
     res.status(200).json({ result });
-  } catch (err) {
-    res.status(400).json({
-      message: "at least one of the fields in the search term has the wrong type; see ICourse in models/Courses.ts for correct types",
-    });
-  }
-});
-
-// NOT TO BE USED BY FRONTEND
-courseRouter.get("/search-dev-only/:finalized", async (req: IGetUserAuthInfoRequest, res: Response) => {
-  const search_term = req.query;
-  let finalized_term = {};
-
-  if (!search_term.proposal_status && typeof req.params.finalized !== 'undefined') { // if finalized exists (has been set)
-    if (strToBool(req.params.finalized)) { // if finalized is true
-      finalized_term = { proposal_status: PROPOSAL_STATUS.CCC_ACCEPTED };
-    } else { // want proposed courses
-      finalized_term = { proposal_status: { $ne: PROPOSAL_STATUS.CCC_ACCEPTED } };
-    }
-  }
-
-  try {
-    const result = await search({ ...search_term, ...finalized_term });
-    if (result.length === 0) {
-      res.status(400).json({
-        message: "No results found.",
-      });
-    } else {
-      res.status(200).json({ result });
-    }
   } catch (err) {
     res.status(400).json({
       message: "at least one of the fields in the search term has the wrong type; see ICourse in models/Courses.ts for correct types",
@@ -201,9 +171,9 @@ courseRouter.post("/edit", authCheck, async (req: IGetUserAuthInfoRequest, res: 
         to.push(match.email)
       }
     }
-    // if (to.length > 0) {
-    //   sendRevisionEmail(to, course, req.user.displayName);
-    // }
+    if (to.length > 0) {
+      sendRevisionEmail(to, course, req.user.displayName);
+    }
 
     res.status(200).json({
       message: "editing course succeeded"
@@ -214,16 +184,6 @@ courseRouter.post("/edit", authCheck, async (req: IGetUserAuthInfoRequest, res: 
       message: "editing course failed",
     });
   }
-});
-
-
-// NOT TO BE USED BY FRONTEND
-courseRouter.post("/submit-dev-only", async (req: IGetUserAuthInfoRequest, res: Response) => {
-  const proposalRequest = req.body as ICourse;
-  const newCourse = await Course.create({
-    ...proposalRequest
-  });
-  res.status(200).json({ newCourse });
 });
 
 courseRouter.post("/accept-reject/:is_accept", authCheck, async (req: IGetUserAuthInfoRequest, res: Response) => {
@@ -261,7 +221,7 @@ courseRouter.post("/accept-reject/:is_accept", authCheck, async (req: IGetUserAu
         profEmails.push(match.email)
       }
     }
-    console.log(profEmails)
+
     if (isAccept) {
       sendAcceptEmail(profEmails, course, reason, req.user.role !== ROLES.MANAGER);
     } else {

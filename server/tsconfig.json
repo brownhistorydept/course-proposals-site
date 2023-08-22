@@ -4,12 +4,16 @@
     "module": "commonjs",
     "outDir": "dist",
     "sourceMap": true,
-    "types": ["node"],
+    "types": [
+      "node"
+    ],
     "moduleResolution": "node",
     "esModuleInterop": true
   },
   "include": [
-    "src/**/*.ts"],
+    "src/**/*.ts",
+    "src/index.js"
+  ],
   "exclude": [
     "node_modules"
   ]

@@ -33,7 +33,7 @@ export function passportInit() {
     new GoogleStrategy({
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "/auth/google/callback",
+      callbackURL: "/api/auth/google/callback",
       userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo" // allows Google+ to be disabled
     },
       async (
@@ -68,10 +68,10 @@ export function passportInit() {
           } else {
             // if no google id, try email
             // this will be how all prefilled professors log in for the first time
-            user = await User.findOne({email: profile._json.email});
+            user = await User.findOne({ email: profile._json.email });
             if (user) {
               // update user to have googleId so they can log in normally next time
-              await User.updateOne({_id: user._id}, {googleId: profile.id})
+              await User.updateOne({ _id: user._id }, { googleId: profile.id })
               done(null, user)
             } else {
               // creates a new user object

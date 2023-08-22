@@ -86,7 +86,7 @@ function CourseProposal() {
     isEditing = myState.isEditing;
     isNewProposal = myState.isNewProposal;
   }
-   // when 1, time ranking is optional, else required. purely for frontend, not passed back in course schema
+
   const [isCrossListed, setIsCrossListed] = useState(0);
   const [isRegular, setRegular] = useState(1);
   const [leaveSpring, setleaveSpring] = useState(0);
@@ -104,11 +104,14 @@ function CourseProposal() {
   const [writ, setWrit] = useState(false);
   const [rpp, setRPP] = useState(false);
   const [cblr, setCBLR] = useState(false);
+  const [fys, setFYS] = useState(false);
+  const [soph, setSoph] = useState(false);
+  const [coex, setCOEX] = useState(false);
   const [remoteOnly, setRemoteOnly] = useState(false);
   const [remoteAccessible, setRemoteAccessible] = useState(false);
   const [premodern, setPremodern] = useState(false);
   const [semester, setSemester] = useState('Fall');
-  const [year, setYear] = useState(new Date().getFullYear());
+  const [year, setYear] = useState(new Date().getFullYear() + 1);
   const [time1, setTime1] = useState('');
   const [time2, setTime2] = useState('');
   const [time3, setTime3] = useState('');
@@ -175,6 +178,18 @@ function CourseProposal() {
 
       if (typeof originalCourse.is_CBLR != "undefined") {
         setCBLR(originalCourse.is_CBLR)
+      }
+
+      if (typeof originalCourse.is_FYS != "undefined") {
+        setFYS(originalCourse.is_FYS)
+      }
+
+      if (typeof originalCourse.is_SOPH != "undefined") {
+        setSoph(originalCourse.is_SOPH)
+      }
+
+      if (typeof originalCourse.is_COEX != "undefined") {
+        setCOEX(originalCourse.is_COEX)
       }
 
       if (typeof originalCourse.is_premodern != "undefined") {
@@ -287,7 +302,7 @@ function CourseProposal() {
     } else if ((time1 === "" || time2 === "" || time3 === "") && !isCrossListed) {
       openAlert("Please rank three times for Time Ranking.")
       return true;
-    } else if ((time1 === time2 || time2 === time3 || time1 === time3)  && !isCrossListed) {
+    } else if ((time1 === time2 || time2 === time3 || time1 === time3) && !isCrossListed) {
       openAlert("Please enter three different times for Time Ranking.")
       return true;
     } else if (isUndergrad && geography.length === 0) {
@@ -333,6 +348,9 @@ function CourseProposal() {
       is_RPP: rpp,
       is_WRIT: writ,
       is_CBLR: cblr,
+      is_FYS: fys,
+      is_SOPH: soph,
+      is_COEX: coex,
       is_cross_listed: isCrossListed === 1,
       is_premodern: premodern,
       course_type: courseType,
@@ -397,6 +415,9 @@ function CourseProposal() {
       is_RPP: rpp,
       is_WRIT: writ,
       is_CBLR: cblr,
+      is_FYS: fys,
+      is_SOPH: soph,
+      is_COEX: coex,
       is_cross_listed: isCrossListed === 1,
       is_premodern: premodern,
       course_type: courseType,
@@ -864,7 +885,7 @@ function CourseProposal() {
           <FormHelperText sx={{ fontSize: '14px' }}>A short paragraph describing the course content, which will end up on CAB.</FormHelperText>
         </Grid>
 
-        <Grid item xs={4.5}></Grid>
+        <Grid item xs={3}></Grid>
         <Grid item xs={3}>
           <FormGroup>
             <Tooltip title="Subject to CCC approval in accordance with their guidelines - syllabus submission required" placement="left">
@@ -880,12 +901,22 @@ function CourseProposal() {
         </Grid>
         <Grid item xs={3}>
           <FormGroup>
+            <Tooltip title="Syllabus submission required" placement="left">
+              <FormControlLabel control={<Checkbox checked={fys} onClick={(e) => { setFYS((e.target as HTMLInputElement).checked) }} />} label="FYS" />
+            </Tooltip>
+            <Tooltip title="Syllabus submission required" placement="left">
+              <FormControlLabel control={<Checkbox checked={soph} onClick={(e) => { setSoph((e.target as HTMLInputElement).checked) }} />} label="SOPH" />
+            </Tooltip>
+            <FormControlLabel control={<Checkbox checked={coex} onClick={(e) => { setCOEX((e.target as HTMLInputElement).checked) }} />} label="COEX" />
+          </FormGroup>
+        </Grid>
+        <Grid item xs={3}>
+          <FormGroup>
             <FormControlLabel control={<Checkbox checked={remoteOnly} onClick={(e) => { setRemoteOnly((e.target as HTMLInputElement).checked) }} />} label="Remote Only" />
             <FormControlLabel control={<Checkbox checked={remoteAccessible} onClick={(e) => { setRemoteAccessible((e.target as HTMLInputElement).checked) }} />} label="Remote Accessible" />
             <FormControlLabel control={<Checkbox checked={cblr} onClick={(e) => { setCBLR((e.target as HTMLInputElement).checked) }} />} label="CBLR" />
           </FormGroup>
         </Grid>
-        <Grid item xs={1.5}></Grid>
 
         <Grid item xs={2}>
           <Typography variant="body1" fontWeight="bold" my="auto" align='right'>Further Notes</Typography>
