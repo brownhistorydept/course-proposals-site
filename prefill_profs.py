@@ -6,7 +6,7 @@ db=client.HistoryDB
 
 u = collection.Collection(db, 'users')
 
-wb = load_workbook('/Users/carolynzech/Desktop/profs.xlsx')
+wb = load_workbook('insert excel path here')
 ws = wb.active
 
 rows = tuple(ws.rows)
