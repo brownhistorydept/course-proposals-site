@@ -207,15 +207,15 @@ courseRouter.post(
     //if you want to add a field to all the data in the collection, just uncomment the following and modify with desired parameters.
     //Also update the ICourse interface and Course schema accordingly. Then edit a course on the site to modify all documents.
 
-    await Course.updateMany(
-      {},
-      { $set: { withdrawn: false, rejected: false, manager_comments: "" } }
-    );
+    // await Course.updateMany(
+    //   {},
+    //   { $set: { withdrawn: false, rejected: false, manager_comments: "" } }
+    // );
 
-    await Course.updateMany(
-      { proposal_status: "under review by director" },
-      { $set: { withdrawn: false, rejected: true, manager_comments: "" } }
-    );
+    // await Course.updateMany(
+    //   { proposal_status: "under review by director" },
+    //   { $set: { withdrawn: false, rejected: true, manager_comments: "" } }
+    // );
 
     try {
       await Course.updateOne({ _id: course._id }, course);
@@ -239,9 +239,9 @@ courseRouter.post(
       // console.log("sending to");
       // console.log(to);
 
-      // if (to.length > 0) {
-      //   sendRevisionEmail(to, course, req.user.displayName);
-      // }
+      if (to.length > 0) {
+        sendRevisionEmail(to, course, req.user.displayName);
+      }
 
       res.status(200).json({
         message: "editing course succeeded",
