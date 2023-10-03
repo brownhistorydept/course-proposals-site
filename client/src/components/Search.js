@@ -1,20 +1,20 @@
-import Box from '@mui/material/Box';
-import FormControl from '@mui/material/FormControl';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import * as React from 'react';
+import Box from "@mui/material/Box";
+import FormControl from "@mui/material/FormControl";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import * as React from "react";
 
-import CourseCard from './CourseCard';
-import { COURSE_TYPES, GEO_REGIONS } from '../utils/constants';
+import CourseCard from "./CourseCard";
+import { COURSE_TYPES, GEO_REGIONS } from "../utils/constants";
 
 export default function Search({ allProfessors, courses: allCourses, user }) {
-  const [searched, setSearched] = React.useState('');
+  const [searched, setSearched] = React.useState("");
   const [professors, setProfessors] = React.useState([]);
   const [levels, setLevels] = React.useState([]);
   const [geographies, setGeographies] = React.useState([]);
@@ -33,7 +33,7 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
     is_FYS: false,
     is_SOPH: false,
     is_COEX: false,
-  })
+  });
 
   const [consider, setConsider] = React.useState({
     year: true,
@@ -43,72 +43,92 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
     course_type: false,
     designations: false,
     search: false,
-  })
+  });
 
   const considerNone = () => {
     for (const [, value] of Object.entries(consider)) {
       if (value) {
-        return false
+        return false;
       }
     }
-    return true
-  }
+    return true;
+  };
 
   const filter = () => {
     if (considerNone()) {
-      return allCourses
+      return allCourses;
     } else {
-      var toFilter = allCourses
+      var toFilter = allCourses;
 
-      if (consider['year']) {
-        toFilter = toFilter.filter(course => course.year === year);
+      if (consider["year"]) {
+        toFilter = toFilter.filter((course) => course.year === year);
       }
 
-      if (consider['semester']) {
-        toFilter = toFilter.filter(course => semesters.some(sem => sem === course.semester));
+      if (consider["semester"]) {
+        toFilter = toFilter.filter((course) =>
+          semesters.some((sem) => sem === course.semester)
+        );
       }
 
-      if (consider['professor']) {
-        toFilter = toFilter.filter(course => professors.some(profName => course.professors.some(p => p.displayName === profName)))
+      if (consider["professor"]) {
+        toFilter = toFilter.filter((course) =>
+          professors.some((profName) =>
+            course.professors.some((p) => p.displayName === profName)
+          )
+        );
       }
 
-      if (consider['levels']) {
-        toFilter = toFilter.filter(course => levels.every(level => course.levels.includes(level)));
+      if (consider["levels"]) {
+        toFilter = toFilter.filter((course) =>
+          levels.every((level) => course.levels.includes(level))
+        );
       }
 
-      if (consider['geography']) {
-        toFilter = toFilter.filter(course => geographies.every(geo => course.geography.includes(geo)));
+      if (consider["geography"]) {
+        toFilter = toFilter.filter((course) =>
+          geographies.every((geo) => course.geography.includes(geo))
+        );
       }
 
-      if (consider['courseType']) {
-        toFilter = toFilter.filter(course => courseTypes.some(type => type === course.course_type));
+      if (consider["courseType"]) {
+        toFilter = toFilter.filter((course) =>
+          courseTypes.some((type) => type === course.course_type)
+        );
       }
 
-      if (consider['designations']) {
-        const trueDesignations = Object.entries(designations).filter(([_, value]) => value);
-        toFilter = toFilter.filter(course => trueDesignations.every(designation => course[designation[0]]));
+      if (consider["designations"]) {
+        const trueDesignations = Object.entries(designations).filter(
+          ([_, value]) => value
+        );
+        toFilter = toFilter.filter((course) =>
+          trueDesignations.every((designation) => course[designation[0]])
+        );
       }
 
-      if (consider['search']) {
-        toFilter = filterBySearched(toFilter, searched)
+      if (consider["search"]) {
+        toFilter = filterBySearched(toFilter, searched);
       }
 
       return toFilter;
     }
-  }
+  };
 
   const selectProfessor = (event) => {
-    setProfessors(typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value);
+    setProfessors(
+      typeof event.target.value === "string"
+        ? event.target.value.split(",")
+        : event.target.value
+    );
     if (event.target.value.length === 0) {
       setConsider({
         ...consider,
-        'professor': false,
+        professor: false,
       });
     } else {
       setConsider({
         ...consider,
-        'professor': true,
-      })
+        professor: true,
+      });
     }
   };
 
@@ -116,74 +136,90 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
     if (event.target.value === "") {
       setConsider({
         ...consider,
-        'year': false,
+        year: false,
       });
     } else {
       setYear(parseInt(event.target.value));
       setConsider({
         ...consider,
-        'year': true,
+        year: true,
       });
     }
-  }
+  };
 
   const selectSemester = (event) => {
-    setSemesters(typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value);
+    setSemesters(
+      typeof event.target.value === "string"
+        ? event.target.value.split(",")
+        : event.target.value
+    );
     if (event.target.value.length === 0) {
       setConsider({
         ...consider,
-        'semester': false,
+        semester: false,
       });
     } else {
       setConsider({
         ...consider,
-        'semester': true,
-      })
+        semester: true,
+      });
     }
   };
 
   const selectLevel = (event) => {
-    setLevels(typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value);
+    setLevels(
+      typeof event.target.value === "string"
+        ? event.target.value.split(",")
+        : event.target.value
+    );
     if (event.target.value.length === 0) {
       setConsider({
         ...consider,
-        'levels': false,
+        levels: false,
       });
     } else {
       setConsider({
         ...consider,
-        'levels': true,
-      })
+        levels: true,
+      });
     }
   };
 
   const selectGeography = (event) => {
-    setGeographies(typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value);
+    setGeographies(
+      typeof event.target.value === "string"
+        ? event.target.value.split(",")
+        : event.target.value
+    );
     if (event.target.value.length === 0) {
       setConsider({
         ...consider,
-        'geography': false,
+        geography: false,
       });
     } else {
       setConsider({
         ...consider,
-        'geography': true,
-      })
+        geography: true,
+      });
     }
   };
 
   const selectCourseType = (event) => {
-    setCourseTypes(typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value);
+    setCourseTypes(
+      typeof event.target.value === "string"
+        ? event.target.value.split(",")
+        : event.target.value
+    );
     if (event.target.value.length === 0) {
       setConsider({
         ...consider,
-        'courseType': false,
+        courseType: false,
       });
     } else {
       setConsider({
         ...consider,
-        'courseType': true,
-      })
+        courseType: true,
+      });
     }
   };
 
@@ -194,37 +230,55 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
     });
     setConsider({
       ...consider,
-      'designations': true,
-    })
+      designations: true,
+    });
   };
 
   const selectSearched = (event) => {
     if (event.target.value === "") {
-      setSearched(event.target.value)
+      setSearched(event.target.value);
       setConsider({
         ...consider,
-        'search': false,
-      })
+        search: false,
+      });
     } else {
-      setSearched(event.target.value)
+      setSearched(event.target.value);
       setConsider({
         ...consider,
-        'search': true,
-      })
+        search: true,
+      });
     }
   };
 
   const filterBySearched = (courses, searchString) => {
-    return courses.filter(course => course.course_title.toLowerCase().includes(searchString.toLowerCase()));
-  }
+    return courses.filter((course) =>
+      course.course_title.toLowerCase().includes(searchString.toLowerCase())
+    );
+  };
 
-  const { is_RPP, is_WRIT, is_CBLR, is_premodern, is_remote_accessible, is_remote_only, is_FYS, is_SOPH, is_COEX } = designations;
+  const {
+    is_RPP,
+    is_WRIT,
+    is_CBLR,
+    is_premodern,
+    is_remote_accessible,
+    is_remote_only,
+    is_FYS,
+    is_SOPH,
+    is_COEX,
+  } = designations;
 
   return (
-    <div align='left'>
-      <Box sx={{
-        margin: 'auto', marginTop: 4, maxWidth: 1060, paddingLeft: 0, border: 0
-      }}>
+    <div align="left">
+      <Box
+        sx={{
+          margin: "auto",
+          marginTop: 4,
+          maxWidth: 1060,
+          paddingLeft: 0,
+          border: 0,
+        }}
+      >
         <br />
         <Box
           sx={{
@@ -232,15 +286,14 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
             height: 120,
             margin: 0,
             paddingLeft: 2,
-          }}>
-          <Typography variant="h3">
-            Course Catalog
-          </Typography>
-          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)' }}>
+          }}
+        >
+          <Typography variant="h3">Course Catalog</Typography>
+          <Box sx={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)" }}>
             <Box
               component="form"
               sx={{
-                '& .MuiTextField-root': { m: 1, marginTop: 4, width: '25ch' },
+                "& .MuiTextField-root": { m: 1, marginTop: 4, width: "25ch" },
               }}
               noValidate
               autoComplete="off"
@@ -259,27 +312,57 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
             </Box>
           </Box>
         </Box>
-        <Box sx={{ display: 'flex', width: 1, marginTop: 3, marginLeft: 1, p: 0, border: '0px solid', marginBottom: 2 }}>
-          <Box sx={{ display: 'grid', paddingLeft: 1, width: 0.3, border: '0px solid', flexGrow: 1, gridTemplateColumns: 'repeat(10, 1fr)' }}>
-
+        <Box
+          sx={{
+            display: "flex",
+            width: 1,
+            marginTop: 3,
+            marginLeft: 1,
+            p: 0,
+            border: "0px solid",
+            marginBottom: 2,
+          }}
+        >
+          <Box
+            sx={{
+              display: "grid",
+              paddingLeft: 1,
+              width: 0.3,
+              border: "0px solid",
+              flexGrow: 1,
+              gridTemplateColumns: "repeat(10, 1fr)",
+            }}
+          >
             <div>
-              <FormControl sx={{ m: 1, minWidth: 120, marginTop: 0 }} size="small">
-                <InputLabel sx={{ m: 0, margin: 0, border: 0, padding: 0, fontSize: 14 }} id="demo-simple-select-helper-label">Professor</InputLabel>
+              <FormControl
+                sx={{ m: 1, minWidth: 120, marginTop: 0 }}
+                size="small"
+              >
+                <InputLabel
+                  sx={{ m: 0, margin: 0, border: 0, padding: 0, fontSize: 14 }}
+                  id="demo-simple-select-helper-label"
+                >
+                  Professor
+                </InputLabel>
                 <Select
                   multiple
                   autoWidth
                   value={professors}
                   label="Professor"
                   onChange={selectProfessor}
-                  renderValue={(selected) => selected.join(', ')}
+                  renderValue={(selected) => selected.join(", ")}
                   sx={{ padding: 0, border: 0 }}
                 >
                   {allProfessors
-                    ?.map(prof => prof.displayName)
+                    ?.map((prof) => prof.displayName)
                     ?.sort()
                     ?.map((profName, idx) => (
                       <MenuItem value={profName} key={idx}>
-                        <Checkbox checked={professors.some(pName => pName === profName)} />
+                        <Checkbox
+                          checked={professors.some(
+                            (pName) => pName === profName
+                          )}
+                        />
                         {profName}
                       </MenuItem>
                     ))}
@@ -287,37 +370,65 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
               </FormControl>
             </div>
             <div>
-              <FormControl sx={{ m: 1, minWidth: 120, marginTop: 0 }} size="small">
-                <InputLabel sx={{ m: 0, margin: 0, height: 1, border: 0, padding: 0, fontSize: 14 }}>Level</InputLabel>
+              <FormControl
+                sx={{ m: 1, minWidth: 120, marginTop: 0 }}
+                size="small"
+              >
+                <InputLabel
+                  sx={{
+                    m: 0,
+                    margin: 0,
+                    height: 1,
+                    border: 0,
+                    padding: 0,
+                    fontSize: 14,
+                  }}
+                >
+                  Level
+                </InputLabel>
                 <Select
                   multiple
                   autoWidth
                   value={levels}
                   label="Level"
                   onChange={selectLevel}
-                  renderValue={(selected) => selected.join(', ')}
+                  renderValue={(selected) => selected.join(", ")}
                 >
-                  <MenuItem value={'Undergraduate'}>
-                    <Checkbox checked={levels.includes('Undergraduate')} />
+                  <MenuItem value={"Undergraduate"}>
+                    <Checkbox checked={levels.includes("Undergraduate")} />
                     Undergraduate
                   </MenuItem>
-                  <MenuItem value={'Graduate'}>
-                    <Checkbox checked={levels.includes('Graduate')} />
+                  <MenuItem value={"Graduate"}>
+                    <Checkbox checked={levels.includes("Graduate")} />
                     Graduate
                   </MenuItem>
                 </Select>
               </FormControl>
             </div>
             <div>
-              <FormControl sx={{ m: 1, minWidth: 120, height: 20, marginTop: 0 }} size="small">
-                <InputLabel sx={{ m: 0, margin: 0, height: 1, border: 0, padding: 0, fontSize: 14 }}>Geography</InputLabel>
+              <FormControl
+                sx={{ m: 1, minWidth: 120, height: 20, marginTop: 0 }}
+                size="small"
+              >
+                <InputLabel
+                  sx={{
+                    m: 0,
+                    margin: 0,
+                    height: 1,
+                    border: 0,
+                    padding: 0,
+                    fontSize: 14,
+                  }}
+                >
+                  Geography
+                </InputLabel>
                 <Select
                   multiple
                   autoWidth
                   value={geographies}
                   label="Geography"
                   onChange={selectGeography}
-                  renderValue={(selected) => selected.join(', ')}
+                  renderValue={(selected) => selected.join(", ")}
                   sx={{ padding: 0, border: 0 }}
                 >
                   {GEO_REGIONS.map((geo, idx) => (
@@ -330,15 +441,29 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
               </FormControl>
             </div>
             <div>
-              <FormControl sx={{ m: 1, minWidth: 120, height: 20, marginTop: 0 }} size="small">
-                <InputLabel sx={{ m: 0, margin: 0, height: 1, border: 0, padding: 0, fontSize: 14 }}>Course Type</InputLabel>
+              <FormControl
+                sx={{ m: 1, minWidth: 120, height: 20, marginTop: 0 }}
+                size="small"
+              >
+                <InputLabel
+                  sx={{
+                    m: 0,
+                    margin: 0,
+                    height: 1,
+                    border: 0,
+                    padding: 0,
+                    fontSize: 14,
+                  }}
+                >
+                  Course Type
+                </InputLabel>
                 <Select
                   multiple
                   autoWidth
                   value={courseTypes}
                   label="CourseType"
                   onChange={selectCourseType}
-                  renderValue={(selected) => selected.join(', ')}
+                  renderValue={(selected) => selected.join(", ")}
                   sx={{ padding: 0, border: 0 }}
                 >
                   {COURSE_TYPES.map((type, idx) => (
@@ -351,18 +476,32 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
               </FormControl>
             </div>
             <div>
-              <FormControl sx={{ m: 1, minWidth: 120, height: 20, marginTop: 0 }} size="small">
-                <InputLabel sx={{ m: 0, margin: 0, height: 1, border: 0, padding: 0, fontSize: 14 }}>Semester</InputLabel>
+              <FormControl
+                sx={{ m: 1, minWidth: 120, height: 20, marginTop: 0 }}
+                size="small"
+              >
+                <InputLabel
+                  sx={{
+                    m: 0,
+                    margin: 0,
+                    height: 1,
+                    border: 0,
+                    padding: 0,
+                    fontSize: 14,
+                  }}
+                >
+                  Semester
+                </InputLabel>
                 <Select
                   multiple
                   autoWidth
                   value={semesters}
                   label="Semester"
                   onChange={selectSemester}
-                  renderValue={(selected) => selected.join(', ')}
+                  renderValue={(selected) => selected.join(", ")}
                   sx={{ padding: 0, border: 0 }}
                 >
-                  {['Winter', 'Spring', 'Summer', 'Fall'].map((sem, idx) => (
+                  {["Winter", "Spring", "Summer", "Fall"].map((sem, idx) => (
                     <MenuItem value={sem} key={idx}>
                       <Checkbox checked={semesters.includes(sem)} />
                       {sem}
@@ -383,61 +522,107 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
             </div>
           </Box>
         </Box>
-        <Box sx={{ display: 'flex', paddingLeft: 3, width: 1, gap: 0, border: '0px solid', flexGrow: 1, gridTemplateColumns: 'repeat(10, 1fr)' }}>
-          <Box sx={{ display: 'flex', height: 50, }}>
+        <Box
+          sx={{
+            display: "flex",
+            paddingLeft: 3,
+            width: 1,
+            gap: 0,
+            border: "0px solid",
+            flexGrow: 1,
+            gridTemplateColumns: "repeat(10, 1fr)",
+          }}
+        >
+          <Box sx={{ display: "flex", height: 50 }}>
             <FormControl sx={{ m: 0 }} component="fieldset" variant="standard">
               <FormGroup row={true}>
                 <FormControlLabel
                   control={
-                    <Checkbox checked={is_WRIT} onChange={selectFilters} name="is_WRIT" />
+                    <Checkbox
+                      checked={is_WRIT}
+                      onChange={selectFilters}
+                      name="is_WRIT"
+                    />
                   }
                   label="WRIT"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={is_RPP} onChange={selectFilters} name="is_RPP" />
+                    <Checkbox
+                      checked={is_RPP}
+                      onChange={selectFilters}
+                      name="is_RPP"
+                    />
                   }
                   label="Race, Power, & Privilege (RPP)"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={is_premodern} onChange={selectFilters} name="is_premodern" />
+                    <Checkbox
+                      checked={is_premodern}
+                      onChange={selectFilters}
+                      name="is_premodern"
+                    />
                   }
                   label="Premodern"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={is_FYS} onChange={selectFilters} name="is_FYS" />
+                    <Checkbox
+                      checked={is_FYS}
+                      onChange={selectFilters}
+                      name="is_FYS"
+                    />
                   }
                   label="FYS"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={is_SOPH} onChange={selectFilters} name="is_SOPH" />
+                    <Checkbox
+                      checked={is_SOPH}
+                      onChange={selectFilters}
+                      name="is_SOPH"
+                    />
                   }
                   label="SOPH"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={is_COEX} onChange={selectFilters} name="is_COEX" />
+                    <Checkbox
+                      checked={is_COEX}
+                      onChange={selectFilters}
+                      name="is_COEX"
+                    />
                   }
                   label="COEX"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={is_remote_only} onChange={selectFilters} name="is_remote_only" />
+                    <Checkbox
+                      checked={is_remote_only}
+                      onChange={selectFilters}
+                      name="is_remote_only"
+                    />
                   }
                   label="Remote Only"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={is_remote_accessible} onChange={selectFilters} name="is_remote_accessible" />
+                    <Checkbox
+                      checked={is_remote_accessible}
+                      onChange={selectFilters}
+                      name="is_remote_accessible"
+                    />
                   }
                   label="Remote Accessible"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={is_CBLR} onChange={selectFilters} name="is_CBLR" />
+                    <Checkbox
+                      checked={is_CBLR}
+                      onChange={selectFilters}
+                      name="is_CBLR"
+                    />
                   }
                   label="Community-Based Learning & Research (CBLR)"
                 />
@@ -452,16 +637,26 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
             margin: 0,
             paddingLeft: 2,
             paddingTop: 2,
-          }}>
+          }}
+        >
           <Typography variant="h5">
             ___________________________________________________________________________________________________
           </Typography>
         </Box>
       </Box>
       {filter().map((course, index) => (
-        <CourseCard key={index} course={course} status={false} canEdit={user?.role === "manager" || user?.role === "curriculum coordinator"} canAccept={user?.role === "manager"} canNewProposal={user?.role !== "default"} isRestrictedView={true} />
-      ))
-      }
+        <CourseCard
+          key={index}
+          course={course}
+          status={false}
+          canEdit={
+            user?.role === "manager" || user?.role === "curriculum coordinator"
+          }
+          canAccept={user?.role === "manager"}
+          canNewProposal={user?.role !== "default"}
+          isRestrictedView={true}
+        />
+      ))}
     </div>
   );
-};
+}

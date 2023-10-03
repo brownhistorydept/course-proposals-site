@@ -5,7 +5,7 @@ import {
   VerifyCallback,
 } from "passport-google-oauth20";
 import User, { IUser } from "../models/User";
-import { ROLES } from "../models/User"
+import { ROLES } from "../models/User";
 
 export function passportInit() {
   // serialize the user.id to save in the cookie session
@@ -30,12 +30,13 @@ export function passportInit() {
   // the callback function checks if a User exists in the MongoDB collection
   // if not, it creates a new user object, else it retrieves the existing user object
   passport.use(
-    new GoogleStrategy({
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "/api/auth/google/callback",
-      userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo" // allows Google+ to be disabled
-    },
+    new GoogleStrategy(
+      {
+        clientID: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        callbackURL: "/api/auth/google/callback",
+        userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo", // allows Google+ to be disabled
+      },
       async (
         _accessToken: string,
         _refreshToken: string,
@@ -71,8 +72,8 @@ export function passportInit() {
             user = await User.findOne({ email: profile._json.email });
             if (user) {
               // update user to have googleId so they can log in normally next time
-              await User.updateOne({ _id: user._id }, { googleId: profile.id })
-              done(null, user)
+              await User.updateOne({ _id: user._id }, { googleId: profile.id });
+              done(null, user);
             } else {
               // creates a new user object
               const newUser: IUser = {

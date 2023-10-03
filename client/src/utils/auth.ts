@@ -1,9 +1,7 @@
-import { IUser } from '../../../server/src/models/User';
+import { IUser } from "../../../server/src/models/User";
 
 // fetches the user if the user is logged in on the backend
-export async function setAuthenticatedUser(
-  setUser: (user: IUser) => void,
-) {
+export async function setAuthenticatedUser(setUser: (user: IUser) => void) {
   try {
     const res = await fetch(
       `${process.env.REACT_APP_SERVER_URL}/auth/login/success`,

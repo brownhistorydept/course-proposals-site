@@ -1,27 +1,29 @@
-import { ICourse } from '../../../server/src/models/Course';
+import { ICourse } from "../../../server/src/models/Course";
 
 export async function fetchCourses(
   setCourses: (courses: ICourse[]) => void,
   params: any,
   finalized: boolean,
-  isMounted: boolean = true,
+  isMounted: boolean = true
 ) {
   try {
-    var url = new URL(`${process.env.REACT_APP_SERVER_URL}/courses/search/${finalized}`);
-    if (params !== null) {
-      Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-    }
-    const res = await fetch(url.toString(),
-      {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Credentials": "true",
-        },
-      },
+    var url = new URL(
+      `${process.env.REACT_APP_SERVER_URL}/courses/search/${finalized}`
     );
+    if (params !== null) {
+      Object.keys(params).forEach((key) =>
+        url.searchParams.append(key, params[key])
+      );
+    }
+    const res = await fetch(url.toString(), {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Credentials": "true",
+      },
+    });
 
     if (res.status === 200) {
       const resJson = await res.json();
@@ -44,7 +46,7 @@ export async function submitCourse(course: any) {
         method: "POST",
         credentials: "include",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(course),
       }
@@ -68,7 +70,7 @@ export async function editCourse(course: any) {
         method: "POST",
         credentials: "include",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(course),
       }
@@ -84,22 +86,74 @@ export async function editCourse(course: any) {
   }
 }
 
+export async function withdrawCourse(course: any) {
+  try {
+    const res = await fetch(
+      `${process.env.REACT_APP_SERVER_URL}/courses/withdraw`,
+      {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(course),
+      }
+    );
+
+    if (res.status === 200) {
+      return true;
+    } else {
+      throw new Error("Request to withdraw course was unsuccessful");
+    }
+  } catch (error) {
+    return false;
+  }
+}
+
+export async function deleteCourse(course: any) {
+  try {
+    const res = await fetch(
+      `${process.env.REACT_APP_SERVER_URL}/courses/delete`,
+      {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(course),
+      }
+    );
+
+    if (res.status === 200) {
+      return true;
+    } else {
+      throw new Error("Request to delete course was unsuccessful");
+    }
+  } catch (error) {
+    return false;
+  }
+}
+
 export async function acceptRejectCourse(
   course: any,
   is_accept: boolean,
   reason: string,
+  managerReason: string
 ) {
   try {
-    const url = new URL(`${process.env.REACT_APP_SERVER_URL}/courses/accept-reject/${is_accept}`)
+    const url = new URL(
+      `${process.env.REACT_APP_SERVER_URL}/courses/accept-reject/${is_accept}`
+    );
     const res = await fetch(url.toString(), {
       method: "POST",
       credentials: "include",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         course,
         reason,
+        managerReason,
       }),
     });
 
