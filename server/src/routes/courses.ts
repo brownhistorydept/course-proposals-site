@@ -147,24 +147,24 @@ courseRouter.post(
         return;
       }
 
-      if (course.proposal_status === PROPOSAL_STATUS.CCC_ACCEPTED) {
-        res.status(403).json({
-          message:
-            "Only the manager or curriculum coordinator can edit a course that has been accepted by CCC",
-        });
-        return;
-      }
+      // if (course.proposal_status === PROPOSAL_STATUS.CCC_ACCEPTED) {
+      //   res.status(403).json({
+      //     message:
+      //       "Only the manager or curriculum coordinator can edit a course that has been accepted by CCC",
+      //   });
+      //   return;
+      // }
 
-      if (
-        req.user.role === ROLES.PROFESSOR &&
-        course.proposal_status === PROPOSAL_STATUS.DIRECTOR_ACCEPTED
-      ) {
-        res.status(403).json({
-          message:
-            "Professors cannot edit a course that has been accepted by director",
-        });
-        return;
-      }
+      // if (
+      //   req.user.role === ROLES.PROFESSOR &&
+      //   course.proposal_status === PROPOSAL_STATUS.DIRECTOR_ACCEPTED
+      // ) {
+      //   res.status(403).json({
+      //     message:
+      //       "Professors cannot edit a course that has been accepted by director",
+      //   });
+      //   return;
+      // }
     }
 
     var recipient_roles = [];
@@ -236,11 +236,9 @@ courseRouter.post(
         }
       }
 
-      // console.log("sending to");
-      // console.log(to);
-
       if (to.length > 0) {
         sendRevisionEmail(to, course, req.user.displayName);
+        // console.log("sending revision email to", to);
       }
 
       res.status(200).json({
@@ -317,6 +315,7 @@ courseRouter.post(
 
       if (to.length > 0) {
         sendWithdrawalEmail(to, course, req.user.displayName);
+        // console.log("sending withdraw email to", to);
       }
 
       res.status(200).json({
@@ -393,6 +392,7 @@ courseRouter.post(
 
       if (to.length > 0) {
         sendDeleteEmail(to, course, req.user.displayName);
+        // console.log("sending delete email to", to);
       }
 
       res.status(200).json({
@@ -498,6 +498,7 @@ courseRouter.post(
           managerReason,
           req.user.role !== ROLES.MANAGER
         );
+        // console.log("sending accept email to", profEmails);
       } else {
         sendRejectEmail(
           profEmails,
@@ -506,6 +507,7 @@ courseRouter.post(
           managerReason,
           req.user.role !== ROLES.MANAGER
         );
+        // console.log("sending reject email to", profEmails);
       }
 
       res.status(200).json({

@@ -256,6 +256,8 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
     );
   };
 
+  console.log(user);
+
   const {
     is_RPP,
     is_WRIT,
@@ -650,7 +652,9 @@ export default function Search({ allProfessors, courses: allCourses, user }) {
           course={course}
           status={false}
           canEdit={
-            user?.role === "manager" || user?.role === "curriculum coordinator"
+            user?.role === "manager" ||
+            user?.role === "curriculum coordinator" ||
+            course.professors.some((prof) => prof.email === user.email)
           }
           canAccept={user?.role === "manager"}
           canNewProposal={user?.role !== "default"}

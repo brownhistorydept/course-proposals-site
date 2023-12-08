@@ -338,6 +338,8 @@ function CourseProposal() {
     return false;
   }
 
+  console.log(allProfessors);
+
   async function edit() {
     const error = await hasError();
     if (error) {
@@ -389,7 +391,13 @@ function CourseProposal() {
     };
     const success = await editCourse(proposedCourse);
     if (success) {
-      if (user?.role === "manager" || user?.role === "curriculum coordinator") {
+      if (
+        user?.role === "manager" ||
+        user?.role === "curriculum coordinator" ||
+        originalCourse.professors.some(
+          (profName) => profName === user?.displayName
+        )
+      ) {
         if (originalCourse?.proposal_status === "accepted by CCC") {
           openAlert("Course successfully edited", "/course_catalog");
         } else {

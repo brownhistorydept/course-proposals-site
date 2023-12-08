@@ -21,6 +21,7 @@ export default function ComplexGrid({
   isRestrictedView,
   selectedSems,
 }) {
+  console.log(course);
   return (
     <Paper
       sx={{
